@@ -1,687 +1,1119 @@
 /* =========================================================
-   Ghost Builder — Core App
-   Version: 1.0.0
+   GHOST BUILDER
+   Core Application Engine
    ========================================================= */
 
 "use strict";
 
+
 /* =========================================================
-   Storage Keys
+   STORAGE KEYS
    ========================================================= */
 
 const GB_KEYS = {
-  projects: "ghost_builder_projects",
-  currentProject: "ghost_builder_current_project",
-  settings: "ghost_builder_settings",
-  media: "ghost_builder_media",
-  support: "ghost_builder_support",
-  published: "ghost_builder_published_",
-  selectedMedia: "ghost_builder_selected_media"
+
+  projects:
+    "ghost_builder_projects",
+
+  currentProject:
+    "ghost_builder_current_project",
+
+  settings:
+    "ghost_builder_settings",
+
+  media:
+    "ghost_builder_media",
+
+  support:
+    "ghost_builder_support",
+
+  published:
+    "ghost_builder_published",
+
+  selectedMedia:
+    "ghost_builder_selected_media"
+
 };
 
+
 /* =========================================================
-   Storage Helpers
+   DEFAULT SETTINGS
    ========================================================= */
 
-function gbGet(key, fallback = null) {
-  try {
-    const value = localStorage.getItem(key);
+const GB_DEFAULT_SETTINGS = {
 
-    if (value === null) {
+  language: "fa",
+
+  creatorName:
+    "کاربر نمونه",
+
+  autoSave: true,
+
+  notifications: true,
+
+  defaultQuality:
+    "Medium",
+
+  defaultResolution:
+    "720p",
+
+  showGrid: true,
+
+  snap: true,
+
+  livePreview: true,
+
+  theme: "dark",
+
+  primaryColor:
+    "#7c5cff",
+
+  backgroundColor:
+    "#0b0d14"
+
+};
+
+
+/* =========================================================
+   STORAGE
+   ========================================================= */
+
+function gbGet(
+  key,
+  fallback = null
+) {
+
+  try {
+
+    const value =
+      localStorage.getItem(key);
+
+    if (
+      value === null ||
+      value === undefined
+    ) {
+
       return fallback;
+
     }
 
     return JSON.parse(value);
+
   } catch (error) {
-    console.warn("Ghost Builder storage read error:", error);
+
+    console.warn(
+      "Ghost Builder storage read error:",
+      error
+    );
+
     return fallback;
+
   }
+
 }
 
-function gbSet(key, value) {
+
+function gbSet(
+  key,
+  value
+) {
+
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+
+    localStorage.setItem(
+      key,
+      JSON.stringify(value)
+    );
+
     return true;
+
   } catch (error) {
-    console.warn("Ghost Builder storage write error:", error);
-    gbToast("فضای ذخیره‌سازی مرورگر پر شده است.", "danger");
+
+    console.warn(
+      "Ghost Builder storage write error:",
+      error
+    );
+
+    gbToast(
+      "ذخیره اطلاعات انجام نشد.",
+      "error"
+    );
+
     return false;
+
   }
+
 }
 
-function gbRemove(key) {
+
+function gbRemove(
+  key
+) {
+
   try {
+
     localStorage.removeItem(key);
+
+    return true;
+
   } catch (error) {
-    console.warn("Ghost Builder storage remove error:", error);
+
+    return false;
+
   }
+
 }
+
 
 /* =========================================================
-   Projects
+   ID GENERATOR
+   ========================================================= */
+
+function gbId(
+  prefix = "gb"
+) {
+
+  return (
+    prefix +
+    "_" +
+    Date.now().toString(36) +
+    "_" +
+    Math.random()
+      .toString(36)
+      .slice(2,9)
+  );
+
+}
+
+
+/* =========================================================
+   PROJECTS
    ========================================================= */
 
 function gbGetProjects() {
-  return gbGet(GB_KEYS.projects, []);
+
+  const projects =
+    gbGet(
+      GB_KEYS.projects,
+      []
+    );
+
+  return Array.isArray(projects)
+    ? projects
+    : [];
+
 }
 
-function gbSaveProjects(projects) {
-  return gbSet(GB_KEYS.projects, projects);
+
+function gbSaveProjects(
+  projects
+) {
+
+  return gbSet(
+    GB_KEYS.projects,
+    Array.isArray(projects)
+      ? projects
+      : []
+  );
+
 }
+
 
 function gbGetCurrentProject() {
-  return gbGet(GB_KEYS.currentProject, null);
+
+  const currentId =
+    gbGet(
+      GB_KEYS.currentProject,
+      null
+    );
+
+
+  if (!currentId) {
+    return null;
+  }
+
+
+  return gbFindProject(
+    currentId
+  );
+
 }
 
-function gbSetCurrentProject(project) {
-  return gbSet(GB_KEYS.currentProject, project);
-}
 
-function gbFindProject(id) {
-  const projects = gbGetProjects();
+function gbSetCurrentProject(
+  projectOrId
+) {
 
-  return projects.find(
-    project => String(project.id) === String(id)
-  ) || null;
-}
+  const id =
+    typeof projectOrId === "object"
+      ? projectOrId?.id
+      : projectOrId;
 
-function gbCreateProject(options = {}) {
-  const type = options.type || "website";
 
-  const project = {
-    id: Date.now(),
-    name: options.name || "پروژه جدید",
-    type,
-    title: options.title || "پروژه جدید",
-    description:
-      options.description ||
-      "پروژه خود را با Ghost Builder بسازید.",
-    button: options.button || "شروع کنید",
-
-    background:
-      options.background ||
-      "#ffffff",
-
-    primary:
-      options.primary ||
-      "#7c5cff",
-
-    radius:
-      options.radius ??
-      18,
-
-    width:
-      options.width ||
-      390,
-
-    height:
-      options.height ||
-      700,
-
-    quality:
-      options.quality ||
-      "Medium",
-
-    resolution:
-      options.resolution ||
-      "720p",
-
-    elements:
-      Array.isArray(options.elements)
-        ? options.elements
-        : [],
-
-    createdAt:
-      options.createdAt ||
-      new Date().toISOString(),
-
-    updatedAt:
-      new Date().toISOString()
-  };
-
-  const projects = gbGetProjects();
-
-  projects.unshift(project);
-
-  gbSaveProjects(projects);
-  gbSetCurrentProject(project);
-
-  return project;
-}
-
-function gbUpdateProject(project) {
-  if (!project || !project.id) {
+  if (!id) {
     return false;
   }
 
-  project.updatedAt = new Date().toISOString();
 
-  const projects = gbGetProjects();
-
-  const index = projects.findIndex(
-    item => String(item.id) === String(project.id)
+  return gbSet(
+    GB_KEYS.currentProject,
+    id
   );
+
+}
+
+
+function gbFindProject(
+  id
+) {
+
+  if (!id) {
+    return null;
+  }
+
+
+  return (
+    gbGetProjects()
+      .find(
+        project =>
+          String(project.id) ===
+          String(id)
+      ) ||
+    null
+  );
+
+}
+
+
+/* =========================================================
+   CREATE PROJECT
+   ========================================================= */
+
+function gbCreateProject(
+  data = {}
+) {
+
+  const now =
+    new Date().toISOString();
+
+
+  const project = {
+
+    id:
+      data.id ||
+      gbId("project"),
+
+    name:
+      data.name ||
+      "پروژه جدید",
+
+    type:
+      data.type ||
+      "website",
+
+    title:
+      data.title ||
+      data.name ||
+      "پروژه جدید",
+
+    description:
+      data.description ||
+      "",
+
+    button:
+      data.button ||
+      "شروع کنید",
+
+    primary:
+      data.primary ||
+      "#7c5cff",
+
+    background:
+      data.background ||
+      "#ffffff",
+
+    textColor:
+      data.textColor ||
+      "#111111",
+
+    quality:
+      data.quality ||
+      "Medium",
+
+    resolution:
+      data.resolution ||
+      "720p",
+
+    width:
+      data.width ||
+      390,
+
+    height:
+      data.height ||
+      720,
+
+    elements:
+      Array.isArray(data.elements)
+        ? data.elements
+        : [],
+
+    template:
+      data.template ||
+      null,
+
+    createdAt:
+      data.createdAt ||
+      now,
+
+    updatedAt:
+      now
+
+  };
+
+
+  const projects =
+    gbGetProjects();
+
+
+  projects.unshift(
+    project
+  );
+
+
+  gbSaveProjects(
+    projects
+  );
+
+
+  gbSetCurrentProject(
+    project.id
+  );
+
+
+  return project;
+
+}
+
+
+/* =========================================================
+   UPDATE PROJECT
+   ========================================================= */
+
+function gbUpdateProject(
+  id,
+  updates = {}
+) {
+
+  const projects =
+    gbGetProjects();
+
+
+  const index =
+    projects.findIndex(
+      project =>
+        String(project.id) ===
+        String(id)
+    );
+
 
   if (index === -1) {
-    projects.unshift(project);
-  } else {
-    projects[index] = project;
+
+    return null;
+
   }
 
-  gbSaveProjects(projects);
-  gbSetCurrentProject(project);
 
-  return true;
-}
+  projects[index] = {
 
-function gbDeleteProject(id) {
-  const projects = gbGetProjects();
+    ...projects[index],
 
-  const filtered = projects.filter(
-    project => String(project.id) !== String(id)
+    ...updates,
+
+    updatedAt:
+      new Date().toISOString()
+
+  };
+
+
+  gbSaveProjects(
+    projects
   );
 
-  gbSaveProjects(filtered);
-
-  const current = gbGetCurrentProject();
 
   if (
-    current &&
-    String(current.id) === String(id)
+    String(
+      gbGet(
+        GB_KEYS.currentProject,
+        ""
+      )
+    ) ===
+    String(id)
   ) {
-    gbRemove(GB_KEYS.currentProject);
+
+    gbSetCurrentProject(
+      projects[index].id
+    );
+
   }
 
-  return true;
+
+  return projects[index];
+
 }
 
-function gbDuplicateProject(id) {
-  const original = gbFindProject(id);
+
+/* =========================================================
+   DELETE PROJECT
+   ========================================================= */
+
+function gbDeleteProject(
+  id
+) {
+
+  const projects =
+    gbGetProjects();
+
+
+  const filtered =
+    projects.filter(
+      project =>
+        String(project.id) !==
+        String(id)
+    );
+
+
+  if (
+    filtered.length ===
+    projects.length
+  ) {
+
+    return false;
+
+  }
+
+
+  gbSaveProjects(
+    filtered
+  );
+
+
+  const current =
+    gbGet(
+      GB_KEYS.currentProject,
+      null
+    );
+
+
+  if (
+    String(current) ===
+    String(id)
+  ) {
+
+    if (filtered[0]) {
+
+      gbSetCurrentProject(
+        filtered[0].id
+      );
+
+    } else {
+
+      gbRemove(
+        GB_KEYS.currentProject
+      );
+
+    }
+
+  }
+
+
+  return true;
+
+}
+
+
+/* =========================================================
+   DUPLICATE PROJECT
+   ========================================================= */
+
+function gbDuplicateProject(
+  id
+) {
+
+  const original =
+    gbFindProject(id);
+
 
   if (!original) {
     return null;
   }
 
-  const copy = {
-    ...original,
-    id: Date.now(),
-    name: `${original.name} - کپی`,
-    title: `${original.title}`,
-    elements: Array.isArray(original.elements)
-      ? JSON.parse(JSON.stringify(original.elements))
-      : [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
 
-  const projects = gbGetProjects();
+  const copy =
+    JSON.parse(
+      JSON.stringify(
+        original
+      )
+    );
 
-  projects.unshift(copy);
 
-  gbSaveProjects(projects);
-  gbSetCurrentProject(copy);
+  copy.id =
+    gbId("project");
+
+
+  copy.name =
+    original.name +
+    " — کپی";
+
+
+  copy.createdAt =
+    new Date().toISOString();
+
+
+  copy.updatedAt =
+    new Date().toISOString();
+
+
+  const projects =
+    gbGetProjects();
+
+
+  projects.unshift(
+    copy
+  );
+
+
+  gbSaveProjects(
+    projects
+  );
+
+
+  gbSetCurrentProject(
+    copy.id
+  );
+
 
   return copy;
+
 }
+
 
 /* =========================================================
-   URL Helpers
+   SETTINGS
    ========================================================= */
-
-function gbParam(name) {
-  const params = new URLSearchParams(
-    window.location.search
-  );
-
-  return params.get(name);
-}
-
-function gbGo(page, params = {}) {
-  const query = new URLSearchParams();
-
-  Object.keys(params).forEach(key => {
-    if (
-      params[key] !== undefined &&
-      params[key] !== null &&
-      params[key] !== ""
-    ) {
-      query.set(key, params[key]);
-    }
-  });
-
-  const queryString = query.toString();
-
-  window.location.href =
-    page +
-    (queryString ? "?" + queryString : "");
-}
-
-function gbBuilder(id) {
-  if (id) {
-    gbGo("builder.html", {
-      project: id
-    });
-  } else {
-    gbGo("builder.html");
-  }
-}
-
-function gbPreview(id) {
-  if (id) {
-    gbGo("preview.html", {
-      project: id
-    });
-  } else {
-    gbGo("preview.html");
-  }
-}
-
-function gbPublish(id, type = "web") {
-  const params = {
-    type
-  };
-
-  if (id) {
-    params.project = id;
-  }
-
-  gbGo("publish.html", params);
-}
-
-/* =========================================================
-   Project Type
-   ========================================================= */
-
-function gbProjectTypeLabel(type) {
-  const labels = {
-    website: "وب‌سایت",
-    app: "اپلیکیشن",
-    game2d: "بازی 2D",
-    game3d: "بازی 3D"
-  };
-
-  return labels[type] || "پروژه";
-}
-
-function gbProjectTypeIcon(type) {
-  const icons = {
-    website: "🌐",
-    app: "📱",
-    game2d: "🎮",
-    game3d: "🕹️"
-  };
-
-  return icons[type] || "📁";
-}
-
-/* =========================================================
-   Settings
-   ========================================================= */
-
-function gbDefaultSettings() {
-  return {
-    language: "fa",
-    unit: "px",
-
-    autosave: true,
-    notifications: true,
-
-    quality: "Medium",
-    resolution: "720p",
-
-    grid: true,
-    snap: true,
-    livePreview: true,
-
-    theme: "dark",
-    primaryColor: "#7c5cff",
-    backgroundColor: "#0b0d14",
-
-    creatorName: "کاربر نمونه",
-
-    confirmDelete: true
-  };
-}
 
 function gbGetSettings() {
-  const saved = gbGet(
-    GB_KEYS.settings,
-    {}
-  );
 
   return {
-    ...gbDefaultSettings(),
-    ...saved
+
+    ...GB_DEFAULT_SETTINGS,
+
+    ...gbGet(
+      GB_KEYS.settings,
+      {}
+    )
+
   };
+
 }
 
-function gbSaveSettings(settings) {
-  return gbSet(
-    GB_KEYS.settings,
-    settings
-  );
-}
 
-/* =========================================================
-   Theme
-   ========================================================= */
-
-function gbApplyTheme() {
-  const settings = gbGetSettings();
-
-  const theme = settings.theme;
-
-  document.body.classList.remove("light");
-
-  if (theme === "light") {
-    document.body.classList.add("light");
-  }
-
-  if (theme === "system") {
-    const dark =
-      window.matchMedia &&
-      window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-
-    if (!dark) {
-      document.body.classList.add("light");
-    }
-  }
-
-  document.documentElement.style.setProperty(
-    "--primary",
-    settings.primaryColor
-  );
-
-  document.documentElement.style.setProperty(
-    "--bg",
-    settings.backgroundColor
-  );
-}
-
-function gbSetTheme(theme) {
-  const settings = gbGetSettings();
-
-  settings.theme = theme;
-
-  gbSaveSettings(settings);
-  gbApplyTheme();
-}
-
-/* =========================================================
-   Toast
-   ========================================================= */
-
-function gbToast(
-  message,
-  type = "info",
-  duration = 2800
+function gbSaveSettings(
+  settings = {}
 ) {
-  let container =
-    document.querySelector(
-      ".toast-container"
+
+  const merged = {
+
+    ...gbGetSettings(),
+
+    ...settings
+
+  };
+
+
+  const result =
+    gbSet(
+      GB_KEYS.settings,
+      merged
     );
 
-  if (!container) {
-    container =
-      document.createElement("div");
-
-    container.className =
-      "toast-container";
-
-    document.body.appendChild(
-      container
-    );
-  }
-
-  const toast =
-    document.createElement("div");
-
-  toast.className = "toast";
-
-  if (type === "success") {
-    toast.style.borderColor =
-      "rgba(50,213,131,.35)";
-  }
-
-  if (type === "danger") {
-    toast.style.borderColor =
-      "rgba(255,92,108,.35)";
-  }
-
-  if (type === "warning") {
-    toast.style.borderColor =
-      "rgba(255,176,32,.35)";
-  }
-
-  toast.textContent = message;
-
-  container.appendChild(toast);
-
-  setTimeout(() => {
-    toast.style.opacity = "0";
-    toast.style.transform =
-      "translateY(8px)";
-
-    setTimeout(() => {
-      toast.remove();
-    }, 250);
-  }, duration);
-}
-
-/* =========================================================
-   Confirm
-   ========================================================= */
-
-function gbConfirm(
-  message,
-  callback
-) {
-  const settings =
-    gbGetSettings();
 
   if (
-    settings.confirmDelete === false
+    merged.theme
   ) {
-    callback(true);
+
+    gbApplyTheme(
+      merged.theme
+    );
+
+  }
+
+
+  return result;
+
+}
+
+
+/* =========================================================
+   THEME
+   ========================================================= */
+
+function gbApplyTheme(
+  theme
+) {
+
+  const body =
+    document.body;
+
+
+  if (!body) {
     return;
   }
 
-  const result =
-    window.confirm(message);
 
-  callback(result);
-}
-
-/* =========================================================
-   Clipboard
-   ========================================================= */
-
-async function gbCopy(
-  text,
-  successMessage = "کپی شد."
-) {
-  try {
-    await navigator.clipboard.writeText(
-      text
-    );
-
-    gbToast(
-      successMessage,
-      "success"
-    );
-
-    return true;
-  } catch (error) {
-    try {
-      const textarea =
-        document.createElement(
-          "textarea"
-        );
-
-      textarea.value = text;
-      textarea.style.position =
-        "fixed";
-      textarea.style.opacity = "0";
-
-      document.body.appendChild(
-        textarea
-      );
-
-      textarea.select();
-
-      document.execCommand("copy");
-
-      textarea.remove();
-
-      gbToast(
-        successMessage,
-        "success"
-      );
-
-      return true;
-    } catch (err) {
-      gbToast(
-        "کپی کردن انجام نشد.",
-        "danger"
-      );
-
-      return false;
-    }
-  }
-}
-
-/* =========================================================
-   Date
-   ========================================================= */
-
-function gbFormatDate(date) {
-  if (!date) {
-    return "نامشخص";
-  }
-
-  try {
-    return new Date(date)
-      .toLocaleDateString(
-        "fa-IR",
-        {
-          year: "numeric",
-          month: "long",
-          day: "numeric"
-        }
-      );
-  } catch {
-    return "نامشخص";
-  }
-}
-
-/* =========================================================
-   ID
-   ========================================================= */
-
-function gbId(prefix = "element") {
-  return (
-    prefix +
-    "_" +
-    Date.now() +
-    "_" +
-    Math.random()
-      .toString(36)
-      .slice(2, 8)
+  body.classList.remove(
+    "light"
   );
+
+
+  if (
+    theme ===
+    "light"
+  ) {
+
+    body.classList.add(
+      "light"
+    );
+
+  }
+
+
+  if (
+    theme ===
+    "system"
+  ) {
+
+    const prefersLight =
+      window.matchMedia &&
+      window.matchMedia(
+        "(prefers-color-scheme: light)"
+      ).matches;
+
+
+    if (prefersLight) {
+
+      body.classList.add(
+        "light"
+      );
+
+    }
+
+  }
+
+
+  const settings =
+    gbGetSettings();
+
+
+  if (
+    settings.primaryColor
+  ) {
+
+    document.documentElement
+      .style.setProperty(
+        "--primary",
+        settings.primaryColor
+      );
+
+  }
+
+
+  if (
+    settings.backgroundColor
+  ) {
+
+    document.documentElement
+      .style.setProperty(
+        "--bg",
+        settings.backgroundColor
+      );
+
+  }
+
 }
 
+
+function gbSetTheme(
+  theme
+) {
+
+  const settings =
+    gbGetSettings();
+
+
+  settings.theme =
+    theme;
+
+
+  gbSaveSettings(
+    settings
+  );
+
+}
+
+
 /* =========================================================
-   Elements
+   PROJECT TYPES
+   ========================================================= */
+
+function gbProjectTypeLabel(
+  type
+) {
+
+  const labels = {
+
+    website:
+      "Website",
+
+    app:
+      "App",
+
+    game2d:
+      "Game 2D",
+
+    game3d:
+      "Game 3D"
+
+  };
+
+
+  return (
+    labels[type] ||
+    "Project"
+  );
+
+}
+
+
+function gbProjectTypeIcon(
+  type
+) {
+
+  const icons = {
+
+    website:
+      "🌐",
+
+    app:
+      "📱",
+
+    game2d:
+      "🎮",
+
+    game3d:
+      "🧊"
+
+  };
+
+
+  return (
+    icons[type] ||
+    "📦"
+  );
+
+}
+
+
+/* =========================================================
+   URL / NAVIGATION
+   ========================================================= */
+
+function gbParam(
+  name
+) {
+
+  try {
+
+    return new URLSearchParams(
+      location.search
+    ).get(name);
+
+  } catch (error) {
+
+    return null;
+
+  }
+
+}
+
+
+function gbGo(
+  url
+) {
+
+  window.location.href =
+    url;
+
+}
+
+
+function gbBuilder(
+  projectId
+) {
+
+  if (projectId) {
+
+    return (
+      "builder.html?project=" +
+      encodeURIComponent(
+        projectId
+      )
+    );
+
+  }
+
+
+  return "builder.html";
+
+}
+
+
+function gbPreview(
+  projectId
+) {
+
+  if (projectId) {
+
+    return (
+      "preview.html?project=" +
+      encodeURIComponent(
+        projectId
+      )
+    );
+
+  }
+
+
+  return "preview.html";
+
+}
+
+
+function gbPublish(
+  projectId
+) {
+
+  if (projectId) {
+
+    return (
+      "publish.html?project=" +
+      encodeURIComponent(
+        projectId
+      )
+    );
+
+  }
+
+
+  return "publish.html";
+
+}
+
+
+/* =========================================================
+   ELEMENT CREATOR
    ========================================================= */
 
 function gbCreateElement(
   type,
   data = {}
 ) {
-  const base = {
-    id: gbId(type),
-    type,
-    x: data.x || 0,
-    y: data.y || 0,
-    width: data.width || "auto",
-    height: data.height || "auto"
-  };
 
   const defaults = {
+
     text: {
-      text: "متن جدید",
-      fontSize: 20,
-      color: "#111111"
+
+      text:
+        "متن جدید",
+
+      align:
+        "center",
+
+      size:
+        22,
+
+      color:
+        "#111111"
+
     },
 
     button: {
-      text: "دکمه",
-      color: "#7c5cff",
-      textColor: "#ffffff"
+
+      text:
+        "دکمه",
+
+      color:
+        "#7c5cff",
+
+      textColor:
+        "#ffffff"
+
     },
 
     card: {
-      title: "کارت جدید",
+
+      title:
+        "عنوان کارت",
+
       description:
-        "توضیحات کارت خود را اینجا بنویسید."
+        "توضیحات کارت"
+
     },
 
     image: {
-      src: "",
-      alt: "تصویر"
+
+      src:
+        "",
+
+      alt:
+        "تصویر"
+
     },
 
     input: {
+
       placeholder:
-        "متن خود را وارد کنید..."
+        "متن خود را وارد کنید"
+
     },
 
     section: {
-      background: "#f0f2f7"
+
+      title:
+        "بخش جدید",
+
+      background:
+        "#f5f5f5"
+
     }
+
   };
+
 
   return {
-    ...base,
-    ...(defaults[type] || {}),
+
+    id:
+      gbId("element"),
+
+    type,
+
+    ...(
+      defaults[type] ||
+      {}
+    ),
+
     ...data
+
   };
+
 }
 
+
 /* =========================================================
-   Media
+   MEDIA
    ========================================================= */
 
 function gbGetMedia() {
-  return gbGet(
-    GB_KEYS.media,
-    []
-  );
+
+  const media =
+    gbGet(
+      GB_KEYS.media,
+      []
+    );
+
+
+  return Array.isArray(media)
+    ? media
+    : [];
+
 }
 
-function gbSaveMedia(media) {
+
+function gbSaveMedia(
+  media
+) {
+
   return gbSet(
     GB_KEYS.media,
     media
   );
+
 }
 
-function gbAddMedia(item) {
-  const media =
+
+function gbAddMedia(
+  media
+) {
+
+  const list =
     gbGetMedia();
 
-  media.unshift(item);
 
-  gbSaveMedia(media);
+  const item = {
+
+    id:
+      media.id ||
+      gbId("media"),
+
+    name:
+      media.name ||
+      "فایل",
+
+    type:
+      media.type ||
+      "other",
+
+    size:
+      Number(
+        media.size || 0
+      ),
+
+    data:
+      media.data ||
+      null,
+
+    url:
+      media.url ||
+      null,
+
+    createdAt:
+      media.createdAt ||
+      new Date().toISOString()
+
+  };
+
+
+  list.unshift(
+    item
+  );
+
+
+  gbSaveMedia(
+    list
+  );
+
 
   return item;
+
 }
 
-function gbDeleteMedia(id) {
+
+function gbDeleteMedia(
+  id
+) {
+
   const media =
     gbGetMedia();
+
 
   const filtered =
     media.filter(
@@ -690,218 +1122,486 @@ function gbDeleteMedia(id) {
         String(id)
     );
 
-  gbSaveMedia(filtered);
+
+  gbSaveMedia(
+    filtered
+  );
+
 
   return true;
+
 }
 
+
+function gbSetSelectedMedia(
+  media
+) {
+
+  return gbSet(
+    GB_KEYS.selectedMedia,
+    media
+  );
+
+}
+
+
+function gbGetSelectedMedia() {
+
+  return gbGet(
+    GB_KEYS.selectedMedia,
+    null
+  );
+
+}
+
+
 /* =========================================================
-   File Helpers
+   FILE HELPERS
    ========================================================= */
 
-function gbFileToDataURL(file) {
+function gbFileToDataURL(
+  file
+) {
+
   return new Promise(
-    (resolve, reject) => {
+    (
+      resolve,
+      reject
+    ) => {
+
       const reader =
         new FileReader();
 
-      reader.onload = () =>
-        resolve(reader.result);
 
-      reader.onerror = reject;
+      reader.onload =
+        () =>
+          resolve(
+            reader.result
+          );
 
-      reader.readAsDataURL(file);
+
+      reader.onerror =
+        reject;
+
+
+      reader.readAsDataURL(
+        file
+      );
+
     }
   );
+
 }
 
-function gbFormatBytes(bytes) {
-  if (!bytes) {
-    return "0 B";
+
+function gbFormatBytes(
+  bytes
+) {
+
+  bytes =
+    Number(bytes) || 0;
+
+
+  if (
+    bytes < 1024
+  ) {
+
+    return (
+      bytes +
+      " B"
+    );
+
   }
 
-  const units = [
-    "B",
-    "KB",
-    "MB",
-    "GB"
-  ];
 
-  const index = Math.floor(
-    Math.log(bytes) /
-      Math.log(1024)
-  );
+  if (
+    bytes < 1024 * 1024
+  ) {
+
+    return (
+      (bytes / 1024)
+        .toFixed(1) +
+      " KB"
+    );
+
+  }
+
+
+  if (
+    bytes <
+    1024 * 1024 * 1024
+  ) {
+
+    return (
+      (bytes /
+        (1024 * 1024)
+      ).toFixed(1) +
+      " MB"
+    );
+
+  }
+
 
   return (
-    Math.round(
+    (
       bytes /
-        Math.pow(
-          1024,
-          index
-        ) *
-        100
-    ) / 100
-  ) +
-    " " +
-    units[index]
+      (1024 * 1024 * 1024)
+    ).toFixed(1) +
+    " GB"
+  );
+
 }
 
+
 /* =========================================================
-   Project Link
+   PROJECT PREVIEW URL
    ========================================================= */
 
-function gbProjectPreviewUrl(id) {
+function gbProjectPreviewURL(
+  project
+) {
+
+  if (!project) {
+    return "";
+  }
+
+
   const base =
-    window.location.href
+    location.href
       .split("/")
-      .slice(0, -1)
-      .join("/");
+      .slice(
+        0,
+        -1
+      )
+      .join("/") +
+    "/";
+
 
   return (
     base +
-    "/preview.html?project=" +
-    encodeURIComponent(id)
+    "preview.html?project=" +
+    encodeURIComponent(
+      project.id
+    )
   );
+
 }
+
 
 /* =========================================================
-   Publishing State
+   PUBLISHING
    ========================================================= */
 
-function gbSetPublished(
-  projectId,
-  state = true
-) {
-  gbSet(
-    GB_KEYS.published +
-      projectId,
-    {
-      published: state,
-      date:
-        new Date().toISOString()
-    }
+function gbGetPublished() {
+
+  return gbGet(
+    GB_KEYS.published,
+    {}
   );
+
 }
 
-function gbIsPublished(projectId) {
-  const data =
-    gbGet(
-      GB_KEYS.published +
-        projectId,
-      null
-    );
+
+function gbPublishProject(
+  id
+) {
+
+  const project =
+    gbFindProject(id);
+
+
+  if (!project) {
+    return null;
+  }
+
+
+  const published =
+    gbGetPublished();
+
+
+  published[id] = {
+
+    published:
+      true,
+
+    publishedAt:
+      new Date().toISOString(),
+
+    url:
+      gbProjectPreviewURL(
+        project
+      )
+
+  };
+
+
+  gbSet(
+    GB_KEYS.published,
+    published
+  );
+
+
+  return published[id];
+
+}
+
+
+function gbIsPublished(
+  id
+) {
+
+  const published =
+    gbGetPublished();
+
 
   return !!(
-    data &&
-    data.published
+    published[id] &&
+    published[id].published
   );
+
 }
 
-/* =========================================================
-   Navigation
-   ========================================================= */
-
-function gbSetupNavigation() {
-  const current =
-    location.pathname
-      .split("/")
-      .pop();
-
-  document
-    .querySelectorAll(
-      "[data-page]"
-    )
-    .forEach(link => {
-      const page =
-        link.getAttribute(
-          "data-page"
-        );
-
-      if (
-        page &&
-        current === page
-      ) {
-        link.classList.add(
-          "active"
-        );
-      }
-    });
-}
 
 /* =========================================================
-   Auto Save
+   TOAST
    ========================================================= */
 
-let gbAutoSaveTimer = null;
-
-function gbEnableAutoSave(
-  callback,
-  delay = 1000
+function gbToast(
+  message,
+  type = "info",
+  duration = 2800
 ) {
-  const settings =
-    gbGetSettings();
+
+  let container =
+    document.getElementById(
+      "gbToastContainer"
+    );
+
+
+  if (!container) {
+
+    container =
+      document.createElement(
+        "div"
+      );
+
+    container.id =
+      "gbToastContainer";
+
+    document.body.appendChild(
+      container
+    );
+
+  }
+
+
+  const toast =
+    document.createElement(
+      "div"
+    );
+
+
+  toast.className =
+    "gb-toast " +
+    type;
+
+
+  toast.textContent =
+    message;
+
+
+  container.appendChild(
+    toast
+  );
+
+
+  setTimeout(
+    () => {
+
+      toast.style.opacity =
+        "0";
+
+      toast.style.transform =
+        "translateY(8px)";
+
+      toast.style.transition =
+        ".2s";
+
+
+      setTimeout(
+        () =>
+          toast.remove(),
+        220
+      );
+
+    },
+    duration
+  );
+
+}
+
+
+/* =========================================================
+   CONFIRM
+   ========================================================= */
+
+function gbConfirm(
+  message,
+  callback
+) {
+
+  const result =
+    window.confirm(
+      message
+    );
+
 
   if (
-    settings.autosave === false
+    result &&
+    typeof callback ===
+    "function"
   ) {
-    return;
+
+    callback();
+
   }
 
-  clearTimeout(
-    gbAutoSaveTimer
-  );
 
-  gbAutoSaveTimer =
-    setTimeout(() => {
-      try {
-        callback();
-      } catch (error) {
-        console.warn(
-          "Auto save error:",
-          error
-        );
-      }
-    }, delay);
+  return result;
+
 }
 
+
 /* =========================================================
-   Search Helper
+   CLIPBOARD
    ========================================================= */
 
-function gbSearchItems(
-  items,
-  query,
-  fields = []
+async function gbCopy(
+  text
 ) {
-  const q =
-    String(query || "")
-      .trim()
-      .toLowerCase();
 
-  if (!q) {
-    return items;
+  try {
+
+    if (
+      navigator.clipboard &&
+      navigator.clipboard.writeText
+    ) {
+
+      await navigator.clipboard.writeText(
+        String(text)
+      );
+
+    } else {
+
+      const input =
+        document.createElement(
+          "textarea"
+        );
+
+      input.value =
+        String(text);
+
+      input.style.position =
+        "fixed";
+
+      input.style.opacity =
+        "0";
+
+      document.body.appendChild(
+        input
+      );
+
+      input.select();
+
+      document.execCommand(
+        "copy"
+      );
+
+      input.remove();
+
+    }
+
+
+    gbToast(
+      "کپی شد.",
+      "success"
+    );
+
+
+    return true;
+
+  } catch (error) {
+
+    gbToast(
+      "کپی انجام نشد.",
+      "error"
+    );
+
+
+    return false;
+
   }
 
-  return items.filter(item =>
-    fields.some(field => {
-      const value =
-        item[field];
-
-      return String(
-        value || ""
-      )
-        .toLowerCase()
-        .includes(q);
-    })
-  );
 }
 
+
 /* =========================================================
-   Escape HTML
+   DATE
    ========================================================= */
 
-function gbEscapeHTML(value) {
-  return String(value ?? "")
+function gbFormatDate(
+  date
+) {
+
+  if (!date) {
+    return "—";
+  }
+
+
+  try {
+
+    return new Intl.DateTimeFormat(
+      "fa-IR",
+      {
+        year:
+          "numeric",
+
+        month:
+          "short",
+
+        day:
+          "numeric",
+
+        hour:
+          "2-digit",
+
+        minute:
+          "2-digit"
+      }
+    ).format(
+      new Date(date)
+    );
+
+  } catch (error) {
+
+    return String(date);
+
+  }
+
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+   ========================================================= */
+
+function gbEscapeHTML(
+  value
+) {
+
+  return String(
+    value ?? ""
+  )
     .replace(
       /&/g,
       "&amp;"
@@ -922,18 +1622,87 @@ function gbEscapeHTML(value) {
       /'/g,
       "&#039;"
     );
+
 }
 
+
 /* =========================================================
-   Statistics
+   SEARCH
+   ========================================================= */
+
+function gbSearch(
+  items,
+  query,
+  fields = []
+) {
+
+  if (!Array.isArray(items)) {
+    return [];
+  }
+
+
+  query =
+    String(
+      query || ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  if (!query) {
+    return items;
+  }
+
+
+  return items.filter(
+    item => {
+
+      if (
+        !fields.length
+      ) {
+
+        return JSON.stringify(
+          item
+        )
+          .toLowerCase()
+          .includes(
+            query
+          );
+
+      }
+
+
+      return fields.some(
+        field =>
+          String(
+            item[field] ?? ""
+          )
+            .toLowerCase()
+            .includes(
+              query
+            )
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   STATS
    ========================================================= */
 
 function gbGetStats() {
+
   const projects =
     gbGetProjects();
 
+
   return {
-    total: projects.length,
+
+    total:
+      projects.length,
 
     websites:
       projects.filter(
@@ -945,151 +1714,608 @@ function gbGetStats() {
     apps:
       projects.filter(
         p =>
-          p.type === "app"
+          p.type ===
+          "app"
       ).length,
 
     games:
       projects.filter(
         p =>
-          p.type === "game2d" ||
-          p.type === "game3d"
+          p.type ===
+          "game2d" ||
+          p.type ===
+          "game3d"
+      ).length,
+
+    game2d:
+      projects.filter(
+        p =>
+          p.type ===
+          "game2d"
+      ).length,
+
+    game3d:
+      projects.filter(
+        p =>
+          p.type ===
+          "game3d"
       ).length
+
   };
+
 }
 
+
 /* =========================================================
-   Reset
+   RESET
    ========================================================= */
 
-function gbResetAllData() {
-  Object.keys(
-    localStorage
-  ).forEach(key => {
-    if (
-      key.startsWith(
-        "ghost_builder_"
-      )
-    ) {
-      localStorage.removeItem(
-        key
-      );
-    }
-  });
+function gbResetAll() {
 
-  gbToast(
-    "اطلاعات Ghost Builder پاک شد.",
-    "success"
+  Object.values(
+    GB_KEYS
+  ).forEach(
+    key =>
+      gbRemove(key)
   );
+
+
+  return true;
+
 }
 
+
 /* =========================================================
-   Keyboard Shortcuts
+   AUTO SAVE
+   ========================================================= */
+
+function gbEnableAutoSave(
+  callback,
+  delay = 700
+) {
+
+  let timer =
+    null;
+
+
+  return function () {
+
+    clearTimeout(
+      timer
+    );
+
+
+    timer =
+      setTimeout(
+        () => {
+
+          if (
+            typeof callback ===
+            "function"
+          ) {
+
+            callback();
+
+          }
+
+        },
+        delay
+      );
+
+  };
+
+}
+
+
+/* =========================================================
+   NAV ACTIVE
+   ========================================================= */
+
+function gbSetActiveNav() {
+
+  const page =
+    location.pathname
+      .split("/")
+      .pop() ||
+    "index.html";
+
+
+  document
+    .querySelectorAll(
+      "[data-nav]"
+    )
+    .forEach(
+      link => {
+
+        const target =
+          link.getAttribute(
+            "data-nav"
+          );
+
+
+        link.classList.toggle(
+          "active",
+          target ===
+          page
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
    ========================================================= */
 
 function gbKeyboardShortcuts() {
+
   document.addEventListener(
     "keydown",
     event => {
+
       if (
-        (event.ctrlKey ||
-          event.metaKey) &&
+        (
+          event.ctrlKey ||
+          event.metaKey
+        ) &&
         event.key.toLowerCase() ===
-          "s"
+        "s"
       ) {
+
         event.preventDefault();
 
-        document
-          .querySelector(
-            "[data-save-project]"
-          )
-          ?.click();
 
-        gbToast(
-          "پروژه ذخیره شد.",
-          "success"
-        );
+        const button =
+          document.querySelector(
+            '[data-action="save"]'
+          );
+
+
+        if (button) {
+
+          button.click();
+
+        } else {
+
+          gbToast(
+            "تغییرات ذخیره شدند.",
+            "success"
+          );
+
+        }
+
       }
+
     }
   );
+
 }
 
+
 /* =========================================================
-   Global Startup
+   INITIAL THEME
+   ========================================================= */
+
+function gbInitTheme() {
+
+  const settings =
+    gbGetSettings();
+
+
+  gbApplyTheme(
+    settings.theme
+  );
+
+}
+
+
+/* =========================================================
+   SAMPLE DATA
+   ========================================================= */
+
+function gbEnsureDemoProject() {
+
+  const projects =
+    gbGetProjects();
+
+
+  if (
+    projects.length > 0
+  ) {
+
+    return;
+
+  }
+
+
+  const demo =
+    gbCreateProject({
+
+      name:
+        "Ghost Demo",
+
+      type:
+        "website",
+
+      title:
+        "Ghost Builder",
+
+      description:
+        "پروژه نمونه Ghost Builder",
+
+      button:
+        "شروع کنید",
+
+      primary:
+        "#7c5cff",
+
+      background:
+        "#ffffff",
+
+      elements: [
+
+        gbCreateElement(
+          "text",
+          {
+            text:
+              "به Ghost Builder خوش آمدید",
+
+            size:
+              25
+          }
+        ),
+
+        gbCreateElement(
+          "button",
+          {
+            text:
+              "شروع ساخت"
+          }
+        ),
+
+        gbCreateElement(
+          "card",
+          {
+            title:
+              "ساخت آسان",
+
+            description:
+              "سایت، اپلیکیشن و بازی خود را بسازید."
+          }
+        )
+
+      ]
+
+    });
+
+
+  gbSetCurrentProject(
+    demo.id
+  );
+
+}
+
+
+/* =========================================================
+   CURRENT PROJECT HELPER
+   ========================================================= */
+
+function gbRequireCurrentProject() {
+
+  const project =
+    gbGetCurrentProject();
+
+
+  if (!project) {
+
+    gbToast(
+      "ابتدا یک پروژه انتخاب کنید.",
+      "warning"
+    );
+
+
+    return null;
+
+  }
+
+
+  return project;
+
+}
+
+
+/* =========================================================
+   SAFE JSON EXPORT
+   ========================================================= */
+
+function gbExportProject(
+  id
+) {
+
+  const project =
+    gbFindProject(id);
+
+
+  if (!project) {
+
+    gbToast(
+      "پروژه پیدا نشد.",
+      "error"
+    );
+
+    return null;
+
+  }
+
+
+  const blob =
+    new Blob(
+      [
+        JSON.stringify(
+          project,
+          null,
+          2
+        )
+      ],
+      {
+        type:
+          "application/json"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+
+  const a =
+    document.createElement(
+      "a"
+    );
+
+
+  a.href =
+    url;
+
+  a.download =
+    (
+      project.name ||
+      "ghost-project"
+    )
+      .replace(
+        /[^a-zA-Z0-9\u0600-\u06FF_-]/g,
+        "_"
+      ) +
+    ".json";
+
+
+  document.body.appendChild(
+    a
+  );
+
+  a.click();
+
+  a.remove();
+
+
+  URL.revokeObjectURL(
+    url
+  );
+
+
+  return true;
+
+}
+
+
+/* =========================================================
+   IMPORT PROJECT
+   ========================================================= */
+
+function gbImportProject(
+  file
+) {
+
+  return new Promise(
+    (
+      resolve,
+      reject
+    ) => {
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        event => {
+
+          try {
+
+            const data =
+              JSON.parse(
+                event.target.result
+              );
+
+
+            data.id =
+              gbId("project");
+
+
+            data.createdAt =
+              new Date().toISOString();
+
+
+            data.updatedAt =
+              new Date().toISOString();
+
+
+            const projects =
+              gbGetProjects();
+
+
+            projects.unshift(
+              data
+            );
+
+
+            gbSaveProjects(
+              projects
+            );
+
+
+            gbSetCurrentProject(
+              data.id
+            );
+
+
+            gbToast(
+              "پروژه وارد شد.",
+              "success"
+            );
+
+
+            resolve(
+              data
+            );
+
+          } catch (error) {
+
+            gbToast(
+              "فایل پروژه معتبر نیست.",
+              "error"
+            );
+
+
+            reject(
+              error
+            );
+
+          }
+
+        };
+
+
+      reader.onerror =
+        reject;
+
+
+      reader.readAsText(
+        file
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   GLOBAL API
+   ========================================================= */
+
+window.GhostBuilder = {
+
+  keys:
+    GB_KEYS,
+
+  get:
+    gbGet,
+
+  set:
+    gbSet,
+
+  remove:
+    gbRemove,
+
+  id:
+    gbId,
+
+  getProjects:
+    gbGetProjects,
+
+  createProject:
+    gbCreateProject,
+
+  updateProject:
+    gbUpdateProject,
+
+  deleteProject:
+    gbDeleteProject,
+
+  duplicateProject:
+    gbDuplicateProject,
+
+  findProject:
+    gbFindProject,
+
+  getCurrentProject:
+    gbGetCurrentProject,
+
+  setCurrentProject:
+    gbSetCurrentProject,
+
+  getSettings:
+    gbGetSettings,
+
+  saveSettings:
+    gbSaveSettings,
+
+  createElement:
+    gbCreateElement,
+
+  getMedia:
+    gbGetMedia,
+
+  addMedia:
+    gbAddMedia,
+
+  deleteMedia:
+    gbDeleteMedia,
+
+  getStats:
+    gbGetStats,
+
+  preview:
+    gbPreview,
+
+  publish:
+    gbPublish,
+
+  toast:
+    gbToast,
+
+  copy:
+    gbCopy,
+
+  formatDate:
+    gbFormatDate,
+
+  exportProject:
+    gbExportProject,
+
+  importProject:
+    gbImportProject
+
+};
+
+
+/* =========================================================
+   DOM READY
    ========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
-    gbApplyTheme();
-    gbSetupNavigation();
+
+    gbInitTheme();
+
+    gbSetActiveNav();
+
     gbKeyboardShortcuts();
 
-    window.GhostBuilder = {
-      getProjects:
-        gbGetProjects,
-
-      getCurrentProject:
-        gbGetCurrentProject,
-
-      findProject:
-        gbFindProject,
-
-      createProject:
-        gbCreateProject,
-
-      updateProject:
-        gbUpdateProject,
-
-      deleteProject:
-        gbDeleteProject,
-
-      duplicateProject:
-        gbDuplicateProject,
-
-      createElement:
-        gbCreateElement,
-
-      getMedia:
-        gbGetMedia,
-
-      addMedia:
-        gbAddMedia,
-
-      deleteMedia:
-        gbDeleteMedia,
-
-      getSettings:
-        gbGetSettings,
-
-      saveSettings:
-        gbSaveSettings,
-
-      setTheme:
-        gbSetTheme,
-
-      toast:
-        gbToast,
-
-      copy:
-        gbCopy,
-
-      preview:
-        gbPreview,
-
-      builder:
-        gbBuilder,
-
-      publish:
-        gbPublish,
-
-      projectUrl:
-        gbProjectPreviewUrl,
-
-      isPublished:
-        gbIsPublished,
-
-      setPublished:
-        gbSetPublished
-    };
   }
 );
