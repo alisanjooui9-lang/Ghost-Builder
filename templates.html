@@ -1,1033 +1,1594 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Ghost Builder — قالب‌ها</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
+  <title>Ghost Builder — قالب‌ها</title>
 
-:root{
- --bg:#080b12;
- --panel:#101521;
- --panel2:#151b29;
- --border:#252d3d;
- --text:#f4f7ff;
- --muted:#8e99ad;
- --primary:#7c5cff;
- --cyan:#22d3ee;
- --green:#22c55e;
-}
-
-body{
- font-family:Tahoma,Arial,sans-serif;
- background:var(--bg);
- color:var(--text);
- min-height:100vh;
-}
-
-button,input,select{font-family:inherit}
-button{cursor:pointer}
-
-.topbar{
- height:64px;
- background:#0d111b;
- border-bottom:1px solid var(--border);
- display:flex;
- align-items:center;
- justify-content:space-between;
- padding:0 20px;
- position:sticky;
- top:0;
- z-index:20;
-}
-
-.brand{
- display:flex;
- align-items:center;
- gap:10px;
- font-weight:900;
-}
-
-.logo{
- width:38px;
- height:38px;
- border-radius:11px;
- background:linear-gradient(135deg,#7c5cff,#22d3ee);
- display:flex;
- align-items:center;
- justify-content:center;
- font-weight:900;
-}
-
-.top-actions{
- display:flex;
- gap:8px;
-}
-
-.btn{
- border:1px solid var(--border);
- background:var(--panel);
- color:white;
- padding:10px 14px;
- border-radius:9px;
-}
-
-.btn.primary{
- background:var(--primary);
- border-color:var(--primary);
-}
-
-.container{
- max-width:1350px;
- margin:auto;
- padding:28px 20px 60px;
-}
-
-.hero{
- display:flex;
- justify-content:space-between;
- align-items:flex-end;
- gap:20px;
- margin-bottom:25px;
-}
-
-.hero h1{
- font-size:28px;
- margin-bottom:9px;
-}
-
-.hero p{
- color:var(--muted);
- font-size:13px;
- line-height:1.8;
-}
-
-.search{
- width:330px;
- background:var(--panel);
- border:1px solid var(--border);
- color:white;
- padding:13px;
- border-radius:10px;
- outline:none;
-}
-
-.search:focus{
- border-color:var(--primary);
-}
-
-.filters{
- display:flex;
- gap:8px;
- overflow-x:auto;
- padding-bottom:8px;
- margin-bottom:25px;
-}
-
-.filter{
- white-space:nowrap;
- border:1px solid var(--border);
- background:var(--panel);
- color:#b9c2d2;
- padding:10px 15px;
- border-radius:9px;
-}
-
-.filter.active{
- background:var(--primary);
- border-color:var(--primary);
- color:white;
-}
-
-.section-title{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin-bottom:14px;
-}
-
-.section-title h2{
- font-size:17px;
-}
-
-.section-title span{
- color:var(--muted);
- font-size:11px;
-}
-
-.grid{
- display:grid;
- grid-template-columns:repeat(4,1fr);
- gap:15px;
-}
-
-.card{
- background:var(--panel);
- border:1px solid var(--border);
- border-radius:15px;
- overflow:hidden;
- transition:.2s;
-}
-
-.card:hover{
- transform:translateY(-4px);
- border-color:#46516a;
-}
-
-.preview{
- height:165px;
- position:relative;
- display:flex;
- align-items:center;
- justify-content:center;
- overflow:hidden;
-}
-
-.preview .emoji{
- font-size:52px;
- position:relative;
- z-index:2;
-}
-
-.preview::after{
- content:"";
- position:absolute;
- inset:0;
- background:linear-gradient(135deg,rgba(124,92,255,.35),transparent);
-}
-
-.web{background:linear-gradient(135deg,#111827,#312e81)}
-.shop{background:linear-gradient(135deg,#172554,#064e3b)}
-.academy{background:linear-gradient(135deg,#172554,#1e1b4b)}
-.ai{background:linear-gradient(135deg,#111827,#164e63)}
-.creator{background:linear-gradient(135deg,#3b0764,#172554)}
-.restaurant{background:linear-gradient(135deg,#431407,#3f1d0b)}
-.blog{background:linear-gradient(135deg,#1f2937,#111827)}
-.portfolio{background:linear-gradient(135deg,#0f172a,#334155)}
-.app{background:linear-gradient(135deg,#1e1b4b,#312e81)}
-.finance{background:linear-gradient(135deg,#052e16,#14532d)}
-.health{background:linear-gradient(135deg,#083344,#164e63)}
-.social{background:linear-gradient(135deg,#4a044e,#701a75)}
-.game2d{background:linear-gradient(135deg,#172554,#7c2d12)}
-.game3d{background:linear-gradient(135deg,#020617,#312e81)}
-.racing{background:linear-gradient(135deg,#450a0a,#171717)}
-.shooter{background:linear-gradient(135deg,#111827,#1e293b)}
-.survival{background:linear-gradient(135deg,#052e16,#172554)}
-.puzzle{background:linear-gradient(135deg,#3b0764,#172554)}
-.sports{background:linear-gradient(135deg,#172554,#064e3b)}
-
-.badge{
- position:absolute;
- top:10px;
- right:10px;
- z-index:3;
- background:rgba(0,0,0,.55);
- border:1px solid rgba(255,255,255,.12);
- color:white;
- padding:5px 8px;
- border-radius:6px;
- font-size:9px;
-}
-
-.info{
- padding:14px;
-}
-
-.name{
- font-weight:900;
- font-size:14px;
- margin-bottom:7px;
-}
-
-.description{
- color:var(--muted);
- font-size:10px;
- line-height:1.7;
- min-height:34px;
-}
-
-.tags{
- display:flex;
- gap:5px;
- flex-wrap:wrap;
- margin:11px 0;
-}
-
-.tag{
- background:#191f2c;
- color:#aeb8c9;
- border-radius:5px;
- padding:4px 6px;
- font-size:9px;
-}
-
-.actions{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:6px;
-}
-
-.actions button{
- border:1px solid var(--border);
- background:#171e2b;
- color:white;
- padding:8px;
- border-radius:7px;
- font-size:10px;
-}
-
-.actions .use{
- background:var(--primary);
- border-color:var(--primary);
-}
-
-.empty{
- text-align:center;
- border:1px dashed #30394c;
- padding:65px 20px;
- border-radius:15px;
- display:none;
-}
-
-.empty.show{display:block}
-
-.empty-icon{
- font-size:50px;
- margin-bottom:12px;
-}
-
-.toast{
- position:fixed;
- bottom:20px;
- left:50%;
- transform:translateX(-50%) translateY(20px);
- opacity:0;
- background:#171e2b;
- border:1px solid #303a4d;
- padding:11px 17px;
- border-radius:9px;
- transition:.25s;
- z-index:100;
- font-size:12px;
- pointer-events:none;
-}
-
-.toast.show{
- opacity:1;
- transform:translateX(-50%) translateY(0);
-}
-
-@media(max-width:1050px){
- .grid{grid-template-columns:repeat(3,1fr)}
-}
-
-@media(max-width:750px){
- .grid{grid-template-columns:repeat(2,1fr)}
- .hero{flex-direction:column;align-items:stretch}
- .search{width:100%}
-}
-
-@media(max-width:500px){
- .grid{grid-template-columns:1fr}
- .container{padding:20px 12px}
- .topbar{padding:0 10px}
-}
-</style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="topbar">
+<div class="app">
 
- <div class="brand">
-  <div class="logo">G</div>
-  <span>Ghost Builder</span>
- </div>
+  <!-- ================= SIDEBAR ================= -->
 
- <div class="top-actions">
-  <button class="btn" onclick="goHome()">⌂ خانه</button>
-  <button class="btn primary" onclick="newProject()">＋ پروژه جدید</button>
- </div>
+  <aside class="sidebar">
 
-</header>
+    <div class="brand">
 
+      <div class="brand-logo">
+        G
+      </div>
 
-<main class="container">
+      <div>
+        <div class="brand-name">
+          Ghost Builder
+        </div>
 
- <section class="hero">
+        <div class="brand-subtitle">
+          ساخت بدون محدودیت
+        </div>
+      </div>
 
-  <div>
-   <h1>🎨 کتابخانه قالب‌ها</h1>
-   <p>
-    قالب آماده انتخاب کن، وارد Builder شو و همه‌چیز را شخصی‌سازی کن.
-   </p>
-  </div>
-
-  <input
-   class="search"
-   id="search"
-   placeholder="🔎 جستجوی قالب..."
-   oninput="render()"
-  >
-
- </section>
+    </div>
 
 
- <div class="filters">
+    <div class="nav-title">
+      اصلی
+    </div>
 
-  <button class="filter active" onclick="setFilter('all',this)">همه</button>
-  <button class="filter" onclick="setFilter('website',this)">🌐 وب‌سایت</button>
-  <button class="filter" onclick="setFilter('shop',this)">🛒 فروشگاهی</button>
-  <button class="filter" onclick="setFilter('academy',this)">🎓 آموزشی</button>
-  <button class="filter" onclick="setFilter('ai',this)">🤖 هوش مصنوعی</button>
-  <button class="filter" onclick="setFilter('app',this)">📱 اپلیکیشن</button>
-  <button class="filter" onclick="setFilter('game2d',this)">🎮 بازی 2D</button>
-  <button class="filter" onclick="setFilter('game3d',this)">🎮 بازی 3D</button>
-  <button class="filter" onclick="setFilter('racing',this)">🏎️ مسابقه‌ای</button>
-  <button class="filter" onclick="setFilter('shooter',this)">🔫 تیراندازی</button>
-  <button class="filter" onclick="setFilter('puzzle',this)">🧩 پازل</button>
+    <nav class="nav">
 
- </div>
+      <a href="index.html">
+        <span class="nav-icon">🏠</span>
+        <span>داشبورد</span>
+      </a>
 
+      <a href="projects.html">
+        <span class="nav-icon">📁</span>
+        <span>پروژه‌ها</span>
+      </a>
 
- <div class="section-title">
-  <h2>قالب‌های آماده</h2>
-  <span id="count"></span>
- </div>
+      <a href="templates.html" class="active">
+        <span class="nav-icon">🎨</span>
+        <span>قالب‌ها</span>
+      </a>
 
+      <a href="builder.html">
+        <span class="nav-icon">🛠️</span>
+        <span>سازنده</span>
+      </a>
 
- <section class="grid" id="grid"></section>
-
-
- <div class="empty" id="empty">
-
-  <div class="empty-icon">🔍</div>
-
-  <h2>قالبی پیدا نشد</h2>
-
-  <p style="color:var(--muted);margin-top:8px">
-   نام یا دسته‌بندی دیگری را امتحان کن.
-  </p>
-
- </div>
-
-</main>
+    </nav>
 
 
-<div class="toast" id="toast"></div>
+    <div class="nav-title">
+      مدیریت
+    </div>
 
+    <nav class="nav">
+
+      <a href="media.html">
+        <span class="nav-icon">🖼️</span>
+        <span>رسانه‌ها</span>
+      </a>
+
+      <a href="settings.html">
+        <span class="nav-icon">⚙️</span>
+        <span>تنظیمات</span>
+      </a>
+
+      <a href="help.html">
+        <span class="nav-icon">❓</span>
+        <span>راهنما</span>
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+  <!-- ================= MAIN ================= -->
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+
+        <div class="page-title">
+          قالب‌های آماده
+        </div>
+
+        <div class="page-subtitle">
+          یک قالب انتخاب کنید و پروژه خود را سریع شروع کنید.
+        </div>
+
+      </div>
+
+      <div class="topbar-right">
+
+        <button
+          class="btn"
+          onclick="window.location.href='projects.html'">
+          📁 پروژه‌های من
+        </button>
+
+        <button
+          class="btn btn-primary"
+          onclick="createBlankProject()">
+          ＋ پروژه خالی
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <div class="page-content">
+
+
+      <!-- ================= HERO ================= -->
+
+      <section class="templates-hero">
+
+        <div>
+
+          <span class="badge">
+            ✨ Ghost Templates
+          </span>
+
+          <h1>
+            با یک قالب شروع کن
+          </h1>
+
+          <p>
+            قالب‌های آماده برای وب‌سایت، اپلیکیشن و بازی.
+            همه قالب‌ها بعد از انتخاب کاملاً قابل شخصی‌سازی هستند.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= SEARCH ================= -->
+
+      <section class="card">
+
+        <div class="toolbar">
+
+          <div class="search-box">
+
+            <span>
+              🔍
+            </span>
+
+            <input
+              id="templateSearch"
+              type="search"
+              placeholder="جستجوی قالب..."
+              oninput="renderTemplates()">
+
+          </div>
+
+        </div>
+
+
+        <div class="filters">
+
+          <button
+            class="filter-btn active"
+            data-filter="all"
+            onclick="setCategory('all', this)">
+            همه
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="website"
+            onclick="setCategory('website', this)">
+            🌐 وب‌سایت
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="shop"
+            onclick="setCategory('shop', this)">
+            🛒 فروشگاهی
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="academy"
+            onclick="setCategory('academy', this)">
+            🎓 آموزشی
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="ai"
+            onclick="setCategory('ai', this)">
+            🤖 هوش مصنوعی
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="app"
+            onclick="setCategory('app', this)">
+            📱 اپلیکیشن
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="game2d"
+            onclick="setCategory('game2d', this)">
+            🎮 بازی 2D
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="game3d"
+            onclick="setCategory('game3d', this)">
+            🕹️ بازی 3D
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="racing"
+            onclick="setCategory('racing', this)">
+            🏎️ مسابقه‌ای
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="shooter"
+            onclick="setCategory('shooter', this)">
+            🔫 شوتر
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="puzzle"
+            onclick="setCategory('puzzle', this)">
+            🧩 پازل
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= TEMPLATE COUNT ================= -->
+
+      <div class="section-header">
+
+        <div>
+
+          <h2>
+            قالب‌ها
+          </h2>
+
+          <span
+            id="templateCount"
+            class="muted">
+            0 قالب
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- ================= TEMPLATES ================= -->
+
+      <section
+        id="templatesGrid"
+        class="templates-grid">
+      </section>
+
+
+      <!-- ================= EMPTY ================= -->
+
+      <section
+        id="emptyTemplates"
+        class="empty-state"
+        style="display:none">
+
+        <div class="empty-icon">
+          🔍
+        </div>
+
+        <h3>
+          قالبی پیدا نشد
+        </h3>
+
+        <p>
+          نام قالب یا دسته‌بندی دیگری را امتحان کنید.
+        </p>
+
+        <button
+          class="btn"
+          onclick="clearTemplateSearch()">
+          پاک کردن جستجو
+        </button>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<script src="app.js"></script>
 
 <script>
 
+"use strict";
+
+
+/* =====================================================
+   TEMPLATE DATA
+   ===================================================== */
+
 const templates = [
 
- /* ================= WEBSITE ================= */
+  /* ================= WEBSITE ================= */
 
- {
-  id:"cyber-neon",
-  name:"Cyber Neon",
-  type:"website",
-  category:"website",
-  icon:"💻",
-  className:"web",
-  description:"سایت مدرن گیمینگ با طراحی تیره و نئونی.",
-  tags:["Gaming","Neon","Dark"]
- },
+  {
+    id: "cyber-neon",
+    name: "Cyber Neon",
+    type: "website",
+    category: "website",
+    icon: "⚡",
+    className: "template-cyber",
+    description:
+      "وب‌سایت مدرن با ظاهر مشکی و نئونی.",
+    tags:
+      ["مدرن", "نئونی", "تکنولوژی"],
+    title:
+      "CYBER NEON",
+    button:
+      "شروع کنید",
+    primary:
+      "#7c5cff",
+    background:
+      "#09090f"
+  },
 
- {
-  id:"modern-shop",
-  name:"Modern Shop",
-  type:"website",
-  category:"shop",
-  icon:"🛍️",
-  className:"shop",
-  description:"فروشگاه اینترنتی مدرن با صفحه محصول.",
-  tags:["Shop","Store","Responsive"]
- },
 
- {
-  id:"academy",
-  name:"Learning Academy",
-  type:"website",
-  category:"academy",
-  icon:"🎓",
-  className:"academy",
-  description:"پلتفرم آموزشی برای دوره‌ها و درس‌ها.",
-  tags:["Education","Courses","Learn"]
- },
+  {
+    id: "modern-blog",
+    name: "Modern Blog",
+    type: "website",
+    category: "website",
+    icon: "📰",
+    className: "template-blog",
+    description:
+      "قالب تمیز و حرفه‌ای برای وبلاگ.",
+    tags:
+      ["وبلاگ", "مقاله", "محتوا"],
+    title:
+      "مجله مدرن",
+    button:
+      "مشاهده مطالب",
+    primary:
+      "#2563eb",
+    background:
+      "#f7f8fb"
+  },
 
- {
-  id:"ai-future",
-  name:"AI Future",
-  type:"website",
-  category:"ai",
-  icon:"🤖",
-  className:"ai",
-  description:"قالب آینده‌نگر برای پروژه‌های هوش مصنوعی.",
-  tags:["AI","Future","Tech"]
- },
 
- {
-  id:"creator",
-  name:"Creator Studio",
-  type:"website",
-  category:"website",
-  icon:"🎨",
-  className:"creator",
-  description:"سایت شخصی برای سازندگان محتوا.",
-  tags:["Creator","Portfolio","Social"]
- },
+  {
+    id: "pro-portfolio",
+    name: "Pro Portfolio",
+    type: "website",
+    category: "website",
+    icon: "💼",
+    className: "template-portfolio",
+    description:
+      "نمونه‌کار حرفه‌ای برای طراحان و توسعه‌دهندگان.",
+    tags:
+      ["نمونه‌کار", "شخصی", "پروفایل"],
+    title:
+      "نمونه‌کار حرفه‌ای",
+    button:
+      "مشاهده پروژه‌ها",
+    primary:
+      "#111827",
+    background:
+      "#ffffff"
+  },
 
- {
-  id:"restaurant",
-  name:"Restaurant",
-  type:"website",
-  category:"website",
-  icon:"🍔",
-  className:"restaurant",
-  description:"قالب حرفه‌ای رستوران و سفارش غذا.",
-  tags:["Food","Restaurant","Menu"]
- },
 
- {
-  id:"blog",
-  name:"Modern Blog",
-  type:"website",
-  category:"website",
-  icon:"📰",
-  className:"blog",
-  description:"وبلاگ مدرن برای اخبار و مقالات.",
-  tags:["Blog","News","Articles"]
- },
+  {
+    id: "restaurant",
+    name: "Restaurant",
+    type: "website",
+    category: "website",
+    icon: "🍔",
+    className: "template-food",
+    description:
+      "قالب مدرن رستوران و فست‌فود.",
+    tags:
+      ["رستوران", "غذا", "منو"],
+    title:
+      "رستوران مدرن",
+    button:
+      "مشاهده منو",
+    primary:
+      "#ef4444",
+    background:
+      "#fffaf5"
+  },
 
- {
-  id:"portfolio",
-  name:"Pro Portfolio",
-  type:"website",
-  category:"website",
-  icon:"💼",
-  className:"portfolio",
-  description:"نمونه‌کار حرفه‌ای برای پروژه‌ها و خدمات.",
-  tags:["Portfolio","Work","Pro"]
- },
 
- /* ================= APP ================= */
+  /* ================= SHOP ================= */
 
- {
-  id:"ai-app",
-  name:"AI Assistant App",
-  type:"app",
-  category:"app",
-  icon:"🧠",
-  className:"app",
-  description:"اپلیکیشن دستیار هوش مصنوعی.",
-  tags:["AI","App","Assistant"]
- },
+  {
+    id: "modern-shop",
+    name: "Modern Shop",
+    type: "website",
+    category: "shop",
+    icon: "🛒",
+    className: "template-shop",
+    description:
+      "فروشگاه آنلاین مدرن و واکنش‌گرا.",
+    tags:
+      ["فروشگاه", "محصول", "خرید"],
+    title:
+      "فروشگاه مدرن",
+    button:
+      "مشاهده محصولات",
+    primary:
+      "#10b981",
+    background:
+      "#f8fafc"
+  },
 
- {
-  id:"finance-app",
-  name:"Finance App",
-  type:"app",
-  category:"app",
-  icon:"💰",
-  className:"finance",
-  description:"اپلیکیشن مدیریت مالی و هزینه‌ها.",
-  tags:["Finance","Money","App"]
- },
 
- {
-  id:"health-app",
-  name:"Health App",
-  type:"app",
-  category:"app",
-  icon:"❤️",
-  className:"health",
-  description:"اپلیکیشن سلامت و برنامه روزانه.",
-  tags:["Health","Tracker","App"]
- },
+  /* ================= ACADEMY ================= */
 
- {
-  id:"social-app",
-  name:"Social App",
-  type:"app",
-  category:"app",
-  icon:"👥",
-  className:"social",
-  description:"ساختار اولیه یک اپلیکیشن اجتماعی.",
-  tags:["Social","Chat","Community"]
- },
+  {
+    id: "learning-academy",
+    name: "Learning Academy",
+    type: "website",
+    category: "academy",
+    icon: "🎓",
+    className: "template-academy",
+    description:
+      "پلتفرم آموزش آنلاین و دوره‌های آموزشی.",
+    tags:
+      ["آموزش", "دوره", "دانشگاه"],
+    title:
+      "آکادمی آنلاین",
+    button:
+      "شروع یادگیری",
+    primary:
+      "#6366f1",
+    background:
+      "#f5f7ff"
+  },
 
- /* ================= 2D ================= */
 
- {
-  id:"platformer",
-  name:"Shadow Platformer",
-  type:"game2d",
-  category:"game2d",
-  icon:"🕹️",
-  className:"game2d",
-  description:"بازی پلتفرمر دوبعدی با مراحل و سکه.",
-  tags:["2D","Platformer","Levels"]
- },
+  /* ================= AI ================= */
 
- {
-  id:"pixel-adventure",
-  name:"Pixel Adventure",
-  type:"game2d",
-  category:"game2d",
-  icon:"👾",
-  className:"game2d",
-  description:"ماجراجویی دوبعدی با دشمنان و مراحل.",
-  tags:["2D","Adventure","Enemies"]
- },
+  {
+    id: "ai-future",
+    name: "AI Future",
+    type: "website",
+    category: "ai",
+    icon: "🤖",
+    className: "template-ai",
+    description:
+      "صفحه مدرن برای سرویس‌های هوش مصنوعی.",
+    tags:
+      ["AI", "هوش مصنوعی", "تکنولوژی"],
+    title:
+      "آینده با هوش مصنوعی",
+    button:
+      "شروع کنید",
+    primary:
+      "#8b5cf6",
+    background:
+      "#080812"
+  },
 
- {
-  id:"mind-blocks",
-  name:"Mind Blocks",
-  type:"game2d",
-  category:"puzzle",
-  icon:"🧩",
-  className:"puzzle",
-  description:"بازی پازلی دوبعدی با مراحل متعدد.",
-  tags:["2D","Puzzle","Levels"]
- },
 
- /* ================= 3D ================= */
+  /* ================= CREATOR ================= */
 
- {
-  id:"velocity",
-  name:"Velocity Racing",
-  type:"game3d",
-  category:"racing",
-  icon:"🏎️",
-  className:"racing",
-  description:"بازی مسابقه‌ای سه‌بعدی با مسیر و ماشین.",
-  tags:["3D","Racing","Cars"]
- },
+  {
+    id: "creator-studio",
+    name: "Creator Studio",
+    type: "website",
+    category: "website",
+    icon: "🎬",
+    className: "template-creator",
+    description:
+      "صفحه حرفه‌ای برای تولیدکنندگان محتوا.",
+    tags:
+      ["کریتور", "ویدیو", "محتوا"],
+    title:
+      "Creator Studio",
+    button:
+      "مشاهده محتوا",
+    primary:
+      "#ec4899",
+    background:
+      "#111827"
+  },
 
- {
-  id:"galaxy-strike",
-  name:"Galaxy Strike",
-  type:"game3d",
-  category:"shooter",
-  icon:"🚀",
-  className:"game3d",
-  description:"شوتر فضایی سه‌بعدی با دشمنان و امتیاز.",
-  tags:["3D","Shooter","Space"]
- },
 
- {
-  id:"dark-survival",
-  name:"Dark Survival",
-  type:"game3d",
-  category:"game3d",
-  icon:"🧟",
-  className:"survival",
-  description:"بازی بقا با محیط بزرگ و سیستم سلامتی.",
-  tags:["3D","Survival","World"]
- },
+  /* ================= APP ================= */
 
- {
-  id:"football",
-  name:"Street Football",
-  type:"game3d",
-  category:"game3d",
-  icon:"⚽",
-  className:"sports",
-  description:"قالب اولیه بازی ورزشی سه‌بعدی.",
-  tags:["3D","Sports","Football"]
- },
+  {
+    id: "ai-assistant-app",
+    name: "AI Assistant",
+    type: "app",
+    category: "app",
+    icon: "🤖",
+    className: "template-app-ai",
+    description:
+      "رابط کاربری اپلیکیشن دستیار هوش مصنوعی.",
+    tags:
+      ["اپ", "AI", "دستیار"],
+    title:
+      "دستیار هوشمند",
+    button:
+      "شروع گفتگو",
+    primary:
+      "#7c3aed",
+    background:
+      "#0f1020"
+  },
 
- {
-  id:"space-adventure",
-  name:"Space Adventure",
-  type:"game3d",
-  category:"game3d",
-  icon:"🌌",
-  className:"game3d",
-  description:"ماجراجویی سه‌بعدی در محیط فضایی.",
-  tags:["3D","Adventure","Space"]
- },
 
- {
-  id:"battle-arena",
-  name:"Battle Arena",
-  type:"game3d",
-  category:"shooter",
-  icon:"🎯",
-  className:"shooter",
-  description:"محیط مبارزه سه‌بعدی با سیستم امتیاز.",
-  tags:["3D","Battle","Arena"]
- }
+  {
+    id: "finance-app",
+    name: "Finance App",
+    type: "app",
+    category: "app",
+    icon: "💳",
+    className: "template-app-finance",
+    description:
+      "رابط اپلیکیشن مدیریت مالی.",
+    tags:
+      ["اپ", "مالی", "حساب"],
+    title:
+      "مدیریت مالی",
+    button:
+      "شروع",
+    primary:
+      "#059669",
+    background:
+      "#f5f9f7"
+  },
+
+
+  {
+    id: "health-app",
+    name: "Health App",
+    type: "app",
+    category: "app",
+    icon: "❤️",
+    className: "template-app-health",
+    description:
+      "رابط اپلیکیشن سلامت و فعالیت روزانه.",
+    tags:
+      ["اپ", "سلامت", "فعالیت"],
+    title:
+      "سلامت من",
+    button:
+      "شروع فعالیت",
+    primary:
+      "#0ea5e9",
+    background:
+      "#f0f9ff"
+  },
+
+
+  {
+    id: "social-app",
+    name: "Social App",
+    type: "app",
+    category: "app",
+    icon: "💬",
+    className: "template-app-social",
+    description:
+      "رابط یک اپلیکیشن اجتماعی مدرن.",
+    tags:
+      ["اپ", "اجتماعی", "چت"],
+    title:
+      "شبکه اجتماعی",
+    button:
+      "ورود",
+    primary:
+      "#f43f5e",
+    background:
+      "#fff7f8"
+  },
+
+
+  /* ================= 2D GAMES ================= */
+
+  {
+    id: "shadow-platformer",
+    name: "Shadow Platformer",
+    type: "game2d",
+    category: "game2d",
+    icon: "🌑",
+    className: "template-platformer",
+    description:
+      "بازی پلتفرمر دوبعدی با فضای تاریک.",
+    tags:
+      ["2D", "پلتفرمر", "ماجراجویی"],
+    title:
+      "Shadow Platformer",
+    button:
+      "شروع بازی",
+    primary:
+      "#8b5cf6",
+    background:
+      "#11111a"
+  },
+
+
+  {
+    id: "pixel-adventure",
+    name: "Pixel Adventure",
+    type: "game2d",
+    category: "game2d",
+    icon: "👾",
+    className: "template-pixel",
+    description:
+      "بازی ماجراجویی دوبعدی با سبک پیکسلی.",
+    tags:
+      ["2D", "پیکسلی", "ماجراجویی"],
+    title:
+      "Pixel Adventure",
+    button:
+      "Play",
+    primary:
+      "#22c55e",
+    background:
+      "#172018"
+  },
+
+
+  {
+    id: "mind-blocks",
+    name: "Mind Blocks",
+    type: "game2d",
+    category: "puzzle",
+    icon: "🧩",
+    className: "template-puzzle",
+    description:
+      "بازی پازل و حل معما.",
+    tags:
+      ["2D", "پازل", "فکری"],
+    title:
+      "Mind Blocks",
+    button:
+      "شروع",
+    primary:
+      "#f59e0b",
+    background:
+      "#17130a"
+  },
+
+
+  /* ================= 3D GAMES ================= */
+
+  {
+    id: "velocity-racing",
+    name: "Velocity Racing",
+    type: "game3d",
+    category: "racing",
+    icon: "🏎️",
+    className: "template-racing",
+    description:
+      "قالب بازی مسابقه‌ای سه‌بعدی.",
+    tags:
+      ["3D", "مسابقه", "ماشین"],
+    title:
+      "Velocity Racing",
+    button:
+      "شروع مسابقه",
+    primary:
+      "#ef4444",
+    background:
+      "#08090d"
+  },
+
+
+  {
+    id: "galaxy-strike",
+    name: "Galaxy Strike",
+    type: "game3d",
+    category: "shooter",
+    icon: "🚀",
+    className: "template-space",
+    description:
+      "قالب بازی اکشن فضایی سه‌بعدی.",
+    tags:
+      ["3D", "شوتر", "فضا"],
+    title:
+      "Galaxy Strike",
+    button:
+      "شروع مأموریت",
+    primary:
+      "#3b82f6",
+    background:
+      "#050817"
+  },
+
+
+  {
+    id: "dark-survival",
+    name: "Dark Survival",
+    type: "game3d",
+    category: "game3d",
+    icon: "🛡️",
+    className: "template-survival",
+    description:
+      "قالب بازی بقا و ماجراجویی سه‌بعدی.",
+    tags:
+      ["3D", "بقا", "ماجراجویی"],
+    title:
+      "Dark Survival",
+    button:
+      "شروع بازی",
+    primary:
+      "#84cc16",
+    background:
+      "#0b1008"
+  },
+
+
+  {
+    id: "street-football",
+    name: "Street Football",
+    type: "game3d",
+    category: "game3d",
+    icon: "⚽",
+    className: "template-football",
+    description:
+      "قالب بازی فوتبال خیابانی.",
+    tags:
+      ["3D", "فوتبال", "ورزشی"],
+    title:
+      "Street Football",
+    button:
+      "بازی کن",
+    primary:
+      "#16a34a",
+    background:
+      "#07130b"
+  },
+
+
+  {
+    id: "space-adventure",
+    name: "Space Adventure",
+    type: "game3d",
+    category: "game3d",
+    icon: "🌌",
+    className: "template-space-adventure",
+    description:
+      "ماجراجویی سه‌بعدی در فضای خیالی.",
+    tags:
+      ["3D", "فضا", "ماجراجویی"],
+    title:
+      "Space Adventure",
+    button:
+      "شروع سفر",
+    primary:
+      "#6366f1",
+    background:
+      "#070718"
+  },
+
+
+  {
+    id: "battle-arena",
+    name: "Battle Arena",
+    type: "game3d",
+    category: "shooter",
+    icon: "⚔️",
+    className: "template-arena",
+    description:
+      "قالب بازی مبارزه‌ای سه‌بعدی.",
+    tags:
+      ["3D", "مبارزه", "Arena"],
+    title:
+      "Battle Arena",
+    button:
+      "ورود به میدان",
+    primary:
+      "#dc2626",
+    background:
+      "#120707"
+  }
 
 ];
 
 
-let currentFilter="all";
+/* =====================================================
+   STATE
+   ===================================================== */
+
+let currentCategory = "all";
 
 
-/* =========================
+/* =====================================================
+   CATEGORY
+   ===================================================== */
+
+function setCategory(
+  category,
+  button
+) {
+
+  currentCategory =
+    category;
+
+
+  document
+    .querySelectorAll(
+      ".filter-btn"
+    )
+    .forEach(
+      item => {
+
+        item.classList.remove(
+          "active"
+        );
+
+      }
+    );
+
+
+  if (button) {
+
+    button.classList.add(
+      "active"
+    );
+
+  }
+
+
+  renderTemplates();
+
+}
+
+
+/* =====================================================
    RENDER
-========================= */
+   ===================================================== */
 
-function render(){
+function renderTemplates() {
 
- const search =
-  document.getElementById("search")
-  .value
-  .trim()
-  .toLowerCase();
-
- const list =
-  templates.filter(item=>{
-
-   const filterOK =
-    currentFilter==="all" ||
-    item.category===currentFilter;
-
-   const searchOK =
-    !search ||
-    item.name.toLowerCase().includes(search) ||
-    item.description.toLowerCase().includes(search) ||
-    item.tags.join(" ").toLowerCase().includes(search);
-
-   return filterOK && searchOK;
-
-  });
+  const grid =
+    document.getElementById(
+      "templatesGrid"
+    );
 
 
- document.getElementById("count").textContent =
-  list.length+" قالب";
+  const empty =
+    document.getElementById(
+      "emptyTemplates"
+    );
 
 
- document.getElementById("grid").innerHTML =
-  list.map(createCard).join("");
+  const search =
+    document.getElementById(
+      "templateSearch"
+    )
+    .value
+    .trim()
+    .toLowerCase();
 
 
- document.getElementById("empty")
-  .classList.toggle("show",list.length===0);
+  const filtered =
+    templates.filter(
+      template => {
+
+        const categoryMatch =
+          currentCategory ===
+          "all" ||
+          template.category ===
+          currentCategory ||
+          (
+            currentCategory ===
+            "website" &&
+            template.type ===
+            "website"
+          );
+
+
+        const searchable =
+          (
+            template.name +
+            " " +
+            template.description +
+            " " +
+            template.tags.join(" ")
+          )
+          .toLowerCase();
+
+
+        const searchMatch =
+          !search ||
+          searchable.includes(
+            search
+          );
+
+
+        return (
+          categoryMatch &&
+          searchMatch
+        );
+
+      }
+    );
+
+
+  document.getElementById(
+    "templateCount"
+  ).textContent =
+    filtered.length +
+    " قالب";
+
+
+  grid.innerHTML = "";
+
+
+  if (
+    filtered.length ===
+    0
+  ) {
+
+    empty.style.display =
+      "block";
+
+    return;
+
+  }
+
+
+  empty.style.display =
+    "none";
+
+
+  filtered.forEach(
+    template => {
+
+      grid.appendChild(
+        createTemplateCard(
+          template
+        )
+      );
+
+    }
+  );
 
 }
 
 
-/* =========================
+/* =====================================================
    CARD
-========================= */
+   ===================================================== */
 
-function createCard(item){
+function createTemplateCard(
+  template
+) {
 
- return `
+  const card =
+    document.createElement(
+      "article"
+    );
 
- <article class="card">
 
-  <div class="preview ${item.className}">
+  card.className =
+    "template-card";
 
-   <span class="badge">
-    ${typeName(item.type)}
-   </span>
 
-   <span class="emoji">
-    ${item.icon}
-   </span>
+  card.innerHTML = `
 
-  </div>
+    <div
+      class="
+        template-preview
+        ${template.className || ""}
+      "
+      style="
+        --template-primary:
+        ${template.primary};
 
-  <div class="info">
+        --template-background:
+        ${template.background};
+      "
+    >
 
-   <div class="name">
-    ${item.name}
-   </div>
+      <div class="template-preview-top">
 
-   <div class="description">
-    ${item.description}
-   </div>
+        <span class="template-icon">
+          ${template.icon}
+        </span>
 
-   <div class="tags">
+        <span class="badge">
+          ${getTypeLabel(
+            template.type
+          )}
+        </span>
 
-    ${item.tags.map(tag=>`
-     <span class="tag">${tag}</span>
-    `).join("")}
+      </div>
 
-   </div>
 
-   <div class="actions">
+      <div class="template-preview-content">
 
-    <button onclick="previewTemplate('${item.id}')">
-     👁️ پیش‌نمایش
-    </button>
+        <div class="template-big-icon">
+          ${template.icon}
+        </div>
 
-    <button class="use" onclick="useTemplate('${item.id}')">
-     🚀 استفاده
-    </button>
+        <h3>
+          ${gbEscapeHTML(
+            template.title
+          )}
+        </h3>
 
-   </div>
+        <p>
+          ${gbEscapeHTML(
+            template.description
+          )}
+        </p>
 
-  </div>
+        <button
+          class="template-demo-button"
+          style="
+            background:
+            ${template.primary};
+          ">
+          ${gbEscapeHTML(
+            template.button
+          )}
+        </button>
 
- </article>
+      </div>
 
- `;
+
+      <div class="template-preview-glow"></div>
+
+    </div>
+
+
+    <div class="template-card-body">
+
+      <div class="template-card-title">
+
+        <div>
+
+          <h3>
+            ${gbEscapeHTML(
+              template.name
+            )}
+          </h3>
+
+          <span class="muted">
+            ${getTypeLabel(
+              template.type
+            )}
+          </span>
+
+        </div>
+
+        <span class="template-card-icon">
+          ${template.icon}
+        </span>
+
+      </div>
+
+
+      <p class="template-description">
+        ${gbEscapeHTML(
+          template.description
+        )}
+      </p>
+
+
+      <div class="template-tags">
+
+        ${
+          template.tags
+            .map(
+              tag =>
+                `<span>${gbEscapeHTML(
+                  tag
+                )}</span>`
+            )
+            .join("")
+        }
+
+      </div>
+
+
+      <div class="template-actions">
+
+        <button
+          class="btn btn-primary"
+          onclick="useTemplate('${template.id}')">
+          ✨ استفاده از قالب
+        </button>
+
+        <button
+          class="btn"
+          onclick="previewTemplate('${template.id}')">
+          👁️ مشاهده
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  return card;
 
 }
 
 
-/* =========================
-   TYPE NAME
-========================= */
+/* =====================================================
+   TYPE LABEL
+   ===================================================== */
 
-function typeName(type){
+function getTypeLabel(
+  type
+) {
 
- if(type==="website")return"وب‌سایت";
- if(type==="app")return"اپلیکیشن";
- if(type==="game2d")return"بازی 2D";
- if(type==="game3d")return"بازی 3D";
+  switch (
+    type
+  ) {
 
- return type;
+    case "website":
+      return "🌐 وب‌سایت";
 
-}
+    case "app":
+      return "📱 اپلیکیشن";
 
+    case "game2d":
+      return "🎮 بازی 2D";
 
-/* =========================
-   FILTER
-========================= */
+    case "game3d":
+      return "🕹️ بازی 3D";
 
-function setFilter(filter,button){
+    default:
+      return "پروژه";
 
- currentFilter=filter;
-
- document
-  .querySelectorAll(".filter")
-  .forEach(x=>x.classList.remove("active"));
-
- button.classList.add("active");
-
- render();
+  }
 
 }
 
 
-/* =========================
+/* =====================================================
    USE TEMPLATE
-========================= */
+   ===================================================== */
 
-function useTemplate(id){
+function useTemplate(
+  templateId
+) {
 
- const template =
-  templates.find(x=>x.id===id);
-
- if(!template)return;
-
-
- let type="website";
-
- if(template.type==="app"){
-  type="app";
- }
-
- if(template.type==="game2d"){
-  type="game2d";
- }
-
- if(template.type==="game3d"){
-  type="game3d";
- }
+  const template =
+    templates.find(
+      item =>
+        item.id ===
+        templateId
+    );
 
 
- const project={
+  if (!template) {
 
-  id:Date.now(),
+    gbToast(
+      "قالب پیدا نشد.",
+      "error"
+    );
 
-  name:template.name,
+    return;
 
-  type:type,
-
-  title:template.name,
-
-  description:template.description,
-
-  button:"شروع کنید",
-
-  background:"#ffffff",
-
-  primary:"#7c5cff",
-
-  radius:18,
-
-  width:
-   type==="website" ? 900 : 390,
-
-  height:
-   type==="website" ? 650 : 700,
-
-  quality:"High",
-
-  resolution:"1080p",
-
-  template:template.id,
-
-  elements:[]
-
- };
+  }
 
 
- let projects=[];
+  const project =
+    gbCreateProject({
 
- try{
-  projects=
-   JSON.parse(
-    localStorage.getItem("ghost_builder_projects")
-   ) || [];
- }catch(e){
-  projects=[];
- }
+      name:
+        template.name,
+
+      type:
+        template.type,
+
+      title:
+        template.title,
+
+      description:
+        template.description,
+
+      button:
+        template.button,
+
+      primary:
+        template.primary,
+
+      background:
+        template.background,
+
+      radius:
+        18,
+
+      width:
+        template.type ===
+        "website"
+          ? 1100
+          : 390,
+
+      height:
+        template.type ===
+        "website"
+          ? 700
+          : 700,
+
+      quality:
+        "High",
+
+      resolution:
+        "1080p",
+
+      elements:
+        createTemplateElements(
+          template
+        )
+
+    });
 
 
- projects.push(project);
+  gbSetCurrentProject(
+    project
+  );
 
 
- localStorage.setItem(
-  "ghost_builder_projects",
-  JSON.stringify(projects)
- );
+  gbToast(
+    "قالب آماده شد.",
+    "success"
+  );
 
 
- localStorage.setItem(
-  "ghost_builder_current_project",
-  JSON.stringify(project)
- );
+  setTimeout(
+    () => {
 
+      window.location.href =
+        "builder.html?project=" +
+        encodeURIComponent(
+          project.id
+        ) +
+        "&template=" +
+        encodeURIComponent(
+          template.id
+        );
 
- showToast("قالب انتخاب شد ✓");
-
-
- setTimeout(()=>{
-
-  location.href=
-   "builder.html?type="+
-   encodeURIComponent(type)+
-   "&template="+
-   encodeURIComponent(template.id);
-
- },500);
-
-}
-
-
-/* =========================
-   PREVIEW
-========================= */
-
-function previewTemplate(id){
-
- const template =
-  templates.find(x=>x.id===id);
-
- if(!template)return;
-
- localStorage.setItem(
-  "ghost_builder_preview_template",
-  JSON.stringify(template)
- );
-
- location.href=
-  "preview.html?template="+
-  encodeURIComponent(id);
+    },
+    300
+  );
 
 }
 
 
-/* =========================
-   NEW PROJECT
-========================= */
+/* =====================================================
+   TEMPLATE ELEMENTS
+   ===================================================== */
 
-function newProject(){
+function createTemplateElements(
+  template
+) {
 
- const project={
-
-  id:Date.now(),
-
-  name:"پروژه جدید",
-
-  type:"website",
-
-  title:"پروژه جدید",
-
-  description:
-   "پروژه خود را با Ghost Builder بسازید.",
-
-  button:"شروع کنید",
-
-  background:"#ffffff",
-
-  primary:"#7c5cff",
-
-  radius:18,
-
-  width:900,
-
-  height:650,
-
-  quality:"Medium",
-
-  resolution:"720p",
-
-  elements:[]
-
- };
+  const elements = [];
 
 
- localStorage.setItem(
-  "ghost_builder_current_project",
-  JSON.stringify(project)
- );
+  elements.push(
+    gbCreateElement(
+      "text",
+      {
+        text:
+          template.title,
+
+        fontSize:
+          template.type ===
+          "website"
+            ? 34
+            : 28,
+
+        color:
+          template.background ===
+          "#ffffff"
+            ? "#111111"
+            : "#ffffff"
+      }
+    )
+  );
 
 
- location.href=
-  "builder.html?type=website";
+  elements.push(
+    gbCreateElement(
+      "text",
+      {
+        text:
+          template.description,
+
+        fontSize:
+          15,
+
+        color:
+          template.background ===
+          "#ffffff"
+            ? "#555555"
+            : "#c8c8d5"
+      }
+    )
+  );
+
+
+  if (
+    template.type ===
+    "website"
+  ) {
+
+    elements.push(
+      gbCreateElement(
+        "card",
+        {
+          title:
+            "ویژگی‌های اصلی",
+
+          description:
+            "این بخش را می‌توانید در Ghost Builder کاملاً شخصی‌سازی کنید."
+        }
+      )
+    );
+
+  }
+
+
+  if (
+    template.type ===
+    "app"
+  ) {
+
+    elements.push(
+      gbCreateElement(
+        "card",
+        {
+          title:
+            "پنل اصلی",
+
+          description:
+            "رابط کاربری اپلیکیشن آماده و قابل ویرایش است."
+        }
+      )
+    );
+
+  }
+
+
+  if (
+    template.type ===
+    "game2d" ||
+    template.type ===
+    "game3d"
+  ) {
+
+    elements.push(
+      gbCreateElement(
+        "card",
+        {
+          title:
+            "🎮 بازی آماده",
+
+          description:
+            "صفحه شروع بازی آماده است. می‌توانید عناصر بیشتری اضافه کنید."
+        }
+      )
+    );
+
+  }
+
+
+  elements.push(
+    gbCreateElement(
+      "button",
+      {
+        text:
+          template.button,
+
+        color:
+          template.primary
+      }
+    )
+  );
+
+
+  return elements;
 
 }
 
 
-/* =========================
-   HOME
-========================= */
+/* =====================================================
+   PREVIEW TEMPLATE
+   ===================================================== */
 
-function goHome(){
+function previewTemplate(
+  templateId
+) {
 
- location.href="index.html";
+  const template =
+    templates.find(
+      item =>
+        item.id ===
+        templateId
+    );
+
+
+  if (!template) {
+    return;
+  }
+
+
+  sessionStorage.setItem(
+    "ghost_builder_preview_template",
+    templateId
+  );
+
+
+  localStorage.setItem(
+    "ghost_builder_preview_template",
+    templateId
+  );
+
+
+  window.location.href =
+    "preview.html?template=" +
+    encodeURIComponent(
+      templateId
+    );
 
 }
 
 
-/* =========================
-   TOAST
-========================= */
+/* =====================================================
+   BLANK PROJECT
+   ===================================================== */
 
-function showToast(message){
+function createBlankProject() {
 
- const toast=
-  document.getElementById("toast");
+  const project =
+    gbCreateProject({
 
- toast.textContent=message;
+      name:
+        "پروژه خالی",
 
- toast.classList.add("show");
+      type:
+        "website",
 
- setTimeout(()=>{
-  toast.classList.remove("show");
- },2200);
+      title:
+        "پروژه جدید",
+
+      description:
+        "پروژه خود را با Ghost Builder بسازید.",
+
+      button:
+        "شروع کنید",
+
+      background:
+        "#ffffff",
+
+      primary:
+        "#7c5cff",
+
+      radius:
+        18,
+
+      width:
+        1100,
+
+      height:
+        700,
+
+      quality:
+        "Medium",
+
+      resolution:
+        "720p",
+
+      elements:
+        []
+
+    });
+
+
+  gbSetCurrentProject(
+    project
+  );
+
+
+  window.location.href =
+    "builder.html?project=" +
+    encodeURIComponent(
+      project.id
+    );
 
 }
 
 
-/* =========================
-   START
-========================= */
+/* =====================================================
+   CLEAR SEARCH
+   ===================================================== */
 
-render();
+function clearTemplateSearch() {
+
+  document.getElementById(
+    "templateSearch"
+  ).value = "";
+
+
+  currentCategory =
+    "all";
+
+
+  document
+    .querySelectorAll(
+      ".filter-btn"
+    )
+    .forEach(
+      button => {
+
+        button.classList.remove(
+          "active"
+        );
+
+      }
+    );
+
+
+  document
+    .querySelector(
+      '[data-filter="all"]'
+    )
+    ?.classList.add(
+      "active"
+    );
+
+
+  renderTemplates();
+
+}
+
+
+/* =====================================================
+   INIT
+   ===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    renderTemplates();
+
+  }
+);
 
 </script>
 
 </body>
-    </html>
+ </html>
