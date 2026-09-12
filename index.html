@@ -3,1038 +3,514 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#08080d">
-  <meta name="description" content="Ghost Builder - ساخت و مدیریت سایت، اپلیکیشن و بازی">
 
   <title>Ghost Builder</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #07070b;
-      --panel: #101017;
-      --panel2: #15151e;
-      --border: rgba(255,255,255,.08);
-      --text: #ffffff;
-      --muted: #9999a8;
-      --purple: #8b5cf6;
-      --blue: #3b82f6;
-      --cyan: #06b6d4;
-      --pink: #ec4899;
-      --green: #22c55e;
-      --orange: #f97316;
-      --radius: 18px;
-    }
-
-    body {
-      background:
-        radial-gradient(circle at 10% 0%, rgba(139,92,246,.12), transparent 25%),
-        radial-gradient(circle at 90% 20%, rgba(6,182,212,.08), transparent 25%),
-        var(--bg);
-      color: var(--text);
-      font-family:
-        Tahoma,
-        Arial,
-        sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    button,
-    input {
-      font-family: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    /* =========================
-       APP
-    ========================== */
-
-    .app {
-      min-height: 100vh;
-      display: flex;
-    }
-
-    /* =========================
-       SIDEBAR
-    ========================== */
-
-    .sidebar {
-      width: 250px;
-      min-height: 100vh;
-      position: fixed;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      z-index: 100;
-      background: rgba(10,10,15,.92);
-      border-left: 1px solid var(--border);
-      backdrop-filter: blur(20px);
-      padding: 18px 14px;
-      transition: .3s;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      padding: 8px 10px 25px;
-    }
-
-    .brand-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 13px;
-      display: grid;
-      place-items: center;
-      font-size: 21px;
-      font-weight: 900;
-      background:
-        linear-gradient(135deg,#8b5cf6,#06b6d4);
-      box-shadow:
-        0 0 25px rgba(139,92,246,.28);
-    }
-
-    .brand-name {
-      font-size: 19px;
-      font-weight: 900;
-    }
-
-    .brand-sub {
-      color: var(--muted);
-      font-size: 10px;
-      margin-top: 3px;
-    }
-
-    .menu-title {
-      color: #626270;
-      font-size: 10px;
-      padding: 10px 12px 7px;
-      font-weight: bold;
-    }
-
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .menu button {
-      border: 0;
-      background: transparent;
-      color: #aaaab7;
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      text-align: right;
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      font-size: 13px;
-      transition: .2s;
-    }
-
-    .menu button:hover,
-    .menu button.active {
-      background: rgba(139,92,246,.14);
-      color: white;
-    }
-
-    .menu-icon {
-      width: 25px;
-      text-align: center;
-      font-size: 17px;
-    }
-
-    .sidebar-bottom {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 16px;
-    }
-
-    .account-mini {
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.035);
-      border-radius: 15px;
-      padding: 11px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 11px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg,#8b5cf6,#ec4899);
-      font-weight: bold;
-    }
-
-    .account-name {
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .account-status {
-      color: #70707e;
-      font-size: 9px;
-      margin-top: 3px;
-    }
-
-    /* =========================
-       MAIN
-    ========================== */
-
-    .main {
-      width: calc(100% - 250px);
-      margin-right: 250px;
-      min-height: 100vh;
-    }
-
-    .topbar {
-      height: 70px;
-      position: sticky;
-      top: 0;
-      z-index: 80;
-      background: rgba(7,7,11,.78);
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(18px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28px;
-    }
-
-    .page-title {
-      font-size: 17px;
-      font-weight: bold;
-    }
-
-    .page-location {
-      color: var(--muted);
-      font-size: 10px;
-      margin-top: 4px;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .icon-btn {
-      width: 39px;
-      height: 39px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color: white;
-      border-radius: 11px;
-      font-size: 16px;
-    }
-
-    .new-project {
-      border: 0;
-      color: white;
-      background: linear-gradient(135deg,#8b5cf6,#6d28d9);
-      padding: 11px 15px;
-      border-radius: 11px;
-      font-weight: bold;
-      font-size: 12px;
-      box-shadow: 0 7px 25px rgba(139,92,246,.2);
-    }
-
-    .content {
-      max-width: 1450px;
-      margin: auto;
-      padding: 27px;
-    }
-
-    /* =========================
-       WELCOME
-    ========================== */
-
-    .welcome {
-      border: 1px solid var(--border);
-      background:
-        linear-gradient(120deg,
-          rgba(139,92,246,.12),
-          rgba(6,182,212,.04),
-          rgba(255,255,255,.025));
-      border-radius: 24px;
-      padding: 27px;
-      margin-bottom: 22px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .welcome::after {
-      content: "";
-      position: absolute;
-      width: 240px;
-      height: 240px;
-      left: -90px;
-      top: -100px;
-      background: rgba(139,92,246,.13);
-      filter: blur(60px);
-      border-radius: 50%;
-    }
-
-    .welcome h1 {
-      font-size: 27px;
-      margin-bottom: 8px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .welcome p {
-      color: var(--muted);
-      font-size: 12px;
-      position: relative;
-      z-index: 2;
-      line-height: 2;
-    }
-
-    /* =========================
-       STATS
-    ========================== */
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4,1fr);
-      gap: 12px;
-      margin-bottom: 27px;
-    }
-
-    .stat {
-      border: 1px solid var(--border);
-      background: var(--panel);
-      border-radius: 17px;
-      padding: 17px;
-    }
-
-    .stat-icon {
-      font-size: 19px;
-      margin-bottom: 13px;
-    }
-
-    .stat-number {
-      font-size: 24px;
-      font-weight: 900;
-    }
-
-    .stat-label {
-      color: var(--muted);
-      font-size: 10px;
-      margin-top: 5px;
-    }
-
-    /* =========================
-       SECTION
-    ========================== */
-
-    .section {
-      margin-top: 32px;
-    }
-
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 13px;
-    }
-
-    .section-title {
-      font-size: 17px;
-      font-weight: 900;
-    }
-
-    .section-desc {
-      color: var(--muted);
-      font-size: 10px;
-      margin-top: 4px;
-    }
-
-    .view-all {
-      border: 0;
-      background: transparent;
-      color: #a78bfa;
-      font-size: 11px;
-    }
-
-    /* =========================
-       CREATE CARDS
-    ========================== */
-
-    .create-grid {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 13px;
-    }
-
-    .create-card {
-      min-height: 170px;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      border-radius: 19px;
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
-      transition: .25s;
-    }
-
-    .create-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(139,92,246,.35);
-      background: var(--panel2);
-    }
-
-    .create-card::after {
-      content: "";
-      position: absolute;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      filter: blur(55px);
-      opacity: .13;
-      left: -50px;
-      bottom: -70px;
-    }
-
-    .create-card.site::after {
-      background: #06b6d4;
-    }
-
-    .create-card.app::after {
-      background: #8b5cf6;
-    }
-
-    .create-card.game::after {
-      background: #ec4899;
-    }
-
-    .create-icon {
-      width: 48px;
-      height: 48px;
-      display: grid;
-      place-items: center;
-      border-radius: 14px;
-      font-size: 23px;
-      margin-bottom: 17px;
-    }
-
-    .site .create-icon {
-      background: rgba(6,182,212,.12);
-    }
-
-    .app .create-icon {
-      background: rgba(139,92,246,.12);
-    }
-
-    .game .create-icon {
-      background: rgba(236,72,153,.12);
-    }
-
-    .create-card h3 {
-      font-size: 15px;
-      margin-bottom: 6px;
-    }
-
-    .create-card p {
-      color: var(--muted);
-      font-size: 10px;
-      line-height: 1.8;
-    }
-
-    .create-arrow {
-      position: absolute;
-      left: 17px;
-      bottom: 17px;
-      font-size: 18px;
-      color: #aaa;
-    }
-
-    /* =========================
-       FILTER
-    ========================== */
-
-    .filters {
-      display: flex;
-      gap: 7px;
-      overflow-x: auto;
-      padding-bottom: 3px;
-      scrollbar-width: none;
-    }
-
-    .filters::-webkit-scrollbar {
-      display: none;
-    }
-
-    .filter {
-      flex: 0 0 auto;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      color: #aaa;
-      padding: 9px 13px;
-      border-radius: 10px;
-      font-size: 10px;
-    }
-
-    .filter.active {
-      background: #fff;
-      color: #09090d;
-      border-color: white;
-    }
-
-    /* =========================
-       TEMPLATE CARDS
-    ========================== */
-
-    .templates {
-      display: grid;
-      grid-template-columns: repeat(4,1fr);
-      gap: 13px;
-    }
-
-    .template {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 17px;
-      overflow: hidden;
-      transition: .25s;
-    }
-
-    .template:hover {
-      transform: translateY(-4px);
-      border-color: rgba(139,92,246,.3);
-    }
-
-    .template-preview {
-      height: 145px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .preview-content {
-      width: 75%;
-      height: 76%;
-      border-radius: 11px;
-      border: 1px solid rgba(255,255,255,.15);
-      background: rgba(255,255,255,.07);
-      padding: 10px;
-      position: relative;
-      box-shadow: 0 12px 35px rgba(0,0,0,.3);
-    }
-
-    .preview-top {
-      width: 55%;
-      height: 7px;
-      border-radius: 20px;
-      background: rgba(255,255,255,.75);
-      margin-bottom: 10px;
-    }
-
-    .preview-line {
-      width: 85%;
-      height: 5px;
-      border-radius: 20px;
-      background: rgba(255,255,255,.22);
-      margin: 5px 0;
-    }
-
-    .preview-boxes {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 5px;
-      margin-top: 10px;
-    }
-
-    .preview-box {
-      height: 34px;
-      border-radius: 6px;
-      background: rgba(255,255,255,.12);
-    }
-
-    /* template visual themes */
-
-    .neon {
-      background:
-        radial-gradient(circle at 50% 50%, rgba(0,229,255,.32), transparent 45%),
-        linear-gradient(135deg,#090014,#16002e);
-    }
-
-    .shop {
-      background:
-        linear-gradient(135deg,#202020,#101010);
-    }
-
-    .education {
-      background:
-        linear-gradient(135deg,#071a2d,#0c3044);
-    }
-
-    .portfolio {
-      background:
-        linear-gradient(135deg,#21120a,#3d1e0d);
-    }
-
-    .ai {
-      background:
-        radial-gradient(circle at 30% 30%,#6d28d9,transparent 35%),
-        linear-gradient(135deg,#09090f,#171027);
-    }
-
-    .restaurant {
-      background:
-        linear-gradient(135deg,#27120b,#120907);
-    }
-
-    .corporate {
-      background:
-        linear-gradient(135deg,#07131f,#10273c);
-    }
-
-    .personal {
-      background:
-        linear-gradient(135deg,#191919,#292929);
-    }
-
-    .racing {
-      background:
-        linear-gradient(135deg,#250708,#100608);
-    }
-
-    .platformer {
-      background:
-        linear-gradient(180deg,#123f66,#071521);
-    }
-
-    .space {
-      background:
-        radial-gradient(circle at 70% 30%,white 0 1px,transparent 2px),
-        radial-gradient(circle at 20% 60%,white 0 1px,transparent 2px),
-        linear-gradient(135deg,#050018,#09052b);
-    }
-
-    .survival {
-      background:
-        linear-gradient(135deg,#061c12,#07100b);
-    }
-
-    .puzzle {
-      background:
-        linear-gradient(135deg,#20154d,#100b27);
-    }
-
-    .template-info {
-      padding: 13px;
-    }
-
-    .template-title {
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .template-type {
-      color: var(--muted);
-      font-size: 9px;
-      margin-top: 5px;
-    }
-
-    .template-actions {
-      display: flex;
-      gap: 6px;
-      margin-top: 11px;
-    }
-
-    .use-template {
-      flex: 1;
-      border: 0;
-      background: rgba(139,92,246,.15);
-      color: #c4b5fd;
-      padding: 8px;
-      border-radius: 8px;
-      font-size: 10px;
-    }
-
-    .preview-template {
-      width: 35px;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: white;
-      border-radius: 8px;
-    }
-
-    /* =========================
-       PROJECT EMPTY
-    ========================== */
-
-    .projects-empty {
-      border: 1px dashed rgba(255,255,255,.12);
-      background: rgba(255,255,255,.018);
-      border-radius: 18px;
-      padding: 38px 20px;
-      text-align: center;
-    }
-
-    .empty-icon {
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
-
-    .projects-empty h3 {
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-
-    .projects-empty p {
-      color: var(--muted);
-      font-size: 10px;
-      margin-bottom: 15px;
-    }
-
-    .empty-btn {
-      border: 0;
-      background: white;
-      color: black;
-      border-radius: 9px;
-      padding: 9px 15px;
-      font-weight: bold;
-      font-size: 10px;
-    }
-
-    /* =========================
-       MOBILE
-    ========================== */
-
-    .mobile-menu {
-      display: none;
-    }
-
-    @media(max-width:1050px) {
-      .templates {
-        grid-template-columns: repeat(3,1fr);
-      }
-    }
-
-    @media(max-width:850px) {
-      .sidebar {
-        transform: translateX(100%);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .main {
-        width: 100%;
-        margin-right: 0;
-      }
-
-      .mobile-menu {
-        display: grid;
-        place-items: center;
-        width: 39px;
-        height: 39px;
-        border: 1px solid var(--border);
-        background: rgba(255,255,255,.04);
-        color: white;
-        border-radius: 11px;
-      }
-
-      .topbar {
-        padding: 0 14px;
-      }
-
-      .content {
-        padding: 17px 13px 35px;
-      }
-
-      .stats {
-        grid-template-columns: repeat(2,1fr);
-      }
-
-      .create-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .templates {
-        grid-template-columns: repeat(2,1fr);
-      }
-
-      .welcome {
-        padding: 21px;
-      }
-    }
-
-    @media(max-width:500px) {
-      .page-location {
-        display: none;
-      }
-
-      .new-project {
-        display: none;
-      }
-
-      .templates {
-        grid-template-columns: 1fr;
-      }
-
-      .template-preview {
-        height: 170px;
-      }
-
-      .welcome h1 {
-        font-size: 22px;
-      }
-
-      .stat-number {
-        font-size: 20px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <div class="app">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
+  <!-- ================= SIDEBAR ================= -->
+
+  <aside class="sidebar">
 
     <div class="brand">
-      <div class="brand-icon">G</div>
+      <div class="brand-logo">G</div>
+
       <div>
-        <div class="brand-name">Ghost Builder</div>
-        <div class="brand-sub">CREATE • BUILD • PUBLISH</div>
-      </div>
-    </div>
+        <div class="brand-name">
+          Ghost Builder
+        </div>
 
-    <div class="menu-title">فضای کاری</div>
-
-    <nav class="menu">
-
-      <button class="active" onclick="setActive(this)">
-        <span class="menu-icon">⌂</span>
-        خانه
-      </button>
-
-      <button onclick="go('projects.html', this)">
-        <span class="menu-icon">▣</span>
-        پروژه‌های من
-      </button>
-
-      <button onclick="scrollToSection('templates', this)">
-        <span class="menu-icon">◈</span>
-        قالب‌ها
-      </button>
-
-    </nav>
-
-    <div class="menu-title">ساخت</div>
-
-    <nav class="menu">
-
-      <button onclick="createProject('site')">
-        <span class="menu-icon">🌐</span>
-        سایت‌ساز
-      </button>
-
-      <button onclick="createProject('app')">
-        <span class="menu-icon">📱</span>
-        اپ‌ساز
-      </button>
-
-      <button onclick="createProject('game')">
-        <span class="menu-icon">🎮</span>
-        بازی‌ساز
-      </button>
-
-    </nav>
-
-    <div class="menu-title">مدیریت</div>
-
-    <nav class="menu">
-
-      <button onclick="go('media.html', this)">
-        <span class="menu-icon">▧</span>
-        رسانه‌ها
-      </button>
-
-      <button onclick="go('settings.html', this)">
-        <span class="menu-icon">⚙</span>
-        تنظیمات
-      </button>
-
-      <button onclick="go('help.html', this)">
-        <span class="menu-icon">?</span>
-        راهنما
-      </button>
-
-    </nav>
-
-    <div class="sidebar-bottom">
-      <div class="account-mini">
-        <div class="avatar">G</div>
-        <div>
-          <div class="account-name">کاربر Ghost</div>
-          <div class="account-status">حساب رایگان</div>
+        <div class="brand-subtitle">
+          ساخت بدون محدودیت
         </div>
       </div>
     </div>
+
+    <div class="nav-title">
+      اصلی
+    </div>
+
+    <nav class="nav">
+
+      <a href="index.html"
+         data-page="index.html"
+         class="active">
+        <span class="nav-icon">🏠</span>
+        <span>داشبورد</span>
+      </a>
+
+      <a href="projects.html"
+         data-page="projects.html">
+        <span class="nav-icon">📁</span>
+        <span>پروژه‌های من</span>
+      </a>
+
+      <a href="templates.html"
+         data-page="templates.html">
+        <span class="nav-icon">🎨</span>
+        <span>قالب‌ها</span>
+      </a>
+
+    </nav>
+
+
+    <div class="nav-title">
+      سازنده
+    </div>
+
+    <nav class="nav">
+
+      <a href="builder.html?type=website">
+        <span class="nav-icon">🌐</span>
+        <span>Website Builder</span>
+      </a>
+
+      <a href="builder.html?type=app">
+        <span class="nav-icon">📱</span>
+        <span>App Builder</span>
+      </a>
+
+      <a href="builder.html?type=game2d">
+        <span class="nav-icon">🎮</span>
+        <span>Game 2D</span>
+      </a>
+
+      <a href="builder.html?type=game3d">
+        <span class="nav-icon">🕹️</span>
+        <span>Game 3D</span>
+      </a>
+
+    </nav>
+
+
+    <div class="nav-title">
+      مدیریت
+    </div>
+
+    <nav class="nav">
+
+      <a href="media.html"
+         data-page="media.html">
+        <span class="nav-icon">🖼️</span>
+        <span>رسانه‌ها</span>
+      </a>
+
+      <a href="settings.html"
+         data-page="settings.html">
+        <span class="nav-icon">⚙️</span>
+        <span>تنظیمات</span>
+      </a>
+
+      <a href="help.html"
+         data-page="help.html">
+        <span class="nav-icon">❓</span>
+        <span>راهنما</span>
+      </a>
+
+    </nav>
 
   </aside>
 
-  <!-- MAIN -->
+
+  <!-- ================= MAIN ================= -->
+
   <main class="main">
 
     <!-- TOPBAR -->
+
     <header class="topbar">
 
-      <div style="display:flex;align-items:center;gap:10px;">
-
-        <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-left">
 
         <div>
-          <div class="page-title">خانه</div>
-          <div class="page-location">Ghost Builder / Dashboard</div>
+          <div class="page-title">
+            داشبورد
+          </div>
+
+          <div class="page-subtitle">
+            به Ghost Builder خوش آمدید
+          </div>
         </div>
 
       </div>
 
-      <div class="top-actions">
 
-        <button class="icon-btn" title="جستجو" onclick="searchTemplates()">⌕</button>
+      <div class="topbar-right">
 
-        <button class="icon-btn" title="اعلان‌ها">♢</button>
+        <button
+          class="btn"
+          onclick="gbGo('templates.html')">
+          🎨 قالب‌ها
+        </button>
 
-        <button class="new-project" onclick="openCreateMenu()">
-          + پروژه جدید
+        <button
+          class="btn btn-primary"
+          onclick="createNewProject()">
+          ＋ پروژه جدید
         </button>
 
       </div>
 
     </header>
 
-    <div class="content">
 
-      <!-- WELCOME -->
-      <section class="welcome">
+    <!-- CONTENT -->
 
-        <h1>فضای ساخت شما</h1>
+    <div class="container">
+
+      <!-- HERO -->
+
+      <section class="hero">
+
+        <h1>
+          پروژه بعدی خودت را با
+          <span>Ghost Builder</span>
+          بساز
+        </h1>
 
         <p>
-          سایت، اپلیکیشن یا بازی خود را انتخاب کنید و پروژه را از یک قالب آماده شروع کنید.
-          همه پروژه‌ها از همین‌جا مدیریت می‌شوند.
+          وب‌سایت، اپلیکیشن و بازی‌های 2D و 3D
+          را با ابزارهای حرفه‌ای و بدون نیاز
+          به کدنویسی پیچیده بساز.
         </p>
 
       </section>
 
-      <!-- STATS -->
-      <section class="stats">
 
-        <div class="stat">
-          <div class="stat-icon">▣</div>
-          <div class="stat-number" id="projectCount">0</div>
-          <div class="stat-label">پروژه‌های من</div>
-        </div>
+      <!-- ================= STATS ================= -->
 
-        <div class="stat">
-          <div class="stat-icon">🌐</div>
-          <div class="stat-number">0</div>
-          <div class="stat-label">سایت منتشرشده</div>
-        </div>
+      <section class="stats-grid">
 
-        <div class="stat">
-          <div class="stat-icon">📱</div>
-          <div class="stat-number">0</div>
-          <div class="stat-label">اپلیکیشن</div>
-        </div>
+        <div class="card stat-card">
 
-        <div class="stat">
-          <div class="stat-icon">🎮</div>
-          <div class="stat-number">0</div>
-          <div class="stat-label">بازی</div>
-        </div>
+          <div class="stat-value"
+               id="totalProjects">
+            0
+          </div>
 
-      </section>
-
-      <!-- CREATE -->
-      <section class="section">
-
-        <div class="section-head">
-
-          <div>
-            <div class="section-title">چه چیزی می‌سازی؟</div>
-            <div class="section-desc">
-              نوع پروژه را انتخاب کن.
-            </div>
+          <div class="stat-label">
+            کل پروژه‌ها
           </div>
 
         </div>
 
-        <div class="create-grid">
 
-          <div class="create-card site" onclick="createProject('site')">
+        <div class="card stat-card">
 
-            <div class="create-icon">🌐</div>
+          <div class="stat-value"
+               id="totalWebsites">
+            0
+          </div>
 
-            <h3>ساخت سایت</h3>
+          <div class="stat-label">
+            وب‌سایت‌ها
+          </div>
+
+        </div>
+
+
+        <div class="card stat-card">
+
+          <div class="stat-value"
+               id="totalApps">
+            0
+          </div>
+
+          <div class="stat-label">
+            اپلیکیشن‌ها
+          </div>
+
+        </div>
+
+
+        <div class="card stat-card">
+
+          <div class="stat-value"
+               id="totalGames">
+            0
+          </div>
+
+          <div class="stat-label">
+            بازی‌ها
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= CREATE ================= -->
+
+      <section>
+
+        <div class="card">
+
+          <div class="card-header">
+
+            <div class="card-title">
+              شروع ساخت
+            </div>
+
+            <div class="card-description">
+              نوع پروژه خود را انتخاب کنید
+            </div>
+
+          </div>
+
+
+          <div class="card-body">
+
+            <div class="grid grid-4">
+
+
+              <!-- WEBSITE -->
+
+              <div class="card"
+                   style="padding:20px">
+
+                <div style="font-size:38px">
+                  🌐
+                </div>
+
+                <h3 style="margin-top:10px">
+                  وب‌سایت
+                </h3>
+
+                <p class="card-description">
+                  ساخت سایت مدرن و واکنش‌گرا
+                </p>
+
+                <button
+                  class="btn btn-primary"
+                  style="width:100%;margin-top:15px"
+                  onclick="createProject('website')">
+                  ساخت وب‌سایت
+                </button>
+
+              </div>
+
+
+              <!-- APP -->
+
+              <div class="card"
+                   style="padding:20px">
+
+                <div style="font-size:38px">
+                  📱
+                </div>
+
+                <h3 style="margin-top:10px">
+                  اپلیکیشن
+                </h3>
+
+                <p class="card-description">
+                  طراحی رابط اپلیکیشن موبایل
+                </p>
+
+                <button
+                  class="btn btn-primary"
+                  style="width:100%;margin-top:15px"
+                  onclick="createProject('app')">
+                  ساخت اپلیکیشن
+                </button>
+
+              </div>
+
+
+              <!-- GAME 2D -->
+
+              <div class="card"
+                   style="padding:20px">
+
+                <div style="font-size:38px">
+                  🎮
+                </div>
+
+                <h3 style="margin-top:10px">
+                  بازی 2D
+                </h3>
+
+                <p class="card-description">
+                  ساخت بازی‌های دوبعدی
+                </p>
+
+                <button
+                  class="btn btn-primary"
+                  style="width:100%;margin-top:15px"
+                  onclick="createProject('game2d')">
+                  ساخت بازی 2D
+                </button>
+
+              </div>
+
+
+              <!-- GAME 3D -->
+
+              <div class="card"
+                   style="padding:20px">
+
+                <div style="font-size:38px">
+                  🕹️
+                </div>
+
+                <h3 style="margin-top:10px">
+                  بازی 3D
+                </h3>
+
+                <p class="card-description">
+                  ساخت بازی‌های سه‌بعدی
+                </p>
+
+                <button
+                  class="btn btn-primary"
+                  style="width:100%;margin-top:15px"
+                  onclick="createProject('game3d')">
+                  ساخت بازی 3D
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= RECENT PROJECTS ================= -->
+
+      <section style="margin-top:22px">
+
+        <div class="card">
+
+          <div class="card-header"
+               style="
+               display:flex;
+               align-items:center;
+               justify-content:space-between;
+               gap:10px;
+               ">
+
+            <div>
+
+              <div class="card-title">
+                پروژه‌های اخیر
+              </div>
+
+              <div class="card-description">
+                پروژه‌هایی که اخیراً ساخته‌اید
+              </div>
+
+            </div>
+
+            <button
+              class="btn btn-small"
+              onclick="gbGo('projects.html')">
+              مشاهده همه
+            </button>
+
+          </div>
+
+
+          <div class="card-body">
+
+            <div
+              id="recentProjects"
+              class="project-grid">
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= QUICK ACCESS ================= -->
+
+      <section style="margin-top:22px">
+
+        <div class="grid grid-3">
+
+
+          <div class="card help-card">
+
+            <div class="help-icon">
+              🎨
+            </div>
+
+            <h3>
+              قالب‌های آماده
+            </h3>
 
             <p>
-              سایت شخصی، فروشگاهی، آموزشی، گیمینگ،
-              شرکتی و انواع سایت‌های سفارشی.
+              از بین قالب‌های آماده انتخاب کنید
+              و سریع‌تر پروژه خود را بسازید.
             </p>
 
-            <div class="create-arrow">←</div>
+            <button
+              class="btn btn-small"
+              style="margin-top:12px"
+              onclick="gbGo('templates.html')">
+              مشاهده قالب‌ها
+            </button>
 
           </div>
 
-          <div class="create-card app" onclick="createProject('app')">
 
-            <div class="create-icon">📱</div>
+          <div class="card help-card">
 
-            <h3>ساخت اپلیکیشن</h3>
+            <div class="help-icon">
+              🖼️
+            </div>
+
+            <h3>
+              مدیریت رسانه
+            </h3>
 
             <p>
-              ساخت اپلیکیشن با صفحات، منو،
-              WebView، تنظیمات و امکانات قابل شخصی‌سازی.
+              تصاویر، ویدیوها و فایل‌های پروژه
+              خود را مدیریت کنید.
             </p>
 
-            <div class="create-arrow">←</div>
+            <button
+              class="btn btn-small"
+              style="margin-top:12px"
+              onclick="gbGo('media.html')">
+              مدیریت فایل‌ها
+            </button>
 
           </div>
 
-          <div class="create-card game" onclick="createProject('game')">
 
-            <div class="create-icon">🎮</div>
+          <div class="card help-card">
 
-            <h3>ساخت بازی</h3>
+            <div class="help-icon">
+              ❓
+            </div>
+
+            <h3>
+              مرکز راهنما
+            </h3>
 
             <p>
-              بازی‌های 2D، 2.5D و 3D با قالب‌ها،
-              مراحل، شخصیت، افکت و سیستم‌های بازی.
+              آموزش شروع کار با Ghost Builder
+              و امکانات آن.
             </p>
 
-            <div class="create-arrow">←</div>
+            <button
+              class="btn btn-small"
+              style="margin-top:12px"
+              onclick="gbGo('help.html')">
+              باز کردن راهنما
+            </button>
 
           </div>
 
@@ -1042,479 +518,20 @@
 
       </section>
 
-      <!-- TEMPLATES -->
-      <section class="section" id="templates">
 
-        <div class="section-head">
+      <!-- ================= FOOTER ================= -->
 
-          <div>
-            <div class="section-title">قالب‌ها</div>
-            <div class="section-desc">
-              پروژه را از یک قالب آماده شروع کن.
-            </div>
-          </div>
+      <footer class="footer">
 
-          <button class="view-all" onclick="showAllTemplates()">
-            مشاهده همه
-          </button>
-
+        <div>
+          🚀 Ghost Builder
         </div>
 
-        <div class="filters">
-
-          <button class="filter active" onclick="filterTemplates('all',this)">
-            همه
-          </button>
-
-          <button class="filter" onclick="filterTemplates('site',this)">
-            🌐 سایت
-          </button>
-
-          <button class="filter" onclick="filterTemplates('app',this)">
-            📱 اپ
-          </button>
-
-          <button class="filter" onclick="filterTemplates('game',this)">
-            🎮 بازی
-          </button>
-
-          <button class="filter" onclick="filterTemplates('2d',this)">
-            2D
-          </button>
-
-          <button class="filter" onclick="filterTemplates('3d',this)">
-            3D
-          </button>
-
+        <div style="margin-top:5px">
+          Website • App • 2D Game • 3D Game
         </div>
 
-        <div class="templates" id="templateGrid">
-
-          <!-- SITE -->
-
-          <article class="template" data-type="site">
-
-            <div class="template-preview neon">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-line"></div>
-                <div class="preview-line"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Cyber Neon</div>
-              <div class="template-type">سایت گیمینگ / تکنولوژی</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Cyber Neon','site')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Cyber Neon')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <article class="template" data-type="site">
-
-            <div class="template-preview shop">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-                <div class="preview-line"></div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Modern Shop</div>
-              <div class="template-type">فروشگاهی</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Modern Shop','site')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Modern Shop')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <article class="template" data-type="site">
-
-            <div class="template-preview education">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-line"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Academy</div>
-              <div class="template-type">آموزشی</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Academy','site')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Academy')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <article class="template" data-type="site">
-
-            <div class="template-preview portfolio">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-line"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Creator</div>
-              <div class="template-type">نمونه‌کار / شخصی</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Creator','site')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Creator')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <article class="template" data-type="site">
-
-            <div class="template-preview ai">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-line"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">AI Future</div>
-              <div class="template-type">هوش مصنوعی / استارتاپ</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('AI Future','site')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('AI Future')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <article class="template" data-type="site">
-
-            <div class="template-preview restaurant">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-line"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Restaurant</div>
-              <div class="template-type">رستوران / کافه</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Restaurant','site')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Restaurant')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <!-- APP -->
-
-          <article class="template" data-type="app">
-
-            <div class="template-preview ai">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">AI App</div>
-              <div class="template-type">اپلیکیشن هوش مصنوعی</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('AI App','app')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('AI App')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <article class="template" data-type="app">
-
-            <div class="template-preview shop">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Shop App</div>
-              <div class="template-type">اپلیکیشن فروشگاهی</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Shop App','app')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Shop App')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <article class="template" data-type="app">
-
-            <div class="template-preview education">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-line"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Learn</div>
-              <div class="template-type">اپلیکیشن آموزشی</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Learn','app')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Learn')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <!-- GAME -->
-
-          <article class="template" data-type="game 2d">
-
-            <div class="template-preview platformer">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Shadow Adventure</div>
-              <div class="template-type">🎮 2D Platformer</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Shadow Adventure','game')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Shadow Adventure')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <article class="template" data-type="game 3d">
-
-            <div class="template-preview racing">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Velocity</div>
-              <div class="template-type">🏎️ 3D Racing</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Velocity','game')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Velocity')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <article class="template" data-type="game 3d">
-
-            <div class="template-preview space">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-line"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Galaxy Strike</div>
-              <div class="template-type">🚀 3D Space Shooter</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Galaxy Strike','game')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Galaxy Strike')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <article class="template" data-type="game 3d">
-
-            <div class="template-preview survival">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-line"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Dark Survival</div>
-              <div class="template-type">🌲 3D Survival</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Dark Survival','game')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Dark Survival')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-          <article class="template" data-type="game 2d">
-
-            <div class="template-preview puzzle">
-              <div class="preview-content">
-                <div class="preview-top"></div>
-                <div class="preview-boxes">
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                  <div class="preview-box"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="template-info">
-              <div class="template-title">Mind Blocks</div>
-              <div class="template-type">🧩 2D Puzzle</div>
-
-              <div class="template-actions">
-                <button class="use-template" onclick="useTemplate('Mind Blocks','game')">
-                  استفاده از قالب
-                </button>
-                <button class="preview-template" onclick="previewTemplate('Mind Blocks')">◉</button>
-              </div>
-            </div>
-
-          </article>
-
-        </div>
-
-      </section>
-
-      <!-- PROJECTS -->
-      <section class="section">
-
-        <div class="section-head">
-
-          <div>
-            <div class="section-title">پروژه‌های اخیر</div>
-            <div class="section-desc">
-              پروژه‌هایی که ساخته‌ای اینجا نمایش داده می‌شوند.
-            </div>
-          </div>
-
-          <button class="view-all" onclick="go('projects.html')">
-            همه پروژه‌ها
-          </button>
-
-        </div>
-
-        <div class="projects-empty" id="emptyProjects">
-
-          <div class="empty-icon">✦</div>
-
-          <h3>هنوز پروژه‌ای ساخته نشده</h3>
-
-          <p>
-            اولین پروژه خودت را با انتخاب یک قالب یا پروژه خالی بساز.
-          </p>
-
-          <button class="empty-btn" onclick="openCreateMenu()">
-            + ساخت پروژه
-          </button>
-
-        </div>
-
-      </section>
+      </footer>
 
     </div>
 
@@ -1522,277 +539,354 @@
 
 </div>
 
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script src="app.js"></script>
+
 <script>
 
-  /* =========================
-     NAVIGATION
-  ========================== */
+"use strict";
 
-  function go(page, button) {
 
-    if (button) {
-      setActive(button);
-    }
+/* ==========================================
+   CREATE PROJECT
+   ========================================== */
 
-    window.location.href = page;
-  }
+function createProject(type) {
 
-  function setActive(button) {
+  const names = {
 
-    document.querySelectorAll(".menu button")
-      .forEach(item => item.classList.remove("active"));
+    website:
+      "وب‌سایت جدید",
 
-    button.classList.add("active");
-  }
+    app:
+      "اپلیکیشن جدید",
 
-  function toggleSidebar() {
+    game2d:
+      "بازی 2D جدید",
 
-    document
-      .getElementById("sidebar")
-      .classList.toggle("open");
-  }
+    game3d:
+      "بازی 3D جدید"
 
-  function scrollToSection(id) {
+  };
 
-    const element = document.getElementById(id);
 
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth"
-      });
-    }
-  }
+  const project =
+    gbCreateProject({
 
-  /* =========================
-     CREATE PROJECT
-  ========================== */
+      type: type,
 
-  function createProject(type) {
+      name:
+        names[type] ||
+        "پروژه جدید",
 
-    localStorage.setItem(
-      "ghost_builder_new_project_type",
-      type
-    );
-
-    if (type === "site") {
-      window.location.href = "site-builder.html";
-      return;
-    }
-
-    if (type === "app") {
-      window.location.href = "app-builder.html";
-      return;
-    }
-
-    if (type === "game") {
-      window.location.href = "game-builder.html";
-      return;
-    }
-  }
-
-  function openCreateMenu() {
-
-    const type = prompt(
-      "نوع پروژه را انتخاب کنید:\n\n" +
-      "1 = سایت\n" +
-      "2 = اپلیکیشن\n" +
-      "3 = بازی"
-    );
-
-    if (type === "1") {
-      createProject("site");
-    }
-
-    if (type === "2") {
-      createProject("app");
-    }
-
-    if (type === "3") {
-      createProject("game");
-    }
-  }
-
-  /* =========================
-     TEMPLATE
-  ========================== */
-
-  function useTemplate(name, type) {
-
-    localStorage.setItem(
-      "ghost_builder_template",
-      name
-    );
-
-    localStorage.setItem(
-      "ghost_builder_new_project_type",
-      type
-    );
-
-    if (type === "site") {
-      window.location.href = "site-builder.html";
-    }
-
-    if (type === "app") {
-      window.location.href = "app-builder.html";
-    }
-
-    if (type === "game") {
-      window.location.href = "game-builder.html";
-    }
-  }
-
-  function previewTemplate(name) {
-
-    alert(
-      "پیش‌نمایش قالب\n\n" +
-      name +
-      "\n\n" +
-      "صفحه پیش‌نمایش کامل این قالب در نسخه Builder باز خواهد شد."
-    );
-  }
-
-  /* =========================
-     FILTER
-  ========================== */
-
-  function filterTemplates(type, button) {
-
-    document
-      .querySelectorAll(".filter")
-      .forEach(item => item.classList.remove("active"));
-
-    button.classList.add("active");
-
-    const cards =
-      document.querySelectorAll(".template");
-
-    cards.forEach(card => {
-
-      const cardType =
-        card.dataset.type || "";
-
-      if (type === "all") {
-        card.style.display = "";
-        return;
-      }
-
-      if (cardType.includes(type)) {
-        card.style.display = "";
-      } else {
-        card.style.display = "none";
-      }
-
-    });
-  }
-
-  function showAllTemplates() {
-
-    document
-      .querySelectorAll(".filter")
-      .forEach(item => item.classList.remove("active"));
-
-    const allButton =
-      document.querySelector(".filter");
-
-    if (allButton) {
-      allButton.classList.add("active");
-    }
-
-    document
-      .querySelectorAll(".template")
-      .forEach(card => {
-        card.style.display = "";
-      });
-  }
-
-  /* =========================
-     SEARCH
-  ========================== */
-
-  function searchTemplates() {
-
-    const query =
-      prompt("نام قالب موردنظر را وارد کنید:");
-
-    if (!query) return;
-
-    const cards =
-      document.querySelectorAll(".template");
-
-    let found = false;
-
-    cards.forEach(card => {
-
-      const text =
-        card.innerText.toLowerCase();
-
-      if (
-        text.includes(query.toLowerCase())
-      ) {
-        card.style.display = "";
-        found = true;
-      } else {
-        card.style.display = "none";
-      }
+      title:
+        names[type] ||
+        "پروژه جدید"
 
     });
 
-    if (!found) {
-      alert("قالبی با این نام پیدا نشد.");
-    }
 
-    scrollToSection("templates");
+  gbToast(
+    "پروژه ساخته شد.",
+    "success"
+  );
+
+
+  setTimeout(() => {
+
+    gbBuilder(
+      project.id
+    );
+
+  }, 250);
+
+}
+
+
+/* ==========================================
+   NEW PROJECT
+   ========================================== */
+
+function createNewProject() {
+
+  createProject(
+    "website"
+  );
+
+}
+
+
+/* ==========================================
+   RENDER STATS
+   ========================================== */
+
+function renderStats() {
+
+  const stats =
+    gbGetStats();
+
+
+  const total =
+    document.getElementById(
+      "totalProjects"
+    );
+
+  const websites =
+    document.getElementById(
+      "totalWebsites"
+    );
+
+  const apps =
+    document.getElementById(
+      "totalApps"
+    );
+
+  const games =
+    document.getElementById(
+      "totalGames"
+    );
+
+
+  if (total) {
+    total.textContent =
+      stats.total;
   }
 
-  /* =========================
-     PROJECT COUNT
-  ========================== */
+  if (websites) {
+    websites.textContent =
+      stats.websites;
+  }
 
-  function updateProjectCount() {
+  if (apps) {
+    apps.textContent =
+      stats.apps;
+  }
 
-    try {
+  if (games) {
+    games.textContent =
+      stats.games;
+  }
 
-      const projects =
-        JSON.parse(
-          localStorage.getItem(
-            "ghost_builder_projects"
-          ) || "[]"
-        );
+}
 
-      document.getElementById(
-        "projectCount"
-      ).textContent = projects.length;
 
-      if (projects.length > 0) {
+/* ==========================================
+   RECENT PROJECTS
+   ========================================== */
 
-        document.getElementById(
-          "emptyProjects"
-        ).innerHTML = `
-          <div class="empty-icon">✓</div>
-          <h3>${projects.length} پروژه ساخته شده</h3>
-          <p>
-            پروژه‌های خود را از بخش «پروژه‌های من» مدیریت کنید.
-          </p>
-          <button class="empty-btn"
-            onclick="go('projects.html')">
-            مشاهده پروژه‌ها
-          </button>
+function renderRecentProjects() {
+
+  const container =
+    document.getElementById(
+      "recentProjects"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  const projects =
+    gbGetProjects();
+
+
+  const recent =
+    projects.slice(
+      0,
+      4
+    );
+
+
+  if (
+    recent.length === 0
+  ) {
+
+    container.innerHTML = `
+
+      <div class="empty-state"
+           style="grid-column:1/-1">
+
+        <div class="empty-icon">
+          📁
+        </div>
+
+        <h2>
+          هنوز پروژه‌ای ندارید
+        </h2>
+
+        <p>
+          اولین پروژه خود را با Ghost Builder
+          بسازید.
+        </p>
+
+        <button
+          class="btn btn-primary"
+          onclick="createNewProject()">
+          ＋ ساخت اولین پروژه
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    recent.map(
+      project => {
+
+        const icon =
+          gbProjectTypeIcon(
+            project.type
+          );
+
+        const type =
+          gbProjectTypeLabel(
+            project.type
+          );
+
+
+        return `
+
+          <div class="card project-card">
+
+            <div class="project-preview">
+              ${icon}
+            </div>
+
+            <div class="project-info">
+
+              <h3>
+                ${gbEscapeHTML(
+                  project.name
+                )}
+              </h3>
+
+              <div class="project-meta">
+                ${type}
+                •
+                ${gbFormatDate(
+                  project.updatedAt
+                )}
+              </div>
+
+
+              <div class="project-actions">
+
+                <button
+                  class="btn btn-small"
+                  onclick="openProject('${project.id}')">
+                  ویرایش
+                </button>
+
+                <button
+                  class="btn btn-small"
+                  onclick="previewProject('${project.id}')">
+                  پیش‌نمایش
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
         `;
 
       }
+    ).join("");
 
-    } catch (error) {
+}
 
-      document.getElementById(
-        "projectCount"
-      ).textContent = "0";
 
-    }
+/* ==========================================
+   OPEN PROJECT
+   ========================================== */
+
+function openProject(id) {
+
+  const project =
+    gbFindProject(id);
+
+
+  if (!project) {
+
+    gbToast(
+      "پروژه پیدا نشد.",
+      "danger"
+    );
+
+    return;
+
   }
 
-  updateProjectCount();
+
+  gbSetCurrentProject(
+    project
+  );
+
+  gbBuilder(
+    project.id
+  );
+
+}
+
+
+/* ==========================================
+   PREVIEW PROJECT
+   ========================================== */
+
+function previewProject(id) {
+
+  const project =
+    gbFindProject(id);
+
+
+  if (!project) {
+
+    gbToast(
+      "پروژه پیدا نشد.",
+      "danger"
+    );
+
+    return;
+
+  }
+
+
+  gbSetCurrentProject(
+    project
+  );
+
+  gbPreview(
+    project.id
+  );
+
+}
+
+
+/* ==========================================
+   START
+   ========================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    renderStats();
+
+    renderRecentProjects();
+
+  }
+);
 
 </script>
 
 </body>
-  </html>
+</html>
