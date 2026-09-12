@@ -1,856 +1,772 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ghost Builder | Preview</title>
-
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-body{
-  font-family:Tahoma,Arial,sans-serif;
-  background:#07070b;
-  color:#fff;
-  min-height:100vh;
-}
-
-button{
-  font-family:inherit;
-  cursor:pointer;
-}
-
-.topbar{
-  height:70px;
-  background:#0d0d14;
-  border-bottom:1px solid #242432;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 22px;
-  position:sticky;
-  top:0;
-  z-index:50;
-}
-
-.logo{
-  font-size:20px;
-  font-weight:900;
-  color:#8d6bff;
-}
-
-.logo span{
-  color:#fff;
-}
-
-.project-info{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.project-name{
-  font-weight:bold;
-}
-
-.project-type{
-  background:#181722;
-  border:1px solid #29273a;
-  padding:6px 10px;
-  border-radius:8px;
-  color:#aaa;
-  font-size:12px;
-}
-
-.actions{
-  display:flex;
-  gap:8px;
-}
-
-.btn{
-  border:1px solid #302d43;
-  background:#15141d;
-  color:#fff;
-  padding:10px 14px;
-  border-radius:10px;
-  font-weight:bold;
-}
-
-.btn:hover{
-  background:#211e2d;
-}
-
-.btn.primary{
-  background:#7655ff;
-  border-color:#7655ff;
-}
-
-.btn.primary:hover{
-  background:#6848ef;
-}
-
-.layout{
-  display:grid;
-  grid-template-columns:280px 1fr 260px;
-  min-height:calc(100vh - 70px);
-}
-
-.panel{
-  background:#0c0c12;
-  border-left:1px solid #242432;
-  border-right:1px solid #242432;
-  padding:18px;
-}
-
-.panel-title{
-  font-size:16px;
-  font-weight:900;
-  margin-bottom:18px;
-}
-
-.info-box{
-  background:#12121a;
-  border:1px solid #252535;
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:12px;
-}
-
-.info-label{
-  color:#888;
-  font-size:12px;
-  margin-bottom:6px;
-}
-
-.info-value{
-  font-size:14px;
-  font-weight:bold;
-}
-
-.device-buttons{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:7px;
-  margin-bottom:18px;
-}
-
-.device-btn{
-  background:#15151f;
-  border:1px solid #29293a;
-  color:#aaa;
-  padding:9px 5px;
-  border-radius:8px;
-  font-size:11px;
-}
-
-.device-btn.active{
-  background:#7655ff;
-  border-color:#7655ff;
-  color:#fff;
-}
-
-.center{
-  background:
-    linear-gradient(#111118 1px,transparent 1px),
-    linear-gradient(90deg,#111118 1px,transparent 1px);
-  background-size:30px 30px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:35px;
-  overflow:auto;
-}
-
-.preview-wrap{
-  transition:.3s;
-}
-
-.preview-frame{
-  background:#fff;
-  overflow:hidden;
-  box-shadow:
-    0 20px 70px rgba(0,0,0,.55),
-    0 0 0 8px #171722;
-  position:relative;
-}
-
-.preview-frame.mobile{
-  width:390px;
-  height:700px;
-  border-radius:28px;
-}
-
-.preview-frame.tablet{
-  width:700px;
-  height:900px;
-  border-radius:18px;
-}
-
-.preview-frame.desktop{
-  width:min(1100px,80vw);
-  height:700px;
-  border-radius:12px;
-}
-
-.site{
-  width:100%;
-  height:100%;
-  overflow:auto;
-  color:#111;
-}
-
-.site-header{
-  min-height:64px;
-  padding:15px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:#fff;
-  border-bottom:1px solid #eee;
-}
-
-.site-brand{
-  font-weight:900;
-  font-size:18px;
-}
-
-.site-nav{
-  display:flex;
-  gap:15px;
-  font-size:13px;
-  color:#555;
-}
-
-.hero{
-  padding:55px 25px;
-  text-align:center;
-}
-
-.hero h1{
-  font-size:34px;
-  margin-bottom:15px;
-}
-
-.hero p{
-  max-width:650px;
-  margin:auto;
-  color:#666;
-  line-height:1.9;
-}
-
-.hero-button{
-  margin-top:25px;
-  border:0;
-  padding:13px 24px;
-  border-radius:12px;
-  color:#fff;
-  font-weight:bold;
-}
-
-.content{
-  padding:25px;
-}
-
-.cards{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-}
-
-.card{
-  border:1px solid #eee;
-  border-radius:16px;
-  padding:20px;
-  background:#fff;
-}
-
-.card h3{
-  margin-bottom:8px;
-}
-
-.card p{
-  color:#777;
-  line-height:1.7;
-  font-size:13px;
-}
-
-.dynamic-element{
-  margin:15px 25px;
-}
-
-.dynamic-button{
-  border:0;
-  color:#fff;
-  padding:12px 20px;
-  border-radius:10px;
-  font-weight:bold;
-}
-
-.dynamic-input{
-  width:100%;
-  max-width:450px;
-  padding:12px;
-  border:1px solid #ddd;
-  border-radius:10px;
-}
-
-.empty{
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  color:#777;
-  gap:12px;
-  background:#111;
-}
-
-.empty-icon{
-  font-size:50px;
-}
-
-.template-preview{
-  min-height:100%;
-  padding:30px;
-}
-
-.template-title{
-  font-size:30px;
-  font-weight:900;
-  margin-bottom:12px;
-}
-
-.template-description{
-  color:#666;
-  line-height:1.8;
-  margin-bottom:25px;
-}
-
-.right-actions{
-  display:grid;
-  gap:10px;
-}
-
-.full-btn{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #302d43;
-  background:#15141d;
-  color:#fff;
-  font-weight:bold;
-}
-
-.full-btn.primary{
-  background:#7655ff;
-  border-color:#7655ff;
-}
-
-.notice{
-  margin-top:15px;
-  padding:12px;
-  border-radius:10px;
-  background:#14131c;
-  border:1px solid #272536;
-  color:#aaa;
-  font-size:12px;
-  line-height:1.8;
-}
-
-@media(max-width:1000px){
-  .layout{
-    grid-template-columns:220px 1fr;
-  }
-
-  .right-panel{
-    display:none;
-  }
-
-  .preview-frame.desktop{
-    width:75vw;
-  }
-}
-
-@media(max-width:700px){
-  .topbar{
-    padding:0 10px;
-    height:auto;
-    min-height:64px;
-    flex-wrap:wrap;
-    gap:8px;
-    padding-top:10px;
-    padding-bottom:10px;
-  }
-
-  .project-info{
-    order:3;
-    width:100%;
-  }
-
-  .actions{
-    margin-right:auto;
-  }
-
-  .layout{
-    display:block;
-  }
-
-  .left-panel{
-    display:none;
-  }
-
-  .center{
-    min-height:calc(100vh - 100px);
-    padding:25px 10px;
-  }
-
-  .preview-frame.mobile{
-    width:340px;
-    height:620px;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Ghost Builder — پیش‌نمایش</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    /* =====================================================
+       PREVIEW PAGE
+       ===================================================== */
+
+    body {
+      overflow-x: hidden;
+    }
+
+    .preview-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-topbar {
+      min-height: 70px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--card);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .preview-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .preview-brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(
+        135deg,
+        #7c5cff,
+        #4f46e5
+      );
+      color: white;
+      font-size: 21px;
+      font-weight: 900;
+      box-shadow: 0 8px 25px rgba(124,92,255,.25);
+      flex-shrink: 0;
+    }
+
+    .preview-brand-text {
+      min-width: 0;
+    }
+
+    .preview-brand-text strong {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .preview-brand-text span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    .preview-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .preview-workspace {
+      flex: 1;
+      min-height: calc(100vh - 70px);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .preview-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .preview-info-title {
+      font-size: 19px;
+      font-weight: 900;
+    }
+
+    .preview-info-meta {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .preview-stage {
+      flex: 1;
+      min-height: 650px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(124,92,255,.08),
+          transparent 40%
+        ),
+        var(--bg);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: auto;
+      padding: 35px;
+      position: relative;
+    }
+
+    .preview-device {
+      width: 390px;
+      min-height: 700px;
+      background: white;
+      border-radius: 26px;
+      box-shadow:
+        0 25px 70px rgba(0,0,0,.20);
+      overflow: hidden;
+      transition: .25s ease;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .preview-device.tablet {
+      width: 768px;
+      min-height: 720px;
+      border-radius: 22px;
+    }
+
+    .preview-device.desktop {
+      width: min(1100px, 100%);
+      min-height: 650px;
+      border-radius: 16px;
+    }
+
+    .preview-canvas {
+      width: 100%;
+      min-height: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .preview-mobile-header {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.04);
+      position: relative;
+    }
+
+    .preview-mobile-camera {
+      width: 55px;
+      height: 6px;
+      border-radius: 20px;
+      background: rgba(0,0,0,.20);
+    }
+
+    .preview-content {
+      padding: 25px;
+    }
+
+    .preview-hero {
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .preview-hero-icon {
+      font-size: 55px;
+      margin-bottom: 12px;
+    }
+
+    .preview-hero h1 {
+      margin: 0 0 10px;
+      font-size: 32px;
+    }
+
+    .preview-hero p {
+      margin: 0 0 20px;
+      line-height: 1.9;
+      opacity: .72;
+      max-width: 650px;
+    }
+
+    .preview-primary-button {
+      border: 0;
+      color: white;
+      padding: 12px 23px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,.15);
+    }
+
+    .preview-elements {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 20px;
+    }
+
+    .preview-element {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .preview-card {
+      padding: 18px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 8px 25px rgba(0,0,0,.06);
+    }
+
+    .preview-card h3 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .preview-card p {
+      margin: 8px 0 0;
+      line-height: 1.8;
+      color: #666;
+      font-size: 13px;
+    }
+
+    .preview-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      border: 1px solid #ddd;
+      background: white;
+      outline: none;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .preview-section {
+      width: 100%;
+      min-height: 150px;
+      box-sizing: border-box;
+    }
+
+    .game-preview {
+      min-height: 100%;
+      background:
+        radial-gradient(
+          circle at 50% 20%,
+          rgba(124,92,255,.20),
+          transparent 35%
+        ),
+        linear-gradient(
+          145deg,
+          #070912,
+          #12152a
+        );
+      color: white;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 3;
+    }
+
+    .game-hud-box {
+      padding: 8px 11px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 10px;
+      font-size: 11px;
+    }
+
+    .game-world {
+      min-height: 520px;
+      margin-top: 20px;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(
+          180deg,
+          #151a36 0%,
+          #0a0d19 65%,
+          #080a10 100%
+        );
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .game-grid {
+      position: absolute;
+      inset: 45% -30% -30%;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(124,92,255,.20) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          rgba(124,92,255,.20) 1px,
+          transparent 1px
+        );
+      background-size: 45px 45px;
+      transform: perspective(300px) rotateX(58deg);
+      transform-origin: center top;
+    }
+
+    .game-player {
+      position: absolute;
+      left: 50%;
+      bottom: 23%;
+      transform: translateX(-50%);
+      font-size: 55px;
+      z-index: 2;
+      filter: drop-shadow(
+        0 12px 20px rgba(0,0,0,.45)
+      );
+    }
+
+    .game-target {
+      position: absolute;
+      top: 27%;
+      left: 68%;
+      font-size: 35px;
+      animation: targetFloat 2.2s infinite ease-in-out;
+    }
+
+    @keyframes targetFloat {
+      0%,100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    .game-crosshair {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      width: 35px;
+      height: 35px;
+      transform: translate(-50%,-50%);
+      border: 2px solid rgba(255,255,255,.75);
+      border-radius: 50%;
+      z-index: 3;
+    }
+
+    .game-crosshair::after,
+    .game-crosshair::before {
+      content: "";
+      position: absolute;
+      background: rgba(255,255,255,.75);
+    }
+
+    .game-crosshair::after {
+      width: 55px;
+      height: 2px;
+      left: -12px;
+      top: 15px;
+    }
+
+    .game-crosshair::before {
+      height: 55px;
+      width: 2px;
+      top: -12px;
+      left: 15px;
+    }
+
+    .game-controls {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 5;
+    }
+
+    .joystick {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      display: grid;
+      place-items: center;
+    }
+
+    .joystick::after {
+      content: "";
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.16);
+    }
+
+    .game-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .game-button {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.08);
+      color: white;
+      font-size: 18px;
+    }
+
+    .preview-empty {
+      min-height: 450px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .preview-empty-icon {
+      font-size: 60px;
+      margin-bottom: 12px;
+    }
+
+    .preview-url-box {
+      display: flex;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .preview-url-box input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .preview-footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 5px;
+    }
+
+    @media (max-width: 800px) {
+
+      .preview-topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .preview-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .preview-workspace {
+        padding: 10px;
+      }
+
+      .preview-stage {
+        padding: 15px;
+        min-height: 600px;
+        border-radius: 18px;
+      }
+
+      .preview-device.desktop {
+        width: 100%;
+      }
+
+      .preview-device.tablet {
+        width: min(768px, 100%);
+      }
+
+      .preview-info {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .preview-url-box {
+        flex-direction: column;
+      }
+
+    }
+
+  </style>
 </head>
 
 <body>
 
-<header class="topbar">
+<div class="preview-page">
 
-  <div class="logo">
-    Ghost <span>Builder</span>
-  </div>
+  <!-- =====================================================
+       TOPBAR
+       ===================================================== -->
 
-  <div class="project-info">
-    <div class="project-name" id="projectName">پیش‌نمایش پروژه</div>
-    <div class="project-type" id="projectType">وب‌سایت</div>
-  </div>
+  <header class="preview-topbar">
 
-  <div class="actions">
-    <button class="btn" onclick="goBack()">بازگشت</button>
-    <button class="btn" onclick="editProject()">ویرایش</button>
-    <button class="btn primary" onclick="publishProject()">انتشار</button>
-  </div>
+    <div class="preview-brand">
 
-</header>
+      <div class="preview-brand-logo">
+        G
+      </div>
 
-<div class="layout">
+      <div class="preview-brand-text">
 
-  <!-- LEFT -->
-  <aside class="panel left-panel">
+        <strong id="projectName">
+          پیش‌نمایش پروژه
+        </strong>
 
-    <div class="panel-title">پیش‌نمایش</div>
-
-    <div class="device-buttons">
-
-      <button
-        class="device-btn"
-        id="desktopBtn"
-        onclick="setDevice('desktop')">
-        دسکتاپ
-      </button>
-
-      <button
-        class="device-btn"
-        id="tabletBtn"
-        onclick="setDevice('tablet')">
-        تبلت
-      </button>
-
-      <button
-        class="device-btn active"
-        id="mobileBtn"
-        onclick="setDevice('mobile')">
-        موبایل
-      </button>
-
-    </div>
-
-    <div class="info-box">
-      <div class="info-label">نام پروژه</div>
-      <div class="info-value" id="infoName">---</div>
-    </div>
-
-    <div class="info-box">
-      <div class="info-label">نوع پروژه</div>
-      <div class="info-value" id="infoType">---</div>
-    </div>
-
-    <div class="info-box">
-      <div class="info-label">کیفیت</div>
-      <div class="info-value" id="infoQuality">---</div>
-    </div>
-
-    <div class="info-box">
-      <div class="info-label">رزولوشن</div>
-      <div class="info-value" id="infoResolution">---</div>
-    </div>
-
-  </aside>
-
-
-  <!-- CENTER -->
-  <main class="center">
-
-    <div class="preview-wrap">
-
-      <div
-        id="previewFrame"
-        class="preview-frame mobile">
-
-        <div id="previewContent"></div>
+        <span>
+          Ghost Builder Preview
+        </span>
 
       </div>
 
     </div>
 
-  </main>
 
-
-  <!-- RIGHT -->
-  <aside class="panel right-panel">
-
-    <div class="panel-title">
-      عملیات پروژه
-    </div>
-
-    <div class="right-actions">
+    <div class="preview-actions">
 
       <button
-        class="full-btn"
+        class="btn"
+        onclick="goBack()">
+        ← بازگشت
+      </button>
+
+      <button
+        class="btn"
         onclick="editProject()">
-        ✏️ ویرایش پروژه
+        ✏️ ویرایش
       </button>
 
       <button
-        class="full-btn"
+        class="btn"
+        onclick="setDeviceMode('mobile')">
+        📱
+      </button>
+
+      <button
+        class="btn"
+        onclick="setDeviceMode('tablet')">
+        ▣
+      </button>
+
+      <button
+        class="btn"
+        onclick="setDeviceMode('desktop')">
+        🖥️
+      </button>
+
+      <button
+        class="btn btn-primary"
         onclick="publishProject()">
-        🌐 انتشار وب
-      </button>
-
-      <button
-        class="full-btn primary"
-        onclick="buildAPK()">
-        📱 دریافت APK
-      </button>
-
-      <button
-        class="full-btn"
-        onclick="copyProjectLink()">
-        🔗 کپی لینک پروژه
+        🚀 انتشار
       </button>
 
     </div>
 
-    <div class="notice">
-      این صفحه پیش‌نمایش پروژه شماست.
-      تغییرات را در Builder انجام دهید و سپس
-      پروژه را منتشر کنید.
+  </header>
+
+
+  <!-- =====================================================
+       WORKSPACE
+       ===================================================== -->
+
+  <main class="preview-workspace">
+
+
+    <!-- INFO -->
+
+    <div class="preview-info">
+
+      <div>
+
+        <div
+          id="previewTitle"
+          class="preview-info-title">
+          پروژه
+        </div>
+
+        <div
+          id="previewMeta"
+          class="preview-info-meta">
+        </div>
+
+      </div>
+
+
+      <div
+        id="previewUrlContainer"
+        style="min-width:min(100%,420px);">
+      </div>
+
     </div>
 
-    <div class="notice">
-      برای ساخت APK، ابتدا نسخه وب پروژه را
-      منتشر کنید و سپس لینک پروژه را به سرویس
-      تبدیل Web به APK بدهید.
+
+    <!-- STAGE -->
+
+    <section class="preview-stage">
+
+      <div
+        id="previewDevice"
+        class="preview-device mobile">
+
+        <div
+          id="previewCanvas"
+          class="preview-canvas">
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <div class="preview-footer">
+      ساخته‌شده با Ghost Builder
     </div>
 
-  </aside>
+  </main>
 
 </div>
 
 
+<script src="app.js"></script>
+
 <script>
 
-const params = new URLSearchParams(location.search);
+"use strict";
 
-const projectId = params.get("project");
-const templateId = params.get("template");
+
+/* =====================================================
+   STATE
+   ===================================================== */
 
 let project = null;
 
-
-/* =========================
-   TEMPLATE DATA
-========================= */
-
-const templates = [
-
-  {
-    id:"cyber-neon",
-    name:"Cyber Neon",
-    type:"website",
-    icon:"⚡",
-    description:"وب‌سایت مدرن با طراحی تاریک و نئونی"
-  },
-
-  {
-    id:"modern-shop",
-    name:"Modern Shop",
-    type:"website",
-    icon:"🛒",
-    description:"قالب فروشگاه مدرن و حرفه‌ای"
-  },
-
-  {
-    id:"learning-academy",
-    name:"Learning Academy",
-    type:"website",
-    icon:"🎓",
-    description:"قالب آموزشی برای دوره و آموزش آنلاین"
-  },
-
-  {
-    id:"ai-future",
-    name:"AI Future",
-    type:"website",
-    icon:"🤖",
-    description:"قالب مدرن برای پروژه‌های هوش مصنوعی"
-  },
-
-  {
-    id:"creator-studio",
-    name:"Creator Studio",
-    type:"website",
-    icon:"🎨",
-    description:"صفحه حرفه‌ای برای سازندگان محتوا"
-  },
-
-  {
-    id:"restaurant",
-    name:"Restaurant",
-    type:"website",
-    icon:"🍔",
-    description:"قالب رستوران و سفارش آنلاین"
-  },
-
-  {
-    id:"modern-blog",
-    name:"Modern Blog",
-    type:"website",
-    icon:"📰",
-    description:"وبلاگ مدرن و حرفه‌ای"
-  },
-
-  {
-    id:"pro-portfolio",
-    name:"Pro Portfolio",
-    type:"website",
-    icon:"💼",
-    description:"نمونه‌کار حرفه‌ای"
-  },
-
-  {
-    id:"ai-assistant-app",
-    name:"AI Assistant App",
-    type:"app",
-    icon:"🤖",
-    description:"اپلیکیشن دستیار هوش مصنوعی"
-  },
-
-  {
-    id:"finance-app",
-    name:"Finance App",
-    type:"app",
-    icon:"💰",
-    description:"اپلیکیشن مدیریت مالی"
-  },
-
-  {
-    id:"health-app",
-    name:"Health App",
-    type:"app",
-    icon:"❤️",
-    description:"اپلیکیشن سلامت"
-  },
-
-  {
-    id:"social-app",
-    name:"Social App",
-    type:"app",
-    icon:"👥",
-    description:"اپلیکیشن اجتماعی"
-  },
-
-  {
-    id:"shadow-platformer",
-    name:"Shadow Platformer",
-    type:"game2d",
-    icon:"🕹️",
-    description:"بازی پلتفرمر دوبعدی"
-  },
-
-  {
-    id:"pixel-adventure",
-    name:"Pixel Adventure",
-    type:"game2d",
-    icon:"👾",
-    description:"ماجراجویی پیکسلی"
-  },
-
-  {
-    id:"mind-blocks",
-    name:"Mind Blocks",
-    type:"game2d",
-    icon:"🧩",
-    description:"بازی فکری و پازلی"
-  },
-
-  {
-    id:"velocity-racing",
-    name:"Velocity Racing",
-    type:"game3d",
-    icon:"🏎️",
-    description:"بازی مسابقه‌ای سه‌بعدی"
-  },
-
-  {
-    id:"galaxy-strike",
-    name:"Galaxy Strike",
-    type:"game3d",
-    icon:"🚀",
-    description:"بازی تیراندازی فضایی"
-  },
-
-  {
-    id:"dark-survival",
-    name:"Dark Survival",
-    type:"game3d",
-    icon:"☠️",
-    description:"بازی بقا"
-  },
-
-  {
-    id:"street-football",
-    name:"Street Football",
-    type:"game3d",
-    icon:"⚽",
-    description:"بازی فوتبال"
-  },
-
-  {
-    id:"space-adventure",
-    name:"Space Adventure",
-    type:"game3d",
-    icon:"🌌",
-    description:"ماجراجویی فضایی"
-  },
-
-  {
-    id:"battle-arena",
-    name:"Battle Arena",
-    type:"game3d",
-    icon:"⚔️",
-    description:"مبارزه در میدان نبرد"
-  }
-
-];
+let templateId = null;
 
 
-/* =========================
-   LOAD PROJECT
-========================= */
+/* =====================================================
+   GET PROJECT
+   ===================================================== */
 
-function loadProject(){
+function getProject() {
 
-  const projects =
-    JSON.parse(
-      localStorage.getItem("ghost_builder_projects") || "[]"
-    );
+  const id =
+    gbParam("project");
 
-  if(projectId){
 
-    project =
-      projects.find(
-        p => String(p.id) === String(projectId)
-      );
-  }
+  if (id) {
 
-  if(!project){
+    const found =
+      gbFindProject(id);
 
-    project =
-      JSON.parse(
-        localStorage.getItem("ghost_builder_current_project")
-        || "null"
-      );
-  }
 
-  if(!project && templateId){
+    if (found) {
 
-    const savedTemplate =
-      localStorage.getItem("ghost_builder_preview_template");
-
-    if(savedTemplate){
-
-      const template =
-        templates.find(
-          t => t.id === savedTemplate
-        );
-
-      if(template){
-
-        project = {
-          id:"template-preview",
-          name:template.name,
-          type:template.type,
-          title:template.name,
-          description:template.description,
-          button:"شروع کنید",
-          background:"#ffffff",
-          primary:"#7655ff",
-          radius:18,
-          width:390,
-          height:700,
-          quality:"High",
-          resolution:"1080p",
-          elements:[]
-        };
-
-      }
+      return found;
 
     }
 
   }
 
 
-  if(!project){
+  const current =
+    gbGetCurrentProject();
 
-    project = {
 
-      id:"demo",
+  if (current) {
 
-      name:"پروژه نمونه",
-
-      type:"website",
-
-      title:"پروژه خود را با Ghost Builder بسازید.",
-
-      description:
-        "یک پروژه حرفه‌ای با Ghost Builder ایجاد کنید.",
-
-      button:"شروع کنید",
-
-      background:"#ffffff",
-
-      primary:"#7655ff",
-
-      radius:18,
-
-      width:390,
-
-      height:700,
-
-      quality:"High",
-
-      resolution:"1080p",
-
-      elements:[]
-
-    };
+    return current;
 
   }
+
+
+  return null;
+
+}
+
+
+/* =====================================================
+   GET TEMPLATE
+   ===================================================== */
+
+function getTemplateId() {
+
+  return (
+    gbParam("template") ||
+    localStorage.getItem(
+      "ghost_builder_preview_template"
+    ) ||
+    sessionStorage.getItem(
+      "ghost_builder_preview_template"
+    )
+  );
+
+}
+
+
+/* =====================================================
+   INIT
+   ===================================================== */
+
+function initPreview() {
+
+  templateId =
+    getTemplateId();
+
+
+  project =
+    getProject();
+
+
+  if (!project) {
+
+    renderEmpty();
+
+    return;
+
+  }
+
+
+  gbSetCurrentProject(
+    project
+  );
+
 
   updateInfo();
 
@@ -859,465 +775,659 @@ function loadProject(){
 }
 
 
-/* =========================
-   TYPE NAME
-========================= */
-
-function getTypeName(type){
-
-  const names = {
-
-    website:"وب‌سایت",
-
-    app:"اپلیکیشن",
-
-    game2d:"بازی 2D",
-
-    game3d:"بازی 3D"
-
-  };
-
-  return names[type] || "پروژه";
-
-}
-
-
-/* =========================
+/* =====================================================
    UPDATE INFO
-========================= */
+   ===================================================== */
 
-function updateInfo(){
+function updateInfo() {
 
-  document.getElementById("projectName")
-    .textContent =
-    project.name || "پروژه جدید";
-
-  document.getElementById("projectType")
-    .textContent =
-    getTypeName(project.type);
-
-  document.getElementById("infoName")
-    .textContent =
-    project.name || "پروژه جدید";
-
-  document.getElementById("infoType")
-    .textContent =
-    getTypeName(project.type);
-
-  document.getElementById("infoQuality")
-    .textContent =
-    project.quality || "Medium";
-
-  document.getElementById("infoResolution")
-    .textContent =
-    project.resolution || "720p";
-
-}
+  const name =
+    project.name ||
+    project.title ||
+    "پروژه جدید";
 
 
-/* =========================
-   RENDER
-========================= */
-
-function renderProject(){
-
-  const content =
-    document.getElementById("previewContent");
-
-  if(project.type === "game2d" ||
-     project.type === "game3d"){
-
-    renderGame(content);
-
-    return;
-
-  }
-
-  renderWebsite(content);
-
-}
+  document.getElementById(
+    "projectName"
+  ).textContent =
+    name;
 
 
-/* =========================
-   WEBSITE
-========================= */
-
-function renderWebsite(content){
-
-  const bg =
-    project.background || "#ffffff";
-
-  const primary =
-    project.primary || "#7655ff";
-
-  const radius =
-    project.radius || 18;
-
-  content.innerHTML = `
-
-    <div
-      class="site"
-      style="
-        background:${bg};
-      ">
-
-      <header
-        class="site-header">
-
-        <div class="site-brand">
-          ${escapeHTML(project.name || "Ghost Builder")}
-        </div>
-
-        <nav class="site-nav">
-
-          <span>خانه</span>
-          <span>درباره</span>
-          <span>خدمات</span>
-
-        </nav>
-
-      </header>
+  document.getElementById(
+    "previewTitle"
+  ).textContent =
+    name;
 
 
-      <section
-        class="hero">
-
-        <h1>
-          ${escapeHTML(
-            project.title ||
-            project.name ||
-            "پروژه جدید"
-          )}
-        </h1>
-
-        <p>
-          ${escapeHTML(
-            project.description ||
-            "پروژه خود را با Ghost Builder بسازید."
-          )}
-        </p>
-
-        <button
-          class="hero-button"
-          style="
-            background:${primary};
-            border-radius:${radius}px;
-          "
-          onclick="demoClick()">
-
-          ${escapeHTML(
-            project.button ||
-            "شروع کنید"
-          )}
-
-        </button>
-
-      </section>
+  const type =
+    gbProjectTypeLabel(
+      project.type
+    );
 
 
-      <section class="content">
+  document.getElementById(
+    "previewMeta"
+  ).innerHTML = `
 
-        <div class="cards">
+    <span class="badge">
+      ${gbProjectTypeIcon(
+        project.type
+      )}
+      ${type}
+    </span>
 
-          <div class="card">
-            <h3>⚡ سریع</h3>
-            <p>
-              پروژه خود را سریع و آسان بسازید.
-            </p>
-          </div>
+    <span class="badge">
+      🎨 ${
+        gbEscapeHTML(
+          project.quality ||
+          "Medium"
+        )
+      }
+    </span>
 
-          <div class="card">
-            <h3>🎨 قابل شخصی‌سازی</h3>
-            <p>
-              رنگ‌ها، متن‌ها و ظاهر پروژه را تغییر دهید.
-            </p>
-          </div>
+    <span class="badge">
+      📺 ${
+        gbEscapeHTML(
+          project.resolution ||
+          "720p"
+        )
+      }
+    </span>
 
-          <div class="card">
-            <h3>🚀 آماده انتشار</h3>
-            <p>
-              پروژه خود را برای وب یا APK آماده کنید.
-            </p>
-          </div>
+  `;
 
-        </div>
 
-      </section>
+  const url =
+    window.location.origin +
+    window.location.pathname +
+    "?project=" +
+    encodeURIComponent(
+      project.id
+    );
+
+
+  document.getElementById(
+    "previewUrlContainer"
+  ).innerHTML = `
+
+    <div class="preview-url-box">
+
+      <input
+        class="form-input"
+        id="projectUrl"
+        value="${gbEscapeHTML(
+          url
+        )}"
+        readonly
+      >
+
+      <button
+        class="btn"
+        onclick="copyPreviewUrl()">
+        📋 کپی
+      </button>
 
     </div>
 
   `;
 
-
-  renderElements(content);
-
 }
 
 
-/* =========================
-   ELEMENTS
-========================= */
+/* =====================================================
+   RENDER PROJECT
+   ===================================================== */
 
-function renderElements(content){
+function renderProject() {
 
-  if(!project.elements ||
-     !Array.isArray(project.elements)){
+  if (
+    project.type ===
+    "game2d" ||
+    project.type ===
+    "game3d"
+  ) {
+
+    renderGame();
 
     return;
 
   }
 
-  const primary =
-    project.primary || "#7655ff";
 
-  project.elements.forEach(element => {
-
-    const type =
-      element.type || "text";
-
-    const div =
-      document.createElement("div");
-
-    div.className =
-      "dynamic-element";
-
-    if(type === "text"){
-
-      div.innerHTML = `
-        <div style="
-          font-size:18px;
-          font-weight:bold;
-          line-height:1.8;
-        ">
-          ${escapeHTML(
-            element.text ||
-            "متن جدید"
-          )}
-        </div>
-      `;
-
-    }
-
-    else if(type === "button"){
-
-      div.innerHTML = `
-        <button
-          class="dynamic-button"
-          style="
-            background:${primary};
-            border-radius:${project.radius || 18}px;
-          "
-          onclick="demoClick()">
-
-          ${escapeHTML(
-            element.text ||
-            "دکمه"
-          )}
-
-        </button>
-      `;
-
-    }
-
-    else if(type === "card"){
-
-      div.innerHTML = `
-        <div class="card">
-
-          <h3>
-            ${escapeHTML(
-              element.text ||
-              "کارت جدید"
-            )}
-          </h3>
-
-          <p>
-            این یک کارت ساخته‌شده با Ghost Builder است.
-          </p>
-
-        </div>
-      `;
-
-    }
-
-    else if(type === "image"){
-
-      div.innerHTML = `
-        <div
-          style="
-            min-height:150px;
-            background:linear-gradient(
-              135deg,
-              ${primary},
-              #111
-            );
-            border-radius:${project.radius || 18}px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            color:#fff;
-            font-size:40px;
-          ">
-
-          🖼️
-
-        </div>
-      `;
-
-    }
-
-    else if(type === "input"){
-
-      div.innerHTML = `
-        <input
-          class="dynamic-input"
-          placeholder="ورودی کاربر..."
-        >
-      `;
-
-    }
-
-    else if(type === "section"){
-
-      div.innerHTML = `
-        <div
-          style="
-            height:100px;
-            border-radius:${project.radius || 18}px;
-            background:#f2f2f2;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            color:#777;
-          ">
-
-          بخش جدید
-
-        </div>
-      `;
-
-    }
-
-    else{
-
-      div.innerHTML = `
-        <div class="card">
-          ${escapeHTML(
-            element.text ||
-            "عنصر جدید"
-          )}
-        </div>
-      `;
-
-    }
-
-    content.querySelector(".site")
-      ?.appendChild(div);
-
-  });
+  renderWebsite();
 
 }
 
 
-/* =========================
-   GAME
-========================= */
+/* =====================================================
+   RENDER WEBSITE / APP
+   ===================================================== */
 
-function renderGame(content){
+function renderWebsite() {
 
-  const primary =
-    project.primary || "#7655ff";
+  const canvas =
+    document.getElementById(
+      "previewCanvas"
+    );
 
-  const is3D =
-    project.type === "game3d";
 
-  content.innerHTML = `
+  canvas.innerHTML = "";
 
-    <div
-      class="site"
+
+  canvas.style.background =
+    project.background ||
+    "#ffffff";
+
+
+  canvas.style.color =
+    project.background ===
+    "#ffffff"
+      ? "#111111"
+      : "#ffffff";
+
+
+  const radius =
+    project.radius ??
+    18;
+
+
+  const icon =
+    gbProjectTypeIcon(
+      project.type
+    );
+
+
+  /* HERO */
+
+  const hero =
+    document.createElement(
+      "section"
+    );
+
+
+  hero.className =
+    "preview-hero";
+
+
+  hero.innerHTML = `
+
+    <div class="preview-hero-icon">
+      ${icon}
+    </div>
+
+    <h1>
+      ${gbEscapeHTML(
+        project.title ||
+        project.name ||
+        "پروژه جدید"
+      )}
+    </h1>
+
+    <p>
+      ${gbEscapeHTML(
+        project.description ||
+        "پروژه ساخته‌شده با Ghost Builder."
+      )}
+    </p>
+
+    <button
+      class="preview-primary-button"
       style="
-        background:
-          radial-gradient(
-            circle at center,
-            ${primary},
-            #050509 55%
+        background:${
+          project.primary ||
+          "#7c5cff"
+        };
+
+        border-radius:
+        ${radius}px;
+      "
+      onclick="demoButton()">
+      ${gbEscapeHTML(
+        project.button ||
+        "شروع کنید"
+      )}
+    </button>
+
+  `;
+
+
+  canvas.appendChild(
+    hero
+  );
+
+
+  /* ELEMENTS */
+
+  const elements =
+    project.elements ||
+    [];
+
+
+  if (
+    elements.length
+  ) {
+
+    const elementsContainer =
+      document.createElement(
+        "div"
+      );
+
+
+    elementsContainer.className =
+      "preview-elements";
+
+
+    elements.forEach(
+      element => {
+
+        const rendered =
+          renderElement(
+            element
           );
-        color:#fff;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        position:relative;
+
+
+        if (rendered) {
+
+          elementsContainer.appendChild(
+            rendered
+          );
+
+        }
+
+      }
+    );
+
+
+    canvas.appendChild(
+      elementsContainer
+    );
+
+  }
+
+
+  /* FOOTER */
+
+  const footer =
+    document.createElement(
+      "div"
+    );
+
+
+  footer.style.padding =
+    "25px";
+
+  footer.style.textAlign =
+    "center";
+
+  footer.style.opacity =
+    ".55";
+
+  footer.style.fontSize =
+    "11px";
+
+  footer.textContent =
+    "ساخته‌شده با Ghost Builder";
+
+
+  canvas.appendChild(
+    footer
+  );
+
+}
+
+
+/* =====================================================
+   RENDER ELEMENT
+   ===================================================== */
+
+function renderElement(
+  element
+) {
+
+  const wrapper =
+    document.createElement(
+      "div"
+    );
+
+
+  wrapper.className =
+    "preview-element";
+
+
+  if (
+    element.type ===
+    "text"
+  ) {
+
+    wrapper.innerHTML = `
+
+      <div style="
+        font-size:${
+          Number(
+            element.fontSize ||
+            20
+          )
+        }px;
+
+        color:${
+          element.color ||
+          "inherit"
+        };
+
+        font-weight:700;
+
+        line-height:1.8;
       ">
+        ${gbEscapeHTML(
+          element.text ||
+          "متن"
+        )}
+      </div>
+
+    `;
+
+    return wrapper;
+
+  }
+
+
+  if (
+    element.type ===
+    "button"
+  ) {
+
+    wrapper.innerHTML = `
+
+      <button
+        class="preview-primary-button"
+        style="
+          background:${
+            element.color ||
+            project.primary ||
+            "#7c5cff"
+          };
+
+          border-radius:
+          ${project.radius ?? 18}px;
+        "
+        onclick="demoButton()">
+
+        ${gbEscapeHTML(
+          element.text ||
+          "دکمه"
+        )}
+
+      </button>
+
+    `;
+
+    return wrapper;
+
+  }
+
+
+  if (
+    element.type ===
+    "card"
+  ) {
+
+    wrapper.innerHTML = `
 
       <div
+        class="preview-card"
         style="
-          text-align:center;
-          width:90%;
+          border-radius:
+          ${project.radius ?? 18}px;
         ">
 
-        <div style="
-          font-size:60px;
-          margin-bottom:15px;
-        ">
-          ${is3D ? "🎮" : "🕹️"}
-        </div>
-
-        <h1 style="
-          font-size:28px;
-          margin-bottom:12px;
-        ">
-          ${escapeHTML(
-            project.name ||
-            "بازی جدید"
+        <h3>
+          ${gbEscapeHTML(
+            element.title ||
+            "کارت جدید"
           )}
-        </h1>
+        </h3>
 
-        <p style="
-          color:#ccc;
-          line-height:1.8;
-        ">
-          ${escapeHTML(
-            project.description ||
-            "بازی ساخته‌شده با Ghost Builder"
+        <p>
+          ${gbEscapeHTML(
+            element.description ||
+            ""
           )}
         </p>
 
-        <button
-          onclick="startGameDemo()"
+      </div>
+
+    `;
+
+    return wrapper;
+
+  }
+
+
+  if (
+    element.type ===
+    "image"
+  ) {
+
+    if (
+      element.src
+    ) {
+
+      wrapper.innerHTML = `
+
+        <img
+          src="${gbEscapeHTML(
+            element.src
+          )}"
+          alt="${gbEscapeHTML(
+            element.alt ||
+            "تصویر"
+          )}"
           style="
-            margin-top:25px;
-            padding:14px 30px;
-            border:0;
-            border-radius:12px;
-            background:#fff;
-            color:#111;
-            font-weight:900;
-          ">
+            display:block;
+            width:100%;
+            max-height:320px;
+            object-fit:cover;
+            border-radius:
+            ${project.radius ?? 18}px;
+          "
+        >
 
-          شروع بازی
+      `;
 
-        </button>
+    } else {
+
+      wrapper.innerHTML = `
+
+        <div style="
+          min-height:180px;
+          display:grid;
+          place-items:center;
+          background:#eef0f5;
+          color:#777;
+          font-size:48px;
+          border-radius:
+          ${project.radius ?? 18}px;
+        ">
+          🖼️
+        </div>
+
+      `;
+
+    }
+
+
+    return wrapper;
+
+  }
+
+
+  if (
+    element.type ===
+    "input"
+  ) {
+
+    wrapper.innerHTML = `
+
+      <input
+        class="preview-input"
+        type="text"
+        placeholder="${gbEscapeHTML(
+          element.placeholder ||
+          "متن خود را وارد کنید..."
+        )}"
+        style="
+          border-radius:
+          ${project.radius ?? 18}px;
+        "
+      >
+
+    `;
+
+    return wrapper;
+
+  }
+
+
+  if (
+    element.type ===
+    "section"
+  ) {
+
+    wrapper.innerHTML = `
+
+      <div
+        class="preview-section"
+        style="
+          background:
+          ${
+            element.background ||
+            "#f0f2f7"
+          };
+
+          border-radius:
+          ${project.radius ?? 18}px;
+        ">
+      </div>
+
+    `;
+
+    return wrapper;
+
+  }
+
+
+  return null;
+
+}
+
+
+/* =====================================================
+   GAME PREVIEW
+   ===================================================== */
+
+function renderGame() {
+
+  const canvas =
+    document.getElementById(
+      "previewCanvas"
+    );
+
+
+  canvas.innerHTML = "";
+
+
+  canvas.className =
+    "preview-canvas game-preview";
+
+
+  canvas.innerHTML = `
+
+    <div class="game-hud">
+
+      <div class="game-hud-box">
+        ❤️ HP 100
+      </div>
+
+      <div class="game-hud-box">
+        ⭐ SCORE 000
+      </div>
+
+      <div class="game-hud-box">
+        🪙 000
+      </div>
+
+    </div>
+
+
+    <div
+      class="game-world"
+      id="gameWorld">
+
+      <div class="game-grid"></div>
+
+      <div class="game-crosshair"></div>
+
+      <div class="game-target">
+        🎯
+      </div>
+
+      <div class="game-player">
+        🧍
+      </div>
+
+      <div class="game-controls">
+
+        <div class="joystick"></div>
+
+        <div class="game-buttons">
+
+          <button
+            class="game-button"
+            onclick="gameDemoAction('⚡')">
+            ⚡
+          </button>
+
+          <button
+            class="game-button"
+            onclick="gameDemoAction('🛡️')">
+            🛡️
+          </button>
+
+          <button
+            class="game-button"
+            onclick="gameDemoAction('🎯')">
+            🎯
+          </button>
+
+        </div>
 
       </div>
 
+    </div>
 
-      <div style="
-        position:absolute;
-        top:15px;
-        left:15px;
-        right:15px;
-        display:flex;
-        justify-content:space-between;
+
+    <div
+      style="
+        text-align:center;
+        padding:18px 10px;
+        opacity:.75;
         font-size:12px;
       ">
 
-        <span>❤️ HP 100</span>
+      <strong>
+        ${gbEscapeHTML(
+          project.title ||
+          project.name ||
+          "Game"
+        )}
+      </strong>
 
-        <span>⭐ SCORE 0</span>
+      <br>
 
-        <span>🪙 0</span>
-
-      </div>
+      ${gbEscapeHTML(
+        project.description ||
+        "پیش‌نمایش بازی"
+      )}
 
     </div>
 
@@ -1326,174 +1436,249 @@ function renderGame(content){
 }
 
 
-/* =========================
-   DEVICE
-========================= */
+/* =====================================================
+   EMPTY
+   ===================================================== */
 
-function setDevice(device){
+function renderEmpty() {
 
-  const frame =
-    document.getElementById("previewFrame");
-
-  frame.className =
-    "preview-frame " + device;
-
-  document
-    .querySelectorAll(".device-btn")
-    .forEach(btn =>
-      btn.classList.remove("active")
+  const canvas =
+    document.getElementById(
+      "previewCanvas"
     );
 
-  document
-    .getElementById(device + "Btn")
-    .classList.add("active");
+
+  canvas.innerHTML = `
+
+    <div class="preview-empty">
+
+      <div>
+
+        <div class="preview-empty-icon">
+          📂
+        </div>
+
+        <h2>
+          پروژه‌ای برای نمایش وجود ندارد
+        </h2>
+
+        <p style="
+          color:var(--muted);
+          line-height:1.9;
+        ">
+          ابتدا یک پروژه بسازید یا از بخش پروژه‌ها
+          یک پروژه را برای پیش‌نمایش انتخاب کنید.
+        </p>
+
+        <button
+          class="btn btn-primary"
+          onclick="window.location.href='projects.html'">
+          📁 رفتن به پروژه‌ها
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  document.getElementById(
+    "previewTitle"
+  ).textContent =
+    "پیش‌نمایش خالی";
+
+
+  document.getElementById(
+    "previewMeta"
+  ).innerHTML = "";
 
 }
 
 
-/* =========================
-   BUTTONS
-========================= */
+/* =====================================================
+   DEVICE MODE
+   ===================================================== */
 
-function goBack(){
+function setDeviceMode(
+  mode
+) {
 
-  history.back();
+  const device =
+    document.getElementById(
+      "previewDevice"
+    );
+
+
+  device.classList.remove(
+    "mobile",
+    "tablet",
+    "desktop"
+  );
+
+
+  device.classList.add(
+    mode
+  );
+
+
+  gbToast(
+    mode === "mobile"
+      ? "نمایش موبایل"
+      : mode === "tablet"
+        ? "نمایش تبلت"
+        : "نمایش دسکتاپ",
+    "success"
+  );
 
 }
 
 
-function editProject(){
+/* =====================================================
+   EDIT
+   ===================================================== */
 
-  if(project.id === "demo" ||
-     project.id === "template-preview"){
+function editProject() {
 
-    location.href =
-      "builder.html";
-
+  if (!project) {
     return;
-
   }
 
-  localStorage.setItem(
-    "ghost_builder_current_project",
-    JSON.stringify(project)
+
+  gbSetCurrentProject(
+    project
   );
 
-  location.href =
+
+  window.location.href =
     "builder.html?project=" +
-    encodeURIComponent(project.id);
+    encodeURIComponent(
+      project.id
+    );
 
 }
 
 
-function publishProject(){
+/* =====================================================
+   PUBLISH
+   ===================================================== */
 
-  let url =
-    "publish.html?project=" +
-    encodeURIComponent(project.id);
+function publishProject() {
 
-  location.href = url;
-
-}
-
-
-function buildAPK(){
-
-  let url =
-    "publish.html?type=apk&project=" +
-    encodeURIComponent(project.id);
-
-  location.href = url;
-
-}
-
-
-function copyProjectLink(){
-
-  const fakeLink =
-    location.origin +
-    location.pathname.replace(
-      "preview.html",
-      "index.html"
-    ) +
-    "?project=" +
-    encodeURIComponent(project.id);
-
-  if(navigator.clipboard){
-
-    navigator.clipboard.writeText(fakeLink)
-      .then(() => {
-
-        alert(
-          "لینک پروژه کپی شد."
-        );
-
-      })
-      .catch(() => {
-
-        alert(
-          "کپی لینک انجام نشد."
-        );
-
-      });
-
+  if (!project) {
+    return;
   }
 
-  else{
 
-    alert(fakeLink);
-
-  }
-
-}
+  gbSetCurrentProject(
+    project
+  );
 
 
-/* =========================
-   DEMO ACTIONS
-========================= */
-
-function demoClick(){
-
-  alert(
-    "این دکمه در حالت پیش‌نمایش فعال است.\n" +
-    "می‌توانید عملکرد واقعی آن را در Builder تنظیم کنید."
+  gbPublish(
+    project.id,
+    "web"
   );
 
 }
 
 
-function startGameDemo(){
+/* =====================================================
+   BACK
+   ===================================================== */
 
-  alert(
-    "🎮 پیش‌نمایش بازی اجرا شد!"
+function goBack() {
+
+  if (project) {
+
+    gbSetCurrentProject(
+      project
+    );
+
+  }
+
+
+  window.location.href =
+    "projects.html";
+
+}
+
+
+/* =====================================================
+   COPY URL
+   ===================================================== */
+
+function copyPreviewUrl() {
+
+  const input =
+    document.getElementById(
+      "projectUrl"
+    );
+
+
+  if (!input) {
+    return;
+  }
+
+
+  gbCopy(
+    input.value
+  );
+
+
+  gbToast(
+    "لینک پیش‌نمایش کپی شد.",
+    "success"
   );
 
 }
 
 
-/* =========================
-   ESCAPE HTML
-========================= */
+/* =====================================================
+   DEMO BUTTON
+   ===================================================== */
 
-function escapeHTML(value){
+function demoButton() {
 
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+  gbToast(
+    "این دکمه در حالت پیش‌نمایش آزمایشی است.",
+    "success"
+  );
 
 }
 
 
-/* =========================
-   START
-========================= */
+/* =====================================================
+   GAME ACTION
+   ===================================================== */
 
-loadProject();
+function gameDemoAction(
+  action
+) {
+
+  gbToast(
+    action +
+    " قابلیت بازی آزمایشی فعال شد.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   INIT
+   ===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    initPreview();
+
+  }
+);
 
 </script>
 
 </body>
-      </html>
+  </html>
