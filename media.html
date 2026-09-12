@@ -1,600 +1,846 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Ghost Builder | Media</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+  <title>Ghost Builder — رسانه‌ها</title>
 
-body{
-  font-family:Tahoma,Arial,sans-serif;
-  background:#07070b;
-  color:#fff;
-  min-height:100vh;
-}
+  <link rel="stylesheet" href="style.css">
 
-button,input{
-  font-family:inherit;
-}
+  <style>
+    .media-page {
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
 
-.topbar{
-  height:70px;
-  background:#0d0d14;
-  border-bottom:1px solid #252535;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 22px;
-}
+    .media-header {
+      max-width: 1200px;
+      margin: auto;
+      padding: 28px 18px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
 
-.logo{
-  font-size:21px;
-  font-weight:900;
-  color:#805fff;
-}
+    .media-title h1 {
+      margin: 0;
+      font-size: 26px;
+    }
 
-.logo span{
-  color:#fff;
-}
+    .media-title p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
 
-.actions{
-  display:flex;
-  gap:8px;
-}
+    .media-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 18px;
+    }
 
-.btn{
-  border:1px solid #302d43;
-  background:#15141d;
-  color:#fff;
-  padding:10px 15px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-}
+    .media-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
 
-.btn.primary{
-  background:#7655ff;
-  border-color:#7655ff;
-}
+    .media-stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+    }
 
-.container{
-  width:min(1200px,94%);
-  margin:30px auto;
-}
+    .media-stat-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
 
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:25px;
-}
+    .media-stat strong {
+      display: block;
+      font-size: 22px;
+    }
 
-.header h1{
-  font-size:27px;
-  margin-bottom:8px;
-}
+    .media-stat span {
+      color: var(--muted);
+      font-size: 11px;
+    }
 
-.header p{
-  color:#888;
-  font-size:13px;
-  line-height:1.8;
-}
+    .media-toolbar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
 
-.upload{
-  position:relative;
-  overflow:hidden;
-}
+    .media-search {
+      flex: 1;
+      min-width: 200px;
+    }
 
-.upload input{
-  position:absolute;
-  inset:0;
-  opacity:0;
-  cursor:pointer;
-}
+    .media-filters {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
 
-.toolbar{
-  background:#0e0e15;
-  border:1px solid #29283a;
-  border-radius:16px;
-  padding:14px;
-  display:flex;
-  gap:10px;
-  margin-bottom:20px;
-}
+    .media-filter {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      padding: 9px 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+    }
 
-.search{
-  flex:1;
-  background:#09090d;
-  border:1px solid #302f40;
-  color:#fff;
-  border-radius:10px;
-  padding:11px 13px;
-  outline:none;
-}
+    .media-filter.active {
+      background: #7c5cff;
+      color: white;
+      border-color: #7c5cff;
+    }
 
-.filter{
-  background:#15141d;
-  color:#aaa;
-  border:1px solid #302d43;
-  border-radius:10px;
-  padding:10px 13px;
-  cursor:pointer;
-}
+    .upload-box {
+      border: 2px dashed var(--border);
+      border-radius: 20px;
+      padding: 30px 20px;
+      text-align: center;
+      background: var(--card);
+      margin-bottom: 18px;
+      transition: .2s;
+    }
 
-.filter.active{
-  color:#fff;
-  background:#7655ff;
-  border-color:#7655ff;
-}
+    .upload-box:hover {
+      border-color: #7c5cff;
+      background: rgba(124,92,255,.03);
+    }
 
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  margin-bottom:20px;
-}
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
 
-.stat{
-  background:#0e0e15;
-  border:1px solid #29283a;
-  border-radius:14px;
-  padding:16px;
-}
+    .upload-box h2 {
+      margin: 0 0 7px;
+      font-size: 18px;
+    }
 
-.stat small{
-  color:#777;
-  display:block;
-  margin-bottom:8px;
-}
+    .upload-box p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+      margin: 0 auto 15px;
+      max-width: 600px;
+    }
 
-.stat strong{
-  font-size:20px;
-}
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-}
+    .media-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      min-width: 0;
+    }
 
-.media-card{
-  background:#0e0e15;
-  border:1px solid #29283a;
-  border-radius:16px;
-  overflow:hidden;
-  transition:.2s;
-}
+    .media-preview {
+      height: 170px;
+      background: var(--bg);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      position: relative;
+    }
 
-.media-card:hover{
-  transform:translateY(-3px);
-  border-color:#51447c;
-}
+    .media-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-.media-preview{
-  height:150px;
-  background:
-    radial-gradient(circle at 30% 30%,#7655ff55,transparent 30%),
-    linear-gradient(135deg,#171525,#08080c);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:50px;
-}
+    .media-file-icon {
+      font-size: 50px;
+    }
 
-.media-info{
-  padding:13px;
-}
+    .media-type-badge {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      padding: 4px 7px;
+      border-radius: 7px;
+      background: rgba(0,0,0,.65);
+      color: white;
+      font-size: 9px;
+    }
 
-.media-name{
-  font-weight:bold;
-  margin-bottom:6px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+    .media-info {
+      padding: 12px;
+    }
 
-.media-type{
-  color:#777;
-  font-size:11px;
-  margin-bottom:12px;
-}
+    .media-name {
+      font-weight: 800;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-.media-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-}
+    .media-meta {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 5px;
+    }
 
-.small-btn{
-  padding:8px;
-  border-radius:8px;
-  border:1px solid #302d43;
-  background:#15141d;
-  color:#fff;
-  cursor:pointer;
-  font-size:11px;
-}
+    .media-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
 
-.small-btn.danger{
-  color:#ff8585;
-}
+    .media-actions button {
+      flex: 1;
+      font-size: 11px;
+    }
 
-.empty{
-  grid-column:1/-1;
-  background:#0e0e15;
-  border:1px dashed #343346;
-  border-radius:18px;
-  padding:60px 20px;
-  text-align:center;
-  color:#777;
-}
+    .media-empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 65px 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+    }
 
-.empty-icon{
-  font-size:55px;
-  margin-bottom:12px;
-}
+    .media-empty-icon {
+      font-size: 60px;
+      margin-bottom: 12px;
+    }
 
-.note{
-  margin-top:20px;
-  background:#111018;
-  border:1px solid #29283a;
-  border-radius:14px;
-  padding:15px;
-  color:#888;
-  font-size:12px;
-  line-height:1.9;
-}
+    .upload-progress {
+      display: none;
+      margin-top: 15px;
+    }
 
-@media(max-width:900px){
-  .grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-}
+    .upload-progress.show {
+      display: block;
+    }
 
-@media(max-width:650px){
-  .topbar{
-    height:auto;
-    min-height:65px;
-    padding:10px;
-    gap:8px;
-  }
+    .upload-progress-bar {
+      height: 8px;
+      background: var(--bg);
+      border-radius: 20px;
+      overflow: hidden;
+    }
 
-  .header{
-    align-items:flex-start;
-    flex-direction:column;
-  }
+    .upload-progress-fill {
+      height: 100%;
+      width: 0;
+      background: #7c5cff;
+      transition: width .2s;
+    }
 
-  .toolbar{
-    flex-wrap:wrap;
-  }
+    .upload-progress-text {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 6px;
+    }
 
-  .search{
-    flex-basis:100%;
-  }
+    @media(max-width:950px) {
+      .media-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
 
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
+      .media-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
 
-  .grid{
-    grid-template-columns:1fr 1fr;
-  }
-}
-</style>
+    @media(max-width:650px) {
+      .media-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .media-preview {
+        height: 140px;
+      }
+    }
+
+    @media(max-width:430px) {
+      .media-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .media-stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="topbar">
+<div class="media-page">
 
-  <div class="logo">
-    Ghost <span>Builder</span>
-  </div>
+  <!-- TOPBAR -->
 
-  <div class="actions">
+  <header class="topbar">
 
-    <button class="btn" onclick="goHome()">
-      خانه
-    </button>
+    <div class="topbar-title">
+      <div>
+        <strong>🖼️ رسانه‌ها</strong>
+        <span>مدیریت فایل‌های پروژه</span>
+      </div>
+    </div>
 
-    <button class="btn primary" onclick="goBuilder()">
-      ساخت پروژه
-    </button>
+    <div class="topbar-actions">
 
-  </div>
+      <button
+        class="btn"
+        onclick="goBuilder()">
+        ✏️ ویرایشگر
+      </button>
 
-</header>
+      <button
+        class="btn"
+        onclick="goProjects()">
+        📁 پروژه‌ها
+      </button>
+
+    </div>
+
+  </header>
 
 
-<main class="container">
+  <!-- HEADER -->
 
-  <section class="header">
+  <section class="media-header">
 
-    <div>
+    <div class="media-title">
 
-      <h1>📁 فایل‌های رسانه‌ای</h1>
+      <h1>
+        کتابخانه رسانه
+      </h1>
 
       <p>
-        تصاویر، ویدیوها و فایل‌های موردنیاز پروژه‌های خود را مدیریت کنید.
+        تصاویر، ویدیوها، صداها و فایل‌های موردنیاز پروژه‌ها
       </p>
 
     </div>
 
+    <button
+      class="btn btn-primary"
+      onclick="openFilePicker()">
+      ➕ افزودن فایل
+    </button>
 
-    <label class="btn primary upload">
+  </section>
 
-      ⬆️ افزودن فایل
+
+  <main class="media-container">
+
+
+    <!-- STATS -->
+
+    <section class="media-stats">
+
+      <div class="media-stat">
+
+        <div class="media-stat-icon">
+          📦
+        </div>
+
+        <strong id="totalCount">
+          0
+        </strong>
+
+        <span>
+          کل فایل‌ها
+        </span>
+
+      </div>
+
+
+      <div class="media-stat">
+
+        <div class="media-stat-icon">
+          🖼️
+        </div>
+
+        <strong id="imageCount">
+          0
+        </strong>
+
+        <span>
+          تصاویر
+        </span>
+
+      </div>
+
+
+      <div class="media-stat">
+
+        <div class="media-stat-icon">
+          🎬
+        </div>
+
+        <strong id="videoCount">
+          0
+        </strong>
+
+        <span>
+          ویدیوها
+        </span>
+
+      </div>
+
+
+      <div class="media-stat">
+
+        <div class="media-stat-icon">
+          📄
+        </div>
+
+        <strong id="otherCount">
+          0
+        </strong>
+
+        <span>
+          سایر فایل‌ها
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- UPLOAD -->
+
+    <section
+      id="uploadBox"
+      class="upload-box">
+
+      <div class="upload-icon">
+        ☁️
+      </div>
+
+      <h2>
+        فایل خود را اضافه کنید
+      </h2>
+
+      <p>
+        تصویر، ویدیو، صوت، JSON، TXT، SVG و فایل‌های
+        پشتیبانی‌شده دیگر را انتخاب کنید.
+      </p>
+
+      <button
+        class="btn btn-primary"
+        onclick="openFilePicker()">
+        📤 انتخاب فایل
+      </button>
 
       <input
-        type="file"
         id="fileInput"
+        type="file"
         multiple
-        accept="image/*,video/*,audio/*,.json,.txt,.svg"
-      >
-
-    </label>
-
-  </section>
-
-
-  <section class="stats">
-
-    <div class="stat">
-      <small>همه فایل‌ها</small>
-      <strong id="totalCount">0</strong>
-    </div>
-
-    <div class="stat">
-      <small>تصاویر</small>
-      <strong id="imageCount">0</strong>
-    </div>
-
-    <div class="stat">
-      <small>ویدیو</small>
-      <strong id="videoCount">0</strong>
-    </div>
-
-    <div class="stat">
-      <small>سایر فایل‌ها</small>
-      <strong id="otherCount">0</strong>
-    </div>
-
-  </section>
+        hidden
+        accept="
+          image/*,
+          video/*,
+          audio/*,
+          .json,
+          .txt,
+          .svg
+        ">
 
 
-  <section class="toolbar">
+      <div
+        id="uploadProgress"
+        class="upload-progress">
 
-    <input
-      id="search"
-      class="search"
-      placeholder="جستجوی فایل..."
-      oninput="render()"
-    >
+        <div class="upload-progress-bar">
 
+          <div
+            id="uploadProgressFill"
+            class="upload-progress-fill">
+          </div>
 
-    <button
-      class="filter active"
-      id="allFilter"
-      onclick="setFilter('all')">
-      همه
-    </button>
+        </div>
 
-    <button
-      class="filter"
-      id="imageFilter"
-      onclick="setFilter('image')">
-      تصاویر
-    </button>
+        <div
+          id="uploadProgressText"
+          class="upload-progress-text">
+          در حال آماده‌سازی...
+        </div>
 
-    <button
-      class="filter"
-      id="videoFilter"
-      onclick="setFilter('video')">
-      ویدیو
-    </button>
+      </div>
 
-    <button
-      class="filter"
-      id="otherFilter"
-      onclick="setFilter('other')">
-      سایر
-    </button>
-
-  </section>
+    </section>
 
 
-  <section
-    class="grid"
-    id="mediaGrid">
-  </section>
+    <!-- TOOLBAR -->
+
+    <section class="media-toolbar">
+
+      <input
+        id="searchInput"
+        class="form-input media-search"
+        placeholder="🔎 جستجوی فایل..."
+        oninput="renderMedia()">
 
 
-  <div class="note">
+      <div class="media-filters">
 
-    💡 فایل‌های این بخش فعلاً در حافظه مرورگر این دستگاه مدیریت می‌شوند.
-    برای پروژه‌های واقعی، می‌توان در مرحله بعد سیستم ذخیره‌سازی آنلاین
-    و آپلود ابری را به Ghost Builder متصل کرد.
+        <button
+          class="media-filter active"
+          data-filter="all"
+          onclick="setFilter('all',this)">
+          همه
+        </button>
 
-  </div>
+        <button
+          class="media-filter"
+          data-filter="image"
+          onclick="setFilter('image',this)">
+          🖼️ تصاویر
+        </button>
 
-</main>
+        <button
+          class="media-filter"
+          data-filter="video"
+          onclick="setFilter('video',this)">
+          🎬 ویدیو
+        </button>
 
+        <button
+          class="media-filter"
+          data-filter="audio"
+          onclick="setFilter('audio',this)">
+          🎵 صوت
+        </button>
+
+        <button
+          class="media-filter"
+          data-filter="other"
+          onclick="setFilter('other',this)">
+          📄 سایر
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- GRID -->
+
+    <section
+      id="mediaGrid"
+      class="media-grid">
+    </section>
+
+  </main>
+
+</div>
+
+
+<script src="app.js"></script>
 
 <script>
 
-const STORAGE_KEY =
-  "ghost_builder_media";
+"use strict";
 
-let media =
-  JSON.parse(
-    localStorage.getItem(STORAGE_KEY) || "[]"
-  );
+
+/* =====================================================
+   STATE
+   ===================================================== */
 
 let currentFilter = "all";
 
 
-/* =========================
-   FILTER
-========================= */
+/* =====================================================
+   FILE PICKER
+   ===================================================== */
 
-function setFilter(filter){
-
-  currentFilter = filter;
+function openFilePicker() {
 
   document
-    .querySelectorAll(".filter")
-    .forEach(btn =>
-      btn.classList.remove("active")
-    );
-
-  if(filter === "all"){
-    document
-      .getElementById("allFilter")
-      .classList.add("active");
-  }
-
-  if(filter === "image"){
-    document
-      .getElementById("imageFilter")
-      .classList.add("active");
-  }
-
-  if(filter === "video"){
-    document
-      .getElementById("videoFilter")
-      .classList.add("active");
-  }
-
-  if(filter === "other"){
-    document
-      .getElementById("otherFilter")
-      .classList.add("active");
-  }
-
-  render();
+    .getElementById("fileInput")
+    .click();
 
 }
 
 
-/* =========================
+/* =====================================================
    FILE TYPE
-========================= */
+   ===================================================== */
 
-function getFileType(file){
+function getMediaType(file) {
 
-  if(file.type.startsWith("image/")){
+  if (
+    file.type &&
+    file.type.startsWith("image/")
+  ) {
     return "image";
   }
 
-  if(file.type.startsWith("video/")){
+  if (
+    file.type &&
+    file.type.startsWith("video/")
+  ) {
     return "video";
   }
+
+  if (
+    file.type &&
+    file.type.startsWith("audio/")
+  ) {
+    return "audio";
+  }
+
+  const name =
+    file.name.toLowerCase();
+
+
+  if (
+    name.endsWith(".jpg") ||
+    name.endsWith(".jpeg") ||
+    name.endsWith(".png") ||
+    name.endsWith(".gif") ||
+    name.endsWith(".webp") ||
+    name.endsWith(".svg")
+  ) {
+    return "image";
+  }
+
+
+  if (
+    name.endsWith(".mp4") ||
+    name.endsWith(".webm") ||
+    name.endsWith(".mov")
+  ) {
+    return "video";
+  }
+
+
+  if (
+    name.endsWith(".mp3") ||
+    name.endsWith(".wav") ||
+    name.endsWith(".ogg")
+  ) {
+    return "audio";
+  }
+
 
   return "other";
 
 }
 
 
-/* =========================
-   ADD FILES
-========================= */
+/* =====================================================
+   FILE UPLOAD
+   ===================================================== */
 
-document
-  .getElementById("fileInput")
-  .addEventListener(
-    "change",
-    async function(){
+async function handleFiles(
+  files
+) {
 
-      const files =
-        Array.from(this.files);
-
-      for(const file of files){
-
-        const type =
-          getFileType(file);
-
-        let preview = "";
-
-        if(type === "image"){
-
-          try{
-
-            preview =
-              await fileToDataURL(file);
-
-          }catch(e){
-
-            preview = "";
-
-          }
-
-        }
+  if (!files || !files.length) {
+    return;
+  }
 
 
-        media.push({
+  const progress =
+    document.getElementById(
+      "uploadProgress"
+    );
 
-          id:
-            Date.now() +
-            Math.random()
-              .toString(16)
-              .slice(2),
+  const fill =
+    document.getElementById(
+      "uploadProgressFill"
+    );
 
-          name:file.name,
+  const text =
+    document.getElementById(
+      "uploadProgressText"
+    );
 
-          type:type,
 
-          mime:file.type,
+  progress.classList.add(
+    "show"
+  );
 
-          size:file.size,
 
-          preview:preview,
+  let completed = 0;
 
-          createdAt:
-            new Date().toISOString()
 
-        });
+  for (
+    const file of files
+  ) {
+
+    try {
+
+      text.textContent =
+        "در حال افزودن: " +
+        file.name;
+
+
+      fill.style.width =
+        Math.round(
+          (completed /
+            files.length) *
+            100
+        ) + "%";
+
+
+      /*
+       * برای تصاویر، Data URL ذخیره می‌شود
+       * تا امکان پیش‌نمایش داشته باشند.
+       *
+       * فایل‌های خیلی بزرگ ممکن است توسط
+       * localStorage محدود شوند.
+       */
+
+      let dataUrl = "";
+
+
+      if (
+        file.type.startsWith(
+          "image/"
+        ) &&
+        file.size <=
+          3 * 1024 * 1024
+      ) {
+
+        dataUrl =
+          await fileToDataURL(
+            file
+          );
 
       }
 
 
-      save();
+      gbAddMedia({
 
-      render();
+        name:
+          file.name,
 
-      this.value = "";
+        type:
+          getMediaType(
+            file
+          ),
+
+        mime:
+          file.type ||
+          "application/octet-stream",
+
+        size:
+          file.size,
+
+        sizeText:
+          formatBytes(
+            file.size
+          ),
+
+        dataUrl:
+          dataUrl,
+
+        createdAt:
+          new Date().toISOString()
+
+      });
+
+
+      completed++;
+
+    } catch (error) {
+
+      console.error(
+        error
+      );
 
     }
+
+  }
+
+
+  fill.style.width =
+    "100%";
+
+
+  text.textContent =
+    completed +
+    " فایل با موفقیت اضافه شد.";
+
+
+  renderMedia();
+
+
+  setTimeout(
+    () => {
+
+      progress.classList.remove(
+        "show"
+      );
+
+    },
+    1200
   );
 
 
-/* =========================
-   FILE TO DATA URL
-========================= */
+  gbToast(
+    completed +
+    " فایل اضافه شد.",
+    "success"
+  );
 
-function fileToDataURL(file){
+}
+
+
+/* =====================================================
+   DATA URL
+   ===================================================== */
+
+function fileToDataURL(
+  file
+) {
 
   return new Promise(
-    (resolve,reject)=>{
+    (
+      resolve,
+      reject
+    ) => {
 
       const reader =
         new FileReader();
+
 
       reader.onload =
         () => resolve(
           reader.result
         );
 
+
       reader.onerror =
         reject;
 
-      reader.readAsDataURL(file);
+
+      reader.readAsDataURL(
+        file
+      );
 
     }
   );
@@ -602,65 +848,190 @@ function fileToDataURL(file){
 }
 
 
-/* =========================
-   RENDER
-========================= */
+/* =====================================================
+   BYTES
+   ===================================================== */
 
-function render(){
+function formatBytes(
+  bytes
+) {
+
+  if (!bytes) {
+    return "0 B";
+  }
+
+
+  const units =
+    [
+      "B",
+      "KB",
+      "MB",
+      "GB"
+    ];
+
+
+  const index =
+    Math.floor(
+      Math.log(bytes) /
+      Math.log(1024)
+    );
+
+
+  return (
+    Math.round(
+      bytes /
+      Math.pow(
+        1024,
+        index
+      ) *
+      100
+    ) / 100
+  ) +
+  " " +
+  units[
+    Math.min(
+      index,
+      units.length - 1
+    )
+  ];
+
+}
+
+
+/* =====================================================
+   FILTER
+   ===================================================== */
+
+function setFilter(
+  filter,
+  button
+) {
+
+  currentFilter =
+    filter;
+
+
+  document
+    .querySelectorAll(
+      ".media-filter"
+    )
+    .forEach(
+      item =>
+        item.classList.remove(
+          "active"
+        )
+    );
+
+
+  if (button) {
+
+    button.classList.add(
+      "active"
+    );
+
+  }
+
+
+  renderMedia();
+
+}
+
+
+/* =====================================================
+   RENDER
+   ===================================================== */
+
+function renderMedia() {
 
   const grid =
     document.getElementById(
       "mediaGrid"
     );
 
+
+  let media =
+    gbGetMedia();
+
+
   const search =
-    document
-      .getElementById("search")
-      .value
-      .toLowerCase()
-      .trim();
+    (
+      document.getElementById(
+        "searchInput"
+      ).value ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
 
 
-  let filtered =
-    media.filter(item => {
+  if (
+    currentFilter !==
+    "all"
+  ) {
 
-      const matchesSearch =
-        item.name
-          .toLowerCase()
-          .includes(search);
-
-      const matchesFilter =
-        currentFilter === "all" ||
-        item.type === currentFilter;
-
-      return (
-        matchesSearch &&
-        matchesFilter
+    media =
+      media.filter(
+        item =>
+          item.type ===
+          currentFilter
       );
 
-    });
+  }
+
+
+  if (search) {
+
+    media =
+      media.filter(
+        item =>
+          (
+            item.name ||
+            ""
+          )
+            .toLowerCase()
+            .includes(
+              search
+            )
+      );
+
+  }
 
 
   updateStats();
 
 
-  if(filtered.length === 0){
+  if (!media.length) {
 
     grid.innerHTML = `
 
-      <div class="empty">
+      <div class="media-empty">
 
-        <div class="empty-icon">
+        <div class="media-empty-icon">
           📂
         </div>
 
-        <h3>
-          فایل رسانه‌ای پیدا نشد
-        </h3>
+        <h2>
+          فایلی پیدا نشد
+        </h2>
 
-        <p>
-          یک فایل جدید به پروژه اضافه کنید.
+        <p
+          style="
+            color:var(--muted);
+            line-height:1.8;
+          ">
+
+          هنوز فایلی در این بخش وجود ندارد
+          یا نتیجه‌ای مطابق جستجوی شما پیدا نشد.
+
         </p>
+
+        <button
+          class="btn btn-primary"
+          onclick="openFilePicker()">
+
+          ➕ افزودن فایل
+
+        </button>
 
       </div>
 
@@ -672,278 +1043,201 @@ function render(){
 
 
   grid.innerHTML =
-    filtered.map(item => {
+    media
+      .map(
+        item =>
+          createMediaCard(
+            item
+          )
+      )
+      .join("");
 
-      let preview = "📄";
-
-
-      if(item.type === "image"){
-
-        if(item.preview){
-
-          preview = `
-            <img
-              src="${item.preview}"
-              style="
-                width:100%;
-                height:100%;
-                object-fit:cover;
-              "
-            >
-          `;
-
-        }else{
-
-          preview = "🖼️";
-
-        }
-
-      }
-
-      else if(item.type === "video"){
-
-        preview = "🎬";
-
-      }
-
-      else{
-
-        preview = "📄";
-
-      }
+}
 
 
-      return `
+/* =====================================================
+   MEDIA CARD
+   ===================================================== */
 
-        <div class="media-card">
+function createMediaCard(
+  item
+) {
 
-          <div class="media-preview">
-
-            ${preview}
-
-          </div>
-
-
-          <div class="media-info">
-
-            <div class="media-name"
-              title="${escapeHTML(item.name)}">
-
-              ${escapeHTML(item.name)}
-
-            </div>
+  const type =
+    item.type ||
+    "other";
 
 
-            <div class="media-type">
-
-              ${getTypeLabel(item)}
-
-              •
-              ${formatSize(item.size)}
-
-            </div>
+  let preview = "";
 
 
-            <div class="media-actions">
+  if (
+    type === "image" &&
+    item.dataUrl
+  ) {
 
-              <button
-                class="small-btn"
-                onclick="useFile('${item.id}')">
+    preview = `
 
-                استفاده
+      <img
+        src="${item.dataUrl}"
+        alt="${gbEscapeHTML(
+          item.name
+        )}">
 
-              </button>
+      <div class="media-type-badge">
+        IMAGE
+      </div>
+
+    `;
+
+  } else {
+
+    let icon =
+      "📄";
 
 
-              <button
-                class="small-btn danger"
-                onclick="deleteFile('${item.id}')">
+    if (type === "video") {
+      icon = "🎬";
+    }
 
-                حذف
+    if (type === "audio") {
+      icon = "🎵";
+    }
 
-              </button>
+    if (type === "image") {
+      icon = "🖼️";
+    }
 
-            </div>
 
-          </div>
+    preview = `
+
+      <div class="media-file-icon">
+        ${icon}
+      </div>
+
+      <div class="media-type-badge">
+        ${type.toUpperCase()}
+      </div>
+
+    `;
+
+  }
+
+
+  return `
+
+    <article class="media-item">
+
+      <div class="media-preview">
+        ${preview}
+      </div>
+
+      <div class="media-info">
+
+        <div
+          class="media-name"
+          title="${gbEscapeHTML(
+            item.name
+          )}">
+
+          ${gbEscapeHTML(
+            item.name
+          )}
 
         </div>
 
-      `;
+        <div class="media-meta">
 
-    }).join("");
+          ${gbEscapeHTML(
+            item.sizeText ||
+            formatBytes(
+              item.size || 0
+            )
+          )}
 
-}
+          •
 
+          ${gbEscapeHTML(
+            type
+          )}
 
-/* =========================
-   LABEL
-========================= */
-
-function getTypeLabel(item){
-
-  if(item.type === "image"){
-    return "تصویر";
-  }
-
-  if(item.type === "video"){
-    return "ویدیو";
-  }
-
-  return "فایل";
-
-}
+        </div>
 
 
-/* =========================
-   SIZE
-========================= */
+        <div class="media-actions">
 
-function formatSize(bytes){
-
-  if(!bytes){
-    return "0 KB";
-  }
-
-  if(bytes < 1024){
-    return bytes + " B";
-  }
-
-  if(bytes < 1024 * 1024){
-
-    return (
-      (bytes / 1024)
-        .toFixed(1) +
-      " KB"
-    );
-
-  }
-
-  return (
-    (bytes / (1024 * 1024))
-      .toFixed(1) +
-    " MB"
-  );
-
-}
+          ${
+            type === "image" &&
+            item.dataUrl
+              ? `
+                <button
+                  class="btn"
+                  onclick="useMedia('${item.id}')">
+                  استفاده
+                </button>
+              `
+              : ""
+          }
 
 
-/* =========================
-   USE FILE
-========================= */
-
-function useFile(id){
-
-  const item =
-    media.find(
-      x => x.id === id
-    );
-
-  if(!item){
-    return;
-  }
+          <button
+            class="btn"
+            onclick="copyMediaInfo('${item.id}')">
+            📋
+          </button>
 
 
-  localStorage.setItem(
-    "ghost_builder_selected_media",
-    JSON.stringify(item)
-  );
+          <button
+            class="btn"
+            onclick="deleteMediaItem('${item.id}')">
+            🗑️
+          </button>
 
+        </div>
 
-  alert(
-    "فایل انتخاب شد.\n\n" +
-    "حالا وارد Builder شوید تا از آن در پروژه استفاده کنید."
-  );
+      </div>
+
+    </article>
+
+  `;
 
 }
 
 
-/* =========================
-   DELETE
-========================= */
-
-function deleteFile(id){
-
-  const item =
-    media.find(
-      x => x.id === id
-    );
-
-  if(!item){
-    return;
-  }
-
-
-  const ok =
-    confirm(
-      "آیا از حذف این فایل مطمئن هستید؟\n\n" +
-      item.name
-    );
-
-
-  if(!ok){
-    return;
-  }
-
-
-  media =
-    media.filter(
-      x => x.id !== id
-    );
-
-
-  save();
-
-  render();
-
-}
-
-
-/* =========================
-   SAVE
-========================= */
-
-function save(){
-
-  try{
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(media)
-    );
-
-  }catch(error){
-
-    alert(
-      "فضای ذخیره‌سازی مرورگر پر شده است.\n" +
-      "فایل‌های بزرگ را حذف کنید."
-    );
-
-  }
-
-}
-
-
-/* =========================
+/* =====================================================
    STATS
-========================= */
+   ===================================================== */
 
-function updateStats(){
+function updateStats() {
+
+  const media =
+    gbGetMedia();
+
 
   const images =
     media.filter(
-      x => x.type === "image"
+      item =>
+        item.type ===
+        "image"
     ).length;
+
 
   const videos =
     media.filter(
-      x => x.type === "video"
+      item =>
+        item.type ===
+        "video"
     ).length;
 
+
   const others =
-    media.length -
-    images -
-    videos;
+    media.filter(
+      item =>
+        item.type !==
+          "image" &&
+        item.type !==
+          "video"
+    ).length;
 
 
   document.getElementById(
@@ -951,15 +1245,18 @@ function updateStats(){
   ).textContent =
     media.length;
 
+
   document.getElementById(
     "imageCount"
   ).textContent =
     images;
 
+
   document.getElementById(
     "videoCount"
   ).textContent =
     videos;
+
 
   document.getElementById(
     "otherCount"
@@ -969,47 +1266,309 @@ function updateStats(){
 }
 
 
-/* =========================
-   NAVIGATION
-========================= */
+/* =====================================================
+   USE MEDIA
+   ===================================================== */
 
-function goHome(){
+function useMedia(
+  id
+) {
 
-  location.href =
-    "index.html";
+  const media =
+    gbGetMedia();
+
+
+  const item =
+    media.find(
+      file =>
+        file.id ===
+        id
+    );
+
+
+  if (!item) {
+    return;
+  }
+
+
+  gbSet(
+    GB_KEYS.selectedMedia,
+    item
+  );
+
+
+  gbToast(
+    "فایل انتخاب شد.",
+    "success"
+  );
+
+
+  /*
+   * اگر از builder آمده باشیم،
+   * بعد از انتخاب فایل می‌توانیم
+   * به builder برگردیم.
+   */
+
+  const from =
+    gbParam("from");
+
+
+  if (
+    from ===
+    "builder"
+  ) {
+
+    setTimeout(
+      () => {
+
+        window.location.href =
+          "builder.html";
+
+      },
+      500
+    );
+
+  }
 
 }
 
 
-function goBuilder(){
+/* =====================================================
+   COPY INFO
+   ===================================================== */
 
-  location.href =
+function copyMediaInfo(
+  id
+) {
+
+  const media =
+    gbGetMedia();
+
+
+  const item =
+    media.find(
+      file =>
+        file.id ===
+        id
+    );
+
+
+  if (!item) {
+    return;
+  }
+
+
+  const text =
+    [
+      "نام: " +
+        item.name,
+
+      "نوع: " +
+        item.type,
+
+      "حجم: " +
+        (
+          item.sizeText ||
+          formatBytes(
+            item.size || 0
+          )
+        )
+
+    ].join(
+      "\n"
+    );
+
+
+  gbCopy(
+    text
+  );
+
+
+  gbToast(
+    "اطلاعات فایل کپی شد.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   DELETE
+   ===================================================== */
+
+function deleteMediaItem(
+  id
+) {
+
+  const media =
+    gbGetMedia();
+
+
+  const item =
+    media.find(
+      file =>
+        file.id ===
+        id
+    );
+
+
+  if (!item) {
+    return;
+  }
+
+
+  if (
+    !confirm(
+      "آیا از حذف فایل «" +
+      item.name +
+      "» مطمئن هستید؟"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  gbDeleteMedia(
+    id
+  );
+
+
+  renderMedia();
+
+
+  gbToast(
+    "فایل حذف شد.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+   ===================================================== */
+
+function goBuilder() {
+
+  const project =
+    gbGetCurrentProject();
+
+
+  if (project) {
+
+    window.location.href =
+      "builder.html?project=" +
+      encodeURIComponent(
+        project.id
+      );
+
+    return;
+
+  }
+
+
+  window.location.href =
     "builder.html";
 
 }
 
 
-/* =========================
-   ESCAPE
-========================= */
+function goProjects() {
 
-function escapeHTML(value){
-
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+  window.location.href =
+    "projects.html";
 
 }
 
 
-/* =========================
-   START
-========================= */
+/* =====================================================
+   FILE INPUT EVENT
+   ===================================================== */
 
-render();
+document
+  .getElementById(
+    "fileInput"
+  )
+  .addEventListener(
+    "change",
+    event => {
+
+      handleFiles(
+        event.target.files
+      );
+
+      event.target.value = "";
+
+    }
+  );
+
+
+/* =====================================================
+   DRAG & DROP
+   ===================================================== */
+
+const uploadBox =
+  document.getElementById(
+    "uploadBox"
+  );
+
+
+uploadBox.addEventListener(
+  "dragover",
+  event => {
+
+    event.preventDefault();
+
+    uploadBox.style.borderColor =
+      "#7c5cff";
+
+  }
+);
+
+
+uploadBox.addEventListener(
+  "dragleave",
+  () => {
+
+    uploadBox.style.borderColor =
+      "";
+
+  }
+);
+
+
+uploadBox.addEventListener(
+  "drop",
+  event => {
+
+    event.preventDefault();
+
+    uploadBox.style.borderColor =
+      "";
+
+
+    handleFiles(
+      event.dataTransfer.files
+    );
+
+  }
+);
+
+
+/* =====================================================
+   INIT
+   ===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    renderMedia();
+
+  }
+);
 
 </script>
 
