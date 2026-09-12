@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Ghost Builder | Settings</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Tahoma,Arial,sans-serif;
+  background:#07070b;
+  color:#fff;
+  min-height:100vh;
+}
+
+button,input,select{
+  font-family:inherit;
+}
+
+.topbar{
+  height:70px;
+  background:#0d0d14;
+  border-bottom:1px solid #252535;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+}
+
+.logo{
+  font-size:21px;
+  font-weight:900;
+  color:#805fff;
+}
+
+.logo span{
+  color:#fff;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+.btn{
+  border:1px solid #302d43;
+  background:#15141d;
+  color:#fff;
+  padding:10px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.btn.primary{
+  background:#7655ff;
+  border-color:#7655ff;
+}
+
+.container{
+  width:min(1050px,94%);
+  margin:30px auto;
+}
+
+.header{
+  margin-bottom:25px;
+}
+
+.header h1{
+  font-size:28px;
+  margin-bottom:8px;
+}
+
+.header p{
+  color:#888;
+  line-height:1.8;
+  font-size:13px;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:20px;
+}
+
+.sidebar{
+  background:#0e0e15;
+  border:1px solid #29283a;
+  border-radius:16px;
+  padding:10px;
+  height:max-content;
+}
+
+.tab{
+  width:100%;
+  text-align:right;
+  border:0;
+  background:transparent;
+  color:#999;
+  padding:12px;
+  border-radius:9px;
+  cursor:pointer;
+  margin-bottom:4px;
+}
+
+.tab:hover{
+  background:#15141d;
+  color:#fff;
+}
+
+.tab.active{
+  background:#7655ff;
+  color:#fff;
+}
+
+.content{
+  min-width:0;
+}
+
+.section{
+  display:none;
+  background:#0e0e15;
+  border:1px solid #29283a;
+  border-radius:18px;
+  padding:22px;
+}
+
+.section.active{
+  display:block;
+}
+
+.section-title{
+  font-size:19px;
+  font-weight:900;
+  margin-bottom:7px;
+}
+
+.section-description{
+  color:#888;
+  font-size:12px;
+  line-height:1.8;
+  margin-bottom:22px;
+}
+
+.field{
+  margin-bottom:18px;
+}
+
+.field label{
+  display:block;
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.field small{
+  display:block;
+  color:#777;
+  font-size:11px;
+  margin-top:6px;
+  line-height:1.7;
+}
+
+.input,
+.select{
+  width:100%;
+  background:#09090d;
+  color:#fff;
+  border:1px solid #302f40;
+  border-radius:10px;
+  padding:12px;
+  outline:none;
+}
+
+.input:focus,
+.select:focus{
+  border-color:#7655ff;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.color-row{
+  display:flex;
+  gap:10px;
+}
+
+.color{
+  width:55px;
+  height:45px;
+  border:1px solid #302f40;
+  border-radius:10px;
+  background:#fff;
+  padding:3px;
+}
+
+.color-text{
+  flex:1;
+}
+
+.switch-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  background:#12121a;
+  border:1px solid #282738;
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:10px;
+}
+
+.switch-title{
+  font-weight:bold;
+  font-size:13px;
+  margin-bottom:4px;
+}
+
+.switch-description{
+  color:#777;
+  font-size:11px;
+  line-height:1.7;
+}
+
+.switch{
+  position:relative;
+  width:48px;
+  height:26px;
+  flex-shrink:0;
+}
+
+.switch input{
+  opacity:0;
+  width:0;
+  height:0;
+}
+
+.slider{
+  position:absolute;
+  inset:0;
+  background:#292837;
+  border-radius:30px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.slider:before{
+  content:"";
+  position:absolute;
+  width:20px;
+  height:20px;
+  right:3px;
+  top:3px;
+  background:#fff;
+  border-radius:50%;
+  transition:.2s;
+}
+
+.switch input:checked + .slider{
+  background:#7655ff;
+}
+
+.switch input:checked + .slider:before{
+  transform:translateX(-22px);
+}
+
+.save-area{
+  display:flex;
+  gap:10px;
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1px solid #29283a;
+}
+
+.danger-box{
+  border:1px solid #542b32;
+  background:#171013;
+  border-radius:14px;
+  padding:15px;
+  margin-top:20px;
+}
+
+.danger-box h3{
+  color:#ff7c89;
+  margin-bottom:7px;
+}
+
+.danger-box p{
+  color:#999;
+  font-size:12px;
+  line-height:1.8;
+  margin-bottom:12px;
+}
+
+.danger{
+  background:#37171d;
+  border-color:#67313a;
+  color:#ff9da7;
+}
+
+.status{
+  position:fixed;
+  left:20px;
+  bottom:20px;
+  background:#16151f;
+  border:1px solid #37334e;
+  padding:11px 15px;
+  border-radius:10px;
+  display:none;
+  z-index:100;
+  font-size:12px;
+}
+
+.status.show{
+  display:block;
+}
+
+.about{
+  text-align:center;
+  padding:25px 10px;
+}
+
+.about-logo{
+  font-size:55px;
+  margin-bottom:12px;
+}
+
+.about h2{
+  margin-bottom:8px;
+}
+
+.about p{
+  color:#888;
+  line-height:2;
+  font-size:13px;
+}
+
+.version{
+  display:inline-block;
+  margin-top:12px;
+  background:#171621;
+  border:1px solid #302d43;
+  padding:7px 12px;
+  border-radius:9px;
+  color:#aaa;
+  font-size:11px;
+}
+
+@media(max-width:700px){
+  .topbar{
+    height:auto;
+    min-height:65px;
+    padding:10px;
+  }
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    display:flex;
+    overflow-x:auto;
+    gap:5px;
+  }
+
+  .tab{
+    width:auto;
+    white-space:nowrap;
+    text-align:center;
+    margin:0;
+  }
+
+  .row{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <div class="logo">
+    Ghost <span>Builder</span>
+  </div>
+
+  <div class="actions">
+
+    <button
+      class="btn"
+      onclick="goHome()">
+      خانه
+    </button>
+
+    <button
+      class="btn primary"
+      onclick="saveAll()">
+      ذخیره
+    </button>
+
+  </div>
+
+</header>
+
+
+<main class="container">
+
+  <section class="header">
+
+    <h1>⚙️ تنظیمات</h1>
+
+    <p>
+      تنظیمات حساب، ظاهر، ویرایشگر و رفتار Ghost Builder را مدیریت کنید.
+    </p>
+
+  </section>
+
+
+  <div class="layout">
+
+    <aside class="sidebar">
+
+      <button
+        class="tab active"
+        onclick="openTab('general',this)">
+        ⚙️ عمومی
+      </button>
+
+      <button
+        class="tab"
+        onclick="openTab('editor',this)">
+        🛠️ ویرایشگر
+      </button>
+
+      <button
+        class="tab"
+        onclick="openTab('appearance',this)">
+        🎨 ظاهر
+      </button>
+
+      <button
+        class="tab"
+        onclick="openTab('project',this)">
+        📦 پروژه
+      </button>
+
+      <button
+        class="tab"
+        onclick="openTab('about',this)">
+        ℹ️ درباره
+      </button>
+
+    </aside>
+
+
+    <section class="content">
+
+      <!-- GENERAL -->
+
+      <div
+        class="section active"
+        id="general">
+
+        <div class="section-title">
+          تنظیمات عمومی
+        </div>
+
+        <div class="section-description">
+          اطلاعات و رفتار عمومی Ghost Builder را تنظیم کنید.
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            نام سازنده
+          </label>
+
+          <input
+            id="creatorName"
+            class="input"
+            placeholder="نام سازنده">
+
+          <small>
+            این نام فقط برای اطلاعات پروژه استفاده می‌شود.
+          </small>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            زبان رابط کاربری
+          </label>
+
+          <select
+            id="language"
+            class="select">
+
+            <option value="fa">
+              فارسی
+            </option>
+
+            <option value="en">
+              English
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            واحد اندازه‌گیری
+          </label>
+
+          <select
+            id="unit"
+            class="select">
+
+            <option value="px">
+              Pixel (px)
+            </option>
+
+            <option value="rem">
+              REM
+            </option>
+
+            <option value="percent">
+              درصد
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="switch-row">
+
+          <div>
+
+            <div class="switch-title">
+              ذخیره خودکار
+            </div>
+
+            <div class="switch-description">
+              تغییرات پروژه به صورت خودکار ذخیره شوند.
+            </div>
+
+          </div>
+
+          <label class="switch">
+
+            <input
+              type="checkbox"
+              id="autosave"
+              checked>
+
+            <span class="slider"></span>
+
+          </label>
+
+        </div>
+
+
+        <div class="switch-row">
+
+          <div>
+
+            <div class="switch-title">
+              اعلان‌ها
+            </div>
+
+            <div class="switch-description">
+              پیام‌های مربوط به ذخیره و انتشار نمایش داده شوند.
+            </div>
+
+          </div>
+
+          <label class="switch">
+
+            <input
+              type="checkbox"
+              id="notifications"
+              checked>
+
+            <span class="slider"></span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <!-- EDITOR -->
+
+      <div
+        class="section"
+        id="editor">
+
+        <div class="section-title">
+          تنظیمات ویرایشگر
+        </div>
+
+        <div class="section-description">
+          رفتار محیط ساخت پروژه را کنترل کنید.
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            کیفیت پیش‌فرض
+          </label>
+
+          <select
+            id="defaultQuality"
+            class="select">
+
+            <option value="Low">
+              Low
+            </option>
+
+            <option value="Medium">
+              Medium
+            </option>
+
+            <option value="High">
+              High
+            </option>
+
+            <option value="Ultra">
+              Ultra
+            </option>
+
+            <option value="Custom">
+              Custom
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            رزولوشن پیش‌فرض
+          </label>
+
+          <select
+            id="defaultResolution"
+            class="select">
+
+            <option value="480p">
+              480p
+            </option>
+
+            <option value="720p">
+              720p
+            </option>
+
+            <option value="1080p">
+              1080p
+            </option>
+
+            <option value="1440p">
+              1440p
+            </option>
+
+            <option value="2160p">
+              2160p
+            </option>
+
+            <option value="4K">
+              4K
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="switch-row">
+
+          <div>
+
+            <div class="switch-title">
+              نمایش خطوط راهنما
+            </div>
+
+            <div class="switch-description">
+              Grid محیط Builder نمایش داده شود.
+            </div>
+
+          </div>
+
+          <label class="switch">
+
+            <input
+              type="checkbox"
+              id="showGrid"
+              checked>
+
+            <span class="slider"></span>
+
+          </label>
+
+        </div>
+
+
+        <div class="switch-row">
+
+          <div>
+
+            <div class="switch-title">
+              Snap
+            </div>
+
+            <div class="switch-description">
+              عناصر هنگام جابه‌جایی روی نقاط شبکه قرار بگیرند.
+            </div>
+
+          </div>
+
+          <label class="switch">
+
+            <input
+              type="checkbox"
+              id="snap"
+              checked>
+
+            <span class="slider"></span>
+
+          </label>
+
+        </div>
+
+
+        <div class="switch-row">
+
+          <div>
+
+            <div class="switch-title">
+              پیش‌نمایش زنده
+            </div>
+
+            <div class="switch-description">
+              تغییرات در محیط Preview سریع‌تر نمایش داده شوند.
+            </div>
+
+          </div>
+
+          <label class="switch">
+
+            <input
+              type="checkbox"
+              id="livePreview"
+              checked>
+
+            <span class="slider"></span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <!-- APPEARANCE -->
+
+      <div
+        class="section"
+        id="appearance">
+
+        <div class="section-title">
+          ظاهر
+        </div>
+
+        <div class="section-description">
+          ظاهر پنل Ghost Builder را شخصی‌سازی کنید.
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            تم
+          </label>
+
+          <select
+            id="theme"
+            class="select">
+
+            <option value="dark">
+              تاریک
+            </option>
+
+            <option value="light">
+              روشن
+            </option>
+
+            <option value="system">
+              سیستم
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            رنگ اصلی
+          </label>
+
+          <div class="color-row">
+
+            <input
+              type="color"
+              id="primaryColor"
+              class="color"
+              value="#7655ff">
+
+            <input
+              id="primaryColorText"
+              class="input color-text"
+              value="#7655ff">
+
+          </div>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            رنگ پس‌زمینه
+          </label>
+
+          <div class="color-row">
+
+            <input
+              type="color"
+              id="backgroundColor"
+              class="color"
+              value="#07070b">
+
+            <input
+              id="backgroundColorText"
+              class="input color-text"
+              value="#07070b">
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- PROJECT -->
+
+      <div
+        class="section"
+        id="project">
+
+        <div class="section-title">
+          مدیریت پروژه‌ها
+        </div>
+
+        <div class="section-description">
+          تنظیمات مربوط به ذخیره و مدیریت پروژه‌ها.
+        </div>
+
+
+        <div class="switch-row">
+
+          <div>
+
+            <div class="switch-title">
+              ساخت پروژه نمونه
+            </div>
+
+            <div class="switch-description">
+              هنگام شروع Ghost Builder یک پروژه نمونه داشته باشید.
+            </div>
+
+          </div>
+
+          <label class="switch">
+
+            <input
+              type="checkbox"
+              id="sampleProject"
+              checked>
+
+            <span class="slider"></span>
+
+          </label>
+
+        </div>
+
+
+        <div class="switch-row">
+
+          <div>
+
+            <div class="switch-title">
+              تأیید حذف پروژه
+            </div>
+
+            <div class="switch-description">
+              قبل از حذف پروژه پیام تأیید نمایش داده شود.
+            </div>
+
+          </div>
+
+          <label class="switch">
+
+            <input
+              type="checkbox"
+              id="confirmDelete"
+              checked>
+
+            <span class="slider"></span>
+
+          </label>
+
+        </div>
+
+
+        <div class="danger-box">
+
+          <h3>
+            ⚠️ منطقه خطر
+          </h3>
+
+          <p>
+            با حذف اطلاعات محلی، پروژه‌ها و تنظیمات ذخیره‌شده
+            در این مرورگر پاک می‌شوند.
+          </p>
+
+          <button
+            class="btn danger"
+            onclick="resetData()">
+
+            🗑️ حذف اطلاعات محلی
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- ABOUT -->
+
+      <div
+        class="section"
+        id="about">
+
+        <div class="about">
+
+          <div class="about-logo">
+            👻
+          </div>
+
+          <h2>
+            Ghost Builder
+          </h2>
+
+          <p>
+            پلتفرم ساخت وب‌سایت، اپلیکیشن و بازی
+            بدون نیاز به پیچیدگی‌های فنی.
+            <br>
+            ساخت پروژه‌های 2D، 3D، وب و اپلیکیشن در یک محیط.
+          </p>
+
+          <div class="version">
+            Version 1.0.0
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="save-area">
+
+        <button
+          class="btn primary"
+          onclick="saveAll()">
+
+          💾 ذخیره تنظیمات
+
+        </button>
+
+        <button
+          class="btn"
+          onclick="loadSettings()">
+
+          ↩️ بازگردانی
+
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</main>
+
+
+<div
+  id="status"
+  class="status">
+  تنظیمات ذخیره شد.
+</div>
+
+
+<script>
+
+const STORAGE_KEY =
+  "ghost_builder_settings";
+
+
+/* =========================
+   DEFAULT SETTINGS
+========================= */
+
+const defaults = {
+
+  creatorName:"کاربر نمونه",
+
+  language:"fa",
+
+  unit:"px",
+
+  autosave:true,
+
+  notifications:true,
+
+  defaultQuality:"Medium",
+
+  defaultResolution:"720p",
+
+  showGrid:true,
+
+  snap:true,
+
+  livePreview:true,
+
+  theme:"dark",
+
+  primaryColor:"#7655ff",
+
+  backgroundColor:"#07070b",
+
+  sampleProject:true,
+
+  confirmDelete:true
+
+};
+
+
+/* =========================
+   LOAD
+========================= */
+
+function loadSettings(){
+
+  const saved =
+    JSON.parse(
+      localStorage.getItem(
+        STORAGE_KEY
+      ) || "null"
+    );
+
+  const settings = {
+    ...defaults,
+    ...(saved || {})
+  };
+
+
+  document.getElementById(
+    "creatorName"
+  ).value =
+    settings.creatorName;
+
+
+  document.getElementById(
+    "language"
+  ).value =
+    settings.language;
+
+
+  document.getElementById(
+    "unit"
+  ).value =
+    settings.unit;
+
+
+  document.getElementById(
+    "autosave"
+  ).checked =
+    settings.autosave;
+
+
+  document.getElementById(
+    "notifications"
+  ).checked =
+    settings.notifications;
+
+
+  document.getElementById(
+    "defaultQuality"
+  ).value =
+    settings.defaultQuality;
+
+
+  document.getElementById(
+    "defaultResolution"
+  ).value =
+    settings.defaultResolution;
+
+
+  document.getElementById(
+    "showGrid"
+  ).checked =
+    settings.showGrid;
+
+
+  document.getElementById(
+    "snap"
+  ).checked =
+    settings.snap;
+
+
+  document.getElementById(
+    "livePreview"
+  ).checked =
+    settings.livePreview;
+
+
+  document.getElementById(
+    "theme"
+  ).value =
+    settings.theme;
+
+
+  document.getElementById(
+    "primaryColor"
+  ).value =
+    settings.primaryColor;
+
+
+  document.getElementById(
+    "primaryColorText"
+  ).value =
+    settings.primaryColor;
+
+
+  document.getElementById(
+    "backgroundColor"
+  ).value =
+    settings.backgroundColor;
+
+
+  document.getElementById(
+    "backgroundColorText"
+  ).value =
+    settings.backgroundColor;
+
+
+  document.getElementById(
+    "sampleProject"
+  ).checked =
+    settings.sampleProject;
+
+
+  document.getElementById(
+    "confirmDelete"
+  ).checked =
+    settings.confirmDelete;
+
+
+  applyAppearance(settings);
+
+}
+
+
+/* =========================
+   SAVE
+========================= */
+
+function saveAll(){
+
+  const settings = {
+
+    creatorName:
+      document.getElementById(
+        "creatorName"
+      ).value.trim(),
+
+    language:
+      document.getElementById(
+        "language"
+      ).value,
+
+    unit:
+      document.getElementById(
+        "unit"
+      ).value,
+
+    autosave:
+      document.getElementById(
+        "autosave"
+      ).checked,
+
+    notifications:
+      document.getElementById(
+        "notifications"
+      ).checked,
+
+    defaultQuality:
+      document.getElementById(
+        "defaultQuality"
+      ).value,
+
+    defaultResolution:
+      document.getElementById(
+        "defaultResolution"
+      ).value,
+
+    showGrid:
+      document.getElementById(
+        "showGrid"
+      ).checked,
+
+    snap:
+      document.getElementById(
+        "snap"
+      ).checked,
+
+    livePreview:
+      document.getElementById(
+        "livePreview"
+      ).checked,
+
+    theme:
+      document.getElementById(
+        "theme"
+      ).value,
+
+    primaryColor:
+      document.getElementById(
+        "primaryColorText"
+      ).value,
+
+    backgroundColor:
+      document.getElementById(
+        "backgroundColorText"
+      ).value,
+
+    sampleProject:
+      document.getElementById(
+        "sampleProject"
+      ).checked,
+
+    confirmDelete:
+      document.getElementById(
+        "confirmDelete"
+      ).checked
+
+  };
+
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(settings)
+  );
+
+
+  applyAppearance(settings);
+
+  showStatus(
+    "✅ تنظیمات ذخیره شد."
+  );
+
+}
+
+
+/* =========================
+   APPEARANCE
+========================= */
+
+function applyAppearance(settings){
+
+  document.documentElement.style
+    .setProperty(
+      "--ghost-primary",
+      settings.primaryColor
+    );
+
+  if(
+    settings.theme === "light"
+  ){
+
+    document.body.style.background =
+      "#f4f4f8";
+
+    document.body.style.color =
+      "#111";
+
+  }
+
+  else{
+
+    document.body.style.background =
+      settings.backgroundColor;
+
+    document.body.style.color =
+      "#fff";
+
+  }
+
+}
+
+
+/* =========================
+   TABS
+========================= */
+
+function openTab(id,button){
+
+  document
+    .querySelectorAll(".section")
+    .forEach(section => {
+
+      section.classList.remove(
+        "active"
+      );
+
+    });
+
+
+  document
+    .querySelectorAll(".tab")
+    .forEach(tab => {
+
+      tab.classList.remove(
+        "active"
+      );
+
+    });
+
+
+  document
+    .getElementById(id)
+    .classList.add("active");
+
+
+  button.classList.add("active");
+
+}
+
+
+/* =========================
+   COLOR SYNC
+========================= */
+
+document
+  .getElementById("primaryColor")
+  .addEventListener(
+    "input",
+    function(){
+
+      document.getElementById(
+        "primaryColorText"
+      ).value =
+        this.value;
+
+    }
+  );
+
+
+document
+  .getElementById("primaryColorText")
+  .addEventListener(
+    "input",
+    function(){
+
+      if(
+        /^#[0-9A-F]{6}$/i.test(
+          this.value
+        )
+      ){
+
+        document.getElementById(
+          "primaryColor"
+        ).value =
+          this.value;
+
+      }
+
+    }
+  );
+
+
+document
+  .getElementById("backgroundColor")
+  .addEventListener(
+    "input",
+    function(){
+
+      document.getElementById(
+        "backgroundColorText"
+      ).value =
+        this.value;
+
+    }
+  );
+
+
+document
+  .getElementById("backgroundColorText")
+  .addEventListener(
+    "input",
+    function(){
+
+      if(
+        /^#[0-9A-F]{6}$/i.test(
+          this.value
+        )
+      ){
+
+        document.getElementById(
+          "backgroundColor"
+        ).value =
+          this.value;
+
+      }
+
+    }
+  );
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetData(){
+
+  const ok =
+    confirm(
+      "تمام پروژه‌ها، رسانه‌ها و تنظیمات محلی حذف شوند؟\n\nاین عملیات قابل بازگشت نیست."
+    );
+
+
+  if(!ok){
+    return;
+  }
+
+
+  localStorage.removeItem(
+    "ghost_builder_projects"
+  );
+
+  localStorage.removeItem(
+    "ghost_builder_current_project"
+  );
+
+  localStorage.removeItem(
+    "ghost_builder_media"
+  );
+
+  localStorage.removeItem(
+    "ghost_builder_selected_media"
+  );
+
+  localStorage.removeItem(
+    "ghost_builder_published_demo"
+  );
+
+  localStorage.removeItem(
+    STORAGE_KEY
+  );
+
+
+  loadSettings();
+
+
+  showStatus(
+    "🗑️ اطلاعات محلی حذف شد."
+  );
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+function showStatus(message){
+
+  const box =
+    document.getElementById(
+      "status"
+    );
+
+  box.textContent =
+    message;
+
+  box.classList.add("show");
+
+
+  setTimeout(
+    () => {
+
+      box.classList.remove(
+        "show"
+      );
+
+    },
+    2500
+  );
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function goHome(){
+
+  location.href =
+    "index.html";
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadSettings();
+
+</script>
+
+</body>
+  </html>
