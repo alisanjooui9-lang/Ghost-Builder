@@ -1,1073 +1,1406 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ghost Builder — پروژه‌های من</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
+  <title>Ghost Builder — پروژه‌ها</title>
 
-:root{
-    --bg:#080b12;
-    --panel:#101521;
-    --panel2:#151b29;
-    --border:#252d3d;
-    --text:#f4f7ff;
-    --muted:#8e99ad;
-    --primary:#7c5cff;
-    --success:#22c55e;
-    --danger:#ef4444;
-}
-
-body{
-    font-family:Tahoma,Arial,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
-}
-
-button,input,select{font-family:inherit}
-
-button{cursor:pointer}
-
-.topbar{
-    height:64px;
-    background:#0d111b;
-    border-bottom:1px solid var(--border);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 20px;
-    position:sticky;
-    top:0;
-    z-index:10;
-}
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-weight:900;
-}
-
-.logo{
-    width:38px;
-    height:38px;
-    border-radius:11px;
-    background:linear-gradient(135deg,#7c5cff,#22d3ee);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.top-actions{
-    display:flex;
-    gap:8px;
-}
-
-.btn{
-    border:1px solid var(--border);
-    background:var(--panel);
-    color:white;
-    padding:10px 14px;
-    border-radius:9px;
-}
-
-.btn.primary{
-    background:var(--primary);
-    border-color:var(--primary);
-}
-
-.container{
-    max-width:1250px;
-    margin:auto;
-    padding:28px 20px;
-}
-
-.header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    gap:15px;
-    margin-bottom:25px;
-}
-
-.header h1{
-    font-size:27px;
-    margin-bottom:8px;
-}
-
-.header p{
-    color:var(--muted);
-    font-size:13px;
-}
-
-.filters{
-    display:flex;
-    gap:10px;
-    margin-bottom:22px;
-    flex-wrap:wrap;
-}
-
-.search{
-    flex:1;
-    min-width:200px;
-    background:var(--panel);
-    border:1px solid var(--border);
-    color:white;
-    border-radius:10px;
-    padding:12px;
-    outline:none;
-}
-
-.filter{
-    background:var(--panel);
-    border:1px solid var(--border);
-    color:#cbd3e2;
-    padding:10px 14px;
-    border-radius:9px;
-}
-
-.filter.active{
-    background:var(--primary);
-    color:white;
-    border-color:var(--primary);
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:16px;
-}
-
-.card{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:15px;
-    overflow:hidden;
-    transition:.2s;
-}
-
-.card:hover{
-    transform:translateY(-3px);
-    border-color:#3d4960;
-}
-
-.cover{
-    height:150px;
-    background:
-        radial-gradient(circle at 30% 30%,rgba(124,92,255,.35),transparent 35%),
-        linear-gradient(135deg,#141b2a,#0b0f18);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:50px;
-}
-
-.info{
-    padding:15px;
-}
-
-.name{
-    font-weight:900;
-    font-size:16px;
-    margin-bottom:7px;
-}
-
-.type{
-    color:var(--muted);
-    font-size:11px;
-    margin-bottom:13px;
-}
-
-.meta{
-    display:flex;
-    gap:6px;
-    flex-wrap:wrap;
-    margin-bottom:15px;
-}
-
-.tag{
-    background:#191f2c;
-    color:#abb5c8;
-    padding:5px 8px;
-    border-radius:6px;
-    font-size:10px;
-}
-
-.actions{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:6px;
-}
-
-.actions button{
-    border:1px solid var(--border);
-    background:#151b27;
-    color:white;
-    padding:8px 5px;
-    border-radius:7px;
-    font-size:11px;
-}
-
-.actions button:hover{
-    border-color:var(--primary);
-}
-
-.actions .danger:hover{
-    border-color:var(--danger);
-    color:#ff8a8a;
-}
-
-.empty{
-    text-align:center;
-    border:1px dashed #30394c;
-    background:#0d1119;
-    border-radius:16px;
-    padding:70px 20px;
-}
-
-.empty-icon{
-    font-size:55px;
-    margin-bottom:15px;
-}
-
-.empty h2{
-    margin-bottom:8px;
-}
-
-.empty p{
-    color:var(--muted);
-    font-size:13px;
-    margin-bottom:20px;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:12px;
-    margin-bottom:22px;
-}
-
-.stat{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:15px;
-}
-
-.stat-number{
-    font-size:24px;
-    font-weight:900;
-    margin-top:5px;
-}
-
-.stat-label{
-    color:var(--muted);
-    font-size:11px;
-}
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.72);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    z-index:50;
-}
-
-.modal.show{display:flex}
-
-.modal-box{
-    width:100%;
-    max-width:450px;
-    background:#111722;
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:20px;
-}
-
-.modal-box h2{
-    margin-bottom:8px;
-}
-
-.modal-box p{
-    color:var(--muted);
-    font-size:12px;
-    margin-bottom:18px;
-}
-
-.modal input{
-    width:100%;
-    background:#090d15;
-    border:1px solid var(--border);
-    color:white;
-    padding:11px;
-    border-radius:9px;
-    outline:none;
-}
-
-.modal-actions{
-    display:flex;
-    gap:8px;
-    margin-top:15px;
-}
-
-.modal-actions button{
-    flex:1;
-    padding:10px;
-    border-radius:8px;
-    border:1px solid var(--border);
-    background:#181f2d;
-    color:white;
-}
-
-.modal-actions .primary{
-    background:var(--primary);
-    border-color:var(--primary);
-}
-
-.toast{
-    position:fixed;
-    bottom:20px;
-    left:50%;
-    transform:translateX(-50%) translateY(20px);
-    background:#171e2c;
-    border:1px solid #303a4d;
-    padding:11px 17px;
-    border-radius:9px;
-    opacity:0;
-    pointer-events:none;
-    transition:.25s;
-    z-index:100;
-    font-size:12px;
-}
-
-.toast.show{
-    opacity:1;
-    transform:translateX(-50%) translateY(0);
-}
-
-@media(max-width:850px){
-    .grid{grid-template-columns:repeat(2,1fr)}
-    .stats{grid-template-columns:repeat(2,1fr)}
-}
-
-@media(max-width:550px){
-    .grid{grid-template-columns:1fr}
-    .header{align-items:flex-start;flex-direction:column}
-    .topbar{padding:0 10px}
-    .brand span{display:none}
-    .container{padding:20px 12px}
-}
-</style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="topbar">
+<div class="app">
+
+  <!-- ================= SIDEBAR ================= -->
+
+  <aside class="sidebar">
 
     <div class="brand">
-        <div class="logo">G</div>
-        <span>Ghost Builder</span>
-    </div>
 
-    <div class="top-actions">
-        <button class="btn" onclick="goHome()">⌂ خانه</button>
-        <button class="btn primary" onclick="newProject()">＋ پروژه جدید</button>
-    </div>
+      <div class="brand-logo">
+        G
+      </div>
 
-</header>
-
-
-<main class="container">
-
-    <div class="header">
-
-        <div>
-            <h1>📁 پروژه‌های من</h1>
-            <p>تمام پروژه‌های ساخته‌شده با Ghost Builder در اینجا قرار می‌گیرند.</p>
+      <div>
+        <div class="brand-name">
+          Ghost Builder
         </div>
+
+        <div class="brand-subtitle">
+          ساخت بدون محدودیت
+        </div>
+      </div>
 
     </div>
 
 
-    <section class="stats">
+    <div class="nav-title">
+      اصلی
+    </div>
 
-        <div class="stat">
-            <div class="stat-label">همه پروژه‌ها</div>
-            <div class="stat-number" id="totalCount">0</div>
+    <nav class="nav">
+
+      <a href="index.html">
+        <span class="nav-icon">🏠</span>
+        <span>داشبورد</span>
+      </a>
+
+      <a href="projects.html" class="active">
+        <span class="nav-icon">📁</span>
+        <span>پروژه‌ها</span>
+      </a>
+
+      <a href="templates.html">
+        <span class="nav-icon">🎨</span>
+        <span>قالب‌ها</span>
+      </a>
+
+      <a href="builder.html">
+        <span class="nav-icon">🛠️</span>
+        <span>سازنده</span>
+      </a>
+
+    </nav>
+
+
+    <div class="nav-title">
+      مدیریت
+    </div>
+
+    <nav class="nav">
+
+      <a href="media.html">
+        <span class="nav-icon">🖼️</span>
+        <span>رسانه‌ها</span>
+      </a>
+
+      <a href="settings.html">
+        <span class="nav-icon">⚙️</span>
+        <span>تنظیمات</span>
+      </a>
+
+      <a href="help.html">
+        <span class="nav-icon">❓</span>
+        <span>راهنما</span>
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+  <!-- ================= MAIN ================= -->
+
+  <main class="main">
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+      <div>
+
+        <div class="page-title">
+          پروژه‌های من
         </div>
 
-        <div class="stat">
-            <div class="stat-label">وب‌سایت‌ها</div>
-            <div class="stat-number" id="webCount">0</div>
+        <div class="page-subtitle">
+          تمام وب‌سایت‌ها، اپلیکیشن‌ها و بازی‌های خود را مدیریت کنید.
         </div>
 
-        <div class="stat">
-            <div class="stat-label">اپلیکیشن‌ها</div>
-            <div class="stat-number" id="appCount">0</div>
+      </div>
+
+
+      <div class="topbar-right">
+
+        <button
+          class="btn"
+          onclick="refreshProjects()">
+          🔄 بروزرسانی
+        </button>
+
+        <button
+          class="btn btn-primary"
+          onclick="createNewProject()">
+          ＋ پروژه جدید
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <div class="page-content">
+
+
+      <!-- STATS -->
+
+      <section class="stats-grid">
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            📁
+          </div>
+
+          <div>
+
+            <div class="stat-label">
+              کل پروژه‌ها
+            </div>
+
+            <div
+              class="stat-value"
+              id="totalProjects">
+              0
+            </div>
+
+          </div>
+
         </div>
 
-        <div class="stat">
-            <div class="stat-label">بازی‌ها</div>
-            <div class="stat-number" id="gameCount">0</div>
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            🌐
+          </div>
+
+          <div>
+
+            <div class="stat-label">
+              وب‌سایت‌ها
+            </div>
+
+            <div
+              class="stat-value"
+              id="websiteProjects">
+              0
+            </div>
+
+          </div>
+
         </div>
 
-    </section>
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            📱
+          </div>
+
+          <div>
+
+            <div class="stat-label">
+              اپلیکیشن‌ها
+            </div>
+
+            <div
+              class="stat-value"
+              id="appProjects">
+              0
+            </div>
+
+          </div>
+
+        </div>
 
 
-    <section class="filters">
+        <div class="stat-card">
 
-        <input
-            class="search"
-            id="search"
-            placeholder="🔎 جستجوی پروژه..."
-            oninput="renderProjects()"
-        >
+          <div class="stat-icon">
+            🎮
+          </div>
 
-        <button class="filter active" data-filter="all" onclick="setFilter('all',this)">
-            همه
-        </button>
+          <div>
 
-        <button class="filter" data-filter="website" onclick="setFilter('website',this)">
-            🌐 وب
-        </button>
+            <div class="stat-label">
+              بازی‌ها
+            </div>
 
-        <button class="filter" data-filter="app" onclick="setFilter('app',this)">
-            📱 اپ
-        </button>
+            <div
+              class="stat-value"
+              id="gameProjects">
+              0
+            </div>
 
-        <button class="filter" data-filter="game" onclick="setFilter('game',this)">
-            🎮 بازی
-        </button>
+          </div>
 
-    </section>
+        </div>
+
+      </section>
 
 
-    <section id="projectsContainer"></section>
+      <!-- TOOLBAR -->
 
-</main>
+      <section class="card">
+
+        <div class="toolbar">
+
+          <div class="search-box">
+
+            <span>
+              🔍
+            </span>
+
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="جستجوی پروژه..."
+              oninput="renderProjects()">
+
+          </div>
 
 
-<!-- RENAME MODAL -->
+          <div class="filters">
 
-<div class="modal" id="renameModal">
-
-    <div class="modal-box">
-
-        <h2>✏️ تغییر نام پروژه</h2>
-
-        <p>نام جدید پروژه را وارد کنید.</p>
-
-        <input id="renameInput">
-
-        <div class="modal-actions">
-
-            <button onclick="closeRename()">
-                انصراف
+            <button
+              class="filter-btn active"
+              data-filter="all"
+              onclick="setFilter('all', this)">
+              همه
             </button>
 
-            <button class="primary" onclick="confirmRename()">
-                ذخیره
+            <button
+              class="filter-btn"
+              data-filter="website"
+              onclick="setFilter('website', this)">
+              🌐 وب‌سایت
             </button>
+
+            <button
+              class="filter-btn"
+              data-filter="app"
+              onclick="setFilter('app', this)">
+              📱 اپلیکیشن
+            </button>
+
+            <button
+              class="filter-btn"
+              data-filter="game2d"
+              onclick="setFilter('game2d', this)">
+              🎮 بازی 2D
+            </button>
+
+            <button
+              class="filter-btn"
+              data-filter="game3d"
+              onclick="setFilter('game3d', this)">
+              🕹️ بازی 3D
+            </button>
+
+          </div>
 
         </div>
 
+      </section>
+
+
+      <!-- PROJECTS -->
+
+      <section>
+
+        <div class="section-header">
+
+          <div>
+
+            <h2>
+              پروژه‌ها
+            </h2>
+
+            <span
+              id="projectCount"
+              class="muted">
+              0 پروژه
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="projectsGrid"
+          class="projects-grid">
+        </div>
+
+
+        <!-- EMPTY -->
+
+        <div
+          id="emptyState"
+          class="empty-state"
+          style="display:none">
+
+          <div class="empty-icon">
+            📂
+          </div>
+
+          <h3>
+            هنوز پروژه‌ای ندارید
+          </h3>
+
+          <p>
+            اولین پروژه خود را بسازید و ایده‌تان را به یک سایت، اپلیکیشن یا بازی تبدیل کنید.
+          </p>
+
+          <button
+            class="btn btn-primary"
+            onclick="createNewProject()">
+            ＋ ساخت اولین پروژه
+          </button>
+
+        </div>
+
+
+        <!-- NO SEARCH RESULT -->
+
+        <div
+          id="noResults"
+          class="empty-state"
+          style="display:none">
+
+          <div class="empty-icon">
+            🔍
+          </div>
+
+          <h3>
+            پروژه‌ای پیدا نشد
+          </h3>
+
+          <p>
+            عبارت جستجو یا فیلتر را تغییر دهید.
+          </p>
+
+          <button
+            class="btn"
+            onclick="clearSearch()">
+            پاک کردن جستجو
+          </button>
+
+        </div>
+
+      </section>
+
     </div>
+
+  </main>
 
 </div>
 
 
-<div class="toast" id="toast"></div>
+<!-- ================= SCRIPT ================= -->
 
+<script src="app.js"></script>
 
 <script>
 
-let projects = [];
+"use strict";
+
+
 let currentFilter = "all";
-let renameId = null;
 
 
-/* =========================
-   LOAD
-========================= */
+/* =====================================================
+   GET PROJECTS
+   ===================================================== */
 
-function loadProjects(){
+function getProjects() {
 
-    try{
-
-        projects =
-            JSON.parse(
-                localStorage.getItem("ghost_builder_projects")
-            ) || [];
-
-    }catch(error){
-
-        projects = [];
-
-    }
-
-    renderProjects();
-    updateStats();
-}
-
-
-/* =========================
-   RENDER
-========================= */
-
-function renderProjects(){
-
-    const container =
-        document.getElementById("projectsContainer");
-
-    const search =
-        document.getElementById("search").value
-        .trim()
-        .toLowerCase();
-
-    let list =
-        projects.filter(project => {
-
-            let typeOK = true;
-
-            if(currentFilter === "website"){
-                typeOK = project.type === "website";
-            }
-
-            if(currentFilter === "app"){
-                typeOK = project.type === "app";
-            }
-
-            if(currentFilter === "game"){
-                typeOK =
-                    project.type === "game2d" ||
-                    project.type === "game3d";
-            }
-
-            const name =
-                String(project.name || "").toLowerCase();
-
-            const title =
-                String(project.title || "").toLowerCase();
-
-            const searchOK =
-                !search ||
-                name.includes(search) ||
-                title.includes(search);
-
-            return typeOK && searchOK;
-
-        });
-
-
-    if(!list.length){
-
-        container.innerHTML = `
-
-            <div class="empty">
-
-                <div class="empty-icon">📂</div>
-
-                <h2>
-                    ${projects.length ? "پروژه‌ای پیدا نشد" : "هنوز پروژه‌ای نداری"}
-                </h2>
-
-                <p>
-                    ${
-                        projects.length
-                        ? "با تغییر جستجو یا فیلتر دوباره امتحان کن."
-                        : "اولین پروژه خودت را با Ghost Builder بساز."
-                    }
-                </p>
-
-                ${
-                    projects.length
-                    ? ""
-                    : `<button class="btn primary" onclick="newProject()">
-                        🚀 ساخت اولین پروژه
-                       </button>`
-                }
-
-            </div>
-
-        `;
-
-        return;
-    }
-
-
-    container.innerHTML =
-        `<div class="grid">
-            ${list.map(projectCard).join("")}
-        </div>`;
+  return gbGetProjects() || [];
 
 }
 
 
-/* =========================
-   CARD
-========================= */
-
-function projectCard(project){
-
-    const type =
-        project.type || "website";
-
-    let icon = "🌐";
-    let typeName = "وب‌سایت";
-
-    if(type === "app"){
-        icon = "📱";
-        typeName = "اپلیکیشن";
-    }
-
-    if(type === "game2d"){
-        icon = "🎮";
-        typeName = "بازی 2D";
-    }
-
-    if(type === "game3d"){
-        icon = "🎮";
-        typeName = "بازی 3D";
-    }
-
-
-    const quality =
-        project.quality || "Medium";
-
-    const resolution =
-        project.resolution || "720p";
-
-
-    return `
-
-        <article class="card">
-
-            <div class="cover">
-                ${icon}
-            </div>
-
-            <div class="info">
-
-                <div class="name">
-                    ${escapeHTML(project.name || "پروژه بدون نام")}
-                </div>
-
-                <div class="type">
-                    ${typeName}
-                </div>
-
-                <div class="meta">
-
-                    <span class="tag">
-                        ${quality}
-                    </span>
-
-                    <span class="tag">
-                        ${resolution}
-                    </span>
-
-                    <span class="tag">
-                        ${project.elements?.length || 0} اجزا
-                    </span>
-
-                </div>
-
-                <div class="actions">
-
-                    <button onclick="editProject(${project.id})">
-                        ✏️ ویرایش
-                    </button>
-
-                    <button onclick="previewProject(${project.id})">
-                        👁️ پیش‌نمایش
-                    </button>
-
-                    <button onclick="renameProject(${project.id})">
-                        📝 نام
-                    </button>
-
-                    <button onclick="duplicateProject(${project.id})">
-                        📋 کپی
-                    </button>
-
-                    <button onclick="publishProject(${project.id})">
-                        🚀 انتشار
-                    </button>
-
-                    <button
-                        class="danger"
-                        onclick="deleteProject(${project.id})">
-                        🗑️ حذف
-                    </button>
-
-                </div>
-
-            </div>
-
-        </article>
-
-    `;
-
-}
-
-
-/* =========================
+/* =====================================================
    FILTER
-========================= */
+   ===================================================== */
 
-function setFilter(filter,button){
+function setFilter(
+  filter,
+  button
+) {
 
-    currentFilter = filter;
+  currentFilter =
+    filter;
 
-    document
-        .querySelectorAll(".filter")
-        .forEach(item => item.classList.remove("active"));
 
-    button.classList.add("active");
+  document
+    .querySelectorAll(
+      ".filter-btn"
+    )
+    .forEach(
+      item => {
+        item.classList.remove(
+          "active"
+        );
+      }
+    );
 
-    renderProjects();
+
+  if (button) {
+
+    button.classList.add(
+      "active"
+    );
+
+  }
+
+
+  renderProjects();
 
 }
 
 
-/* =========================
+/* =====================================================
+   SEARCH
+   ===================================================== */
+
+function clearSearch() {
+
+  document.getElementById(
+    "searchInput"
+  ).value = "";
+
+
+  currentFilter =
+    "all";
+
+
+  document
+    .querySelectorAll(
+      ".filter-btn"
+    )
+    .forEach(
+      item => {
+
+        item.classList.remove(
+          "active"
+        );
+
+      }
+    );
+
+
+  document
+    .querySelector(
+      '[data-filter="all"]'
+    )
+    ?.classList.add(
+      "active"
+    );
+
+
+  renderProjects();
+
+}
+
+
+/* =====================================================
+   RENDER STATS
+   ===================================================== */
+
+function renderStats() {
+
+  const projects =
+    getProjects();
+
+
+  let websites = 0;
+
+  let apps = 0;
+
+  let games = 0;
+
+
+  projects.forEach(
+    project => {
+
+      if (
+        project.type ===
+        "website"
+      ) {
+
+        websites++;
+
+      }
+
+
+      else if (
+        project.type ===
+        "app"
+      ) {
+
+        apps++;
+
+      }
+
+
+      else if (
+        project.type ===
+        "game2d" ||
+        project.type ===
+        "game3d"
+      ) {
+
+        games++;
+
+      }
+
+    }
+  );
+
+
+  document.getElementById(
+    "totalProjects"
+  ).textContent =
+    projects.length;
+
+
+  document.getElementById(
+    "websiteProjects"
+  ).textContent =
+    websites;
+
+
+  document.getElementById(
+    "appProjects"
+  ).textContent =
+    apps;
+
+
+  document.getElementById(
+    "gameProjects"
+  ).textContent =
+    games;
+
+}
+
+
+/* =====================================================
+   RENDER PROJECTS
+   ===================================================== */
+
+function renderProjects() {
+
+  const projects =
+    getProjects();
+
+
+  const grid =
+    document.getElementById(
+      "projectsGrid"
+    );
+
+
+  const empty =
+    document.getElementById(
+      "emptyState"
+    );
+
+
+  const noResults =
+    document.getElementById(
+      "noResults"
+    );
+
+
+  const search =
+    document.getElementById(
+      "searchInput"
+    ).value
+      .trim()
+      .toLowerCase();
+
+
+  let filtered =
+    projects.filter(
+      project => {
+
+        const matchesFilter =
+          currentFilter ===
+          "all" ||
+          project.type ===
+          currentFilter;
+
+
+        const text =
+          (
+            project.name ||
+            ""
+          ) +
+          " " +
+          (
+            project.title ||
+            ""
+          ) +
+          " " +
+          (
+            project.description ||
+            ""
+          );
+
+
+        const matchesSearch =
+          !search ||
+          text
+            .toLowerCase()
+            .includes(
+              search
+            );
+
+
+        return (
+          matchesFilter &&
+          matchesSearch
+        );
+
+      }
+    );
+
+
+  document.getElementById(
+    "projectCount"
+  ).textContent =
+    filtered.length +
+    " پروژه";
+
+
+  grid.innerHTML = "";
+
+
+  if (
+    projects.length ===
+    0
+  ) {
+
+    empty.style.display =
+      "block";
+
+    noResults.style.display =
+      "none";
+
+    return;
+
+  }
+
+
+  empty.style.display =
+    "none";
+
+
+  if (
+    filtered.length ===
+    0
+  ) {
+
+    noResults.style.display =
+      "block";
+
+    return;
+
+  }
+
+
+  noResults.style.display =
+    "none";
+
+
+  filtered.forEach(
+    project => {
+
+      grid.appendChild(
+        createProjectCard(
+          project
+        )
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   PROJECT CARD
+   ===================================================== */
+
+function createProjectCard(
+  project
+) {
+
+  const card =
+    document.createElement(
+      "article"
+    );
+
+
+  card.className =
+    "project-card";
+
+
+  const type =
+    project.type ||
+    "website";
+
+
+  const icon =
+    gbProjectTypeIcon(
+      type
+    );
+
+
+  const typeLabel =
+    gbProjectTypeLabel(
+      type
+    );
+
+
+  const elements =
+    Array.isArray(
+      project.elements
+    )
+      ? project.elements.length
+      : 0;
+
+
+  const date =
+    project.updatedAt ||
+    project.createdAt;
+
+
+  const formattedDate =
+    date
+      ? gbFormatDate(date)
+      : "اخیراً";
+
+
+  card.innerHTML = `
+
+    <div class="project-card-preview">
+
+      <div class="project-preview-icon">
+        ${icon}
+      </div>
+
+      <div class="project-preview-title">
+        ${gbEscapeHTML(
+          project.title ||
+          project.name ||
+          "پروژه بدون نام"
+        )}
+      </div>
+
+      <div class="project-preview-text">
+        ${gbEscapeHTML(
+          project.description ||
+          "پروژه ساخته‌شده با Ghost Builder"
+        )}
+      </div>
+
+      <div
+        class="project-preview-button"
+        style="
+          background:${
+            project.primary ||
+            "#7c5cff"
+          };
+        ">
+        ${gbEscapeHTML(
+          project.button ||
+          "شروع"
+        )}
+      </div>
+
+    </div>
+
+
+    <div class="project-card-body">
+
+      <div class="project-card-head">
+
+        <div>
+
+          <h3>
+            ${gbEscapeHTML(
+              project.name ||
+              "پروژه بدون نام"
+            )}
+          </h3>
+
+          <span class="badge">
+            ${icon}
+            ${typeLabel}
+          </span>
+
+        </div>
+
+        <button
+          class="icon-btn"
+          onclick="showProjectMenu(event, '${project.id}')">
+          ⋮
+        </button>
+
+      </div>
+
+
+      <div class="project-meta">
+
+        <span>
+          🧩 ${elements} عنصر
+        </span>
+
+        <span>
+          🕒 ${gbEscapeHTML(
+            formattedDate
+          )}
+        </span>
+
+      </div>
+
+
+      <div class="project-actions">
+
+        <button
+          class="btn btn-primary"
+          onclick="editProject('${project.id}')">
+          ✏️ ویرایش
+        </button>
+
+        <button
+          class="btn"
+          onclick="previewProject('${project.id}')">
+          👁️ پیش‌نمایش
+        </button>
+
+      </div>
+
+
+      <div class="project-actions-secondary">
+
+        <button
+          class="btn"
+          onclick="duplicateProject('${project.id}')">
+          📄 کپی
+        </button>
+
+        <button
+          class="btn"
+          onclick="renameProject('${project.id}')">
+          ✏️ تغییر نام
+        </button>
+
+        <button
+          class="btn"
+          onclick="publishProject('${project.id}')">
+          🚀 انتشار
+        </button>
+
+        <button
+          class="btn btn-danger"
+          onclick="deleteProject('${project.id}')">
+          🗑️ حذف
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  return card;
+
+}
+
+
+/* =====================================================
+   CREATE NEW PROJECT
+   ===================================================== */
+
+function createNewProject() {
+
+  const project =
+    gbCreateProject({
+      name:
+        "پروژه جدید",
+
+      type:
+        "website",
+
+      title:
+        "پروژه جدید",
+
+      description:
+        "پروژه خود را با Ghost Builder بسازید.",
+
+      button:
+        "شروع کنید",
+
+      background:
+        "#ffffff",
+
+      primary:
+        "#7c5cff",
+
+      radius:
+        18,
+
+      width:
+        390,
+
+      height:
+        700,
+
+      quality:
+        "Medium",
+
+      resolution:
+        "720p",
+
+      elements:
+        []
+
+    });
+
+
+  gbSetCurrentProject(
+    project
+  );
+
+
+  window.location.href =
+    "builder.html?project=" +
+    encodeURIComponent(
+      project.id
+    );
+
+}
+
+
+/* =====================================================
    EDIT
-========================= */
+   ===================================================== */
 
-function editProject(id){
+function editProject(
+  id
+) {
 
-    const project =
-        projects.find(p => p.id === id);
+  const project =
+    gbFindProject(id);
 
-    if(!project)return;
 
-    localStorage.setItem(
-        "ghost_builder_current_project",
-        JSON.stringify(project)
+  if (!project) {
+
+    gbToast(
+      "پروژه پیدا نشد.",
+      "error"
     );
 
-    location.href =
-        "builder.html?project=" +
-        encodeURIComponent(id);
+    return;
+
+  }
+
+
+  gbSetCurrentProject(
+    project
+  );
+
+
+  window.location.href =
+    "builder.html?project=" +
+    encodeURIComponent(
+      id
+    );
 
 }
 
 
-/* =========================
+/* =====================================================
    PREVIEW
-========================= */
+   ===================================================== */
 
-function previewProject(id){
+function previewProject(
+  id
+) {
 
-    location.href =
-        "preview.html?project=" +
-        encodeURIComponent(id);
-
-}
-
-
-/* =========================
-   PUBLISH
-========================= */
-
-function publishProject(id){
-
-    location.href =
-        "publish.html?project=" +
-        encodeURIComponent(id);
-
-}
+  const project =
+    gbFindProject(id);
 
 
-/* =========================
-   DUPLICATE
-========================= */
+  if (!project) {
 
-function duplicateProject(id){
-
-    const original =
-        projects.find(p => p.id === id);
-
-    if(!original)return;
-
-    const copy =
-        JSON.parse(JSON.stringify(original));
-
-    copy.id = Date.now();
-
-    copy.name =
-        (original.name || "پروژه") + " - کپی";
-
-    projects.push(copy);
-
-    saveProjects();
-
-    showToast("پروژه کپی شد ✓");
-
-}
-
-
-/* =========================
-   DELETE
-========================= */
-
-function deleteProject(id){
-
-    const project =
-        projects.find(p => p.id === id);
-
-    if(!project)return;
-
-    if(!confirm(
-        `آیا مطمئنی می‌خواهی «${project.name}» حذف شود؟`
-    )){
-        return;
-    }
-
-    projects =
-        projects.filter(p => p.id !== id);
-
-    saveProjects();
-
-    showToast("پروژه حذف شد");
-
-}
-
-
-/* =========================
-   RENAME
-========================= */
-
-function renameProject(id){
-
-    const project =
-        projects.find(p => p.id === id);
-
-    if(!project)return;
-
-    renameId = id;
-
-    document.getElementById("renameInput").value =
-        project.name || "";
-
-    document
-        .getElementById("renameModal")
-        .classList.add("show");
-
-    setTimeout(() => {
-        document.getElementById("renameInput").focus();
-    },100);
-
-}
-
-
-function confirmRename(){
-
-    if(renameId === null)return;
-
-    const value =
-        document.getElementById("renameInput")
-        .value
-        .trim();
-
-    if(!value){
-        showToast("نام پروژه نمی‌تواند خالی باشد");
-        return;
-    }
-
-    const project =
-        projects.find(p => p.id === renameId);
-
-    if(project){
-        project.name = value;
-    }
-
-    saveProjects();
-
-    closeRename();
-
-    showToast("نام پروژه تغییر کرد ✓");
-
-}
-
-
-function closeRename(){
-
-    renameId = null;
-
-    document
-        .getElementById("renameModal")
-        .classList.remove("show");
-
-}
-
-
-/* =========================
-   SAVE
-========================= */
-
-function saveProjects(){
-
-    localStorage.setItem(
-        "ghost_builder_projects",
-        JSON.stringify(projects)
+    gbToast(
+      "پروژه پیدا نشد.",
+      "error"
     );
 
-    updateStats();
+    return;
+
+  }
+
+
+  gbSetCurrentProject(
+    project
+  );
+
+
+  gbPreview(
+    id
+  );
+
+}
+
+
+/* =====================================================
+   PUBLISH
+   ===================================================== */
+
+function publishProject(
+  id
+) {
+
+  const project =
+    gbFindProject(id);
+
+
+  if (!project) {
+    return;
+  }
+
+
+  gbSetCurrentProject(
+    project
+  );
+
+
+  gbPublish(
+    id,
+    "web"
+  );
+
+}
+
+
+/* =====================================================
+   DUPLICATE
+   ===================================================== */
+
+function duplicateProject(
+  id
+) {
+
+  const project =
+    gbFindProject(id);
+
+
+  if (!project) {
+    return;
+  }
+
+
+  const copy =
+    gbDuplicateProject(
+      id
+    );
+
+
+  if (!copy) {
+
+    gbToast(
+      "کپی پروژه انجام نشد.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  gbSetCurrentProject(
+    copy
+  );
+
+
+  renderStats();
+
+  renderProjects();
+
+
+  gbToast(
+    "پروژه با موفقیت کپی شد.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   RENAME
+   ===================================================== */
+
+function renameProject(
+  id
+) {
+
+  const project =
+    gbFindProject(id);
+
+
+  if (!project) {
+    return;
+  }
+
+
+  const name =
+    prompt(
+      "نام جدید پروژه:",
+      project.name ||
+      "پروژه جدید"
+    );
+
+
+  if (
+    name ===
+    null
+  ) {
+    return;
+  }
+
+
+  const cleanName =
+    name.trim();
+
+
+  if (!cleanName) {
+
+    gbToast(
+      "نام پروژه نمی‌تواند خالی باشد.",
+      "warning"
+    );
+
+    return;
+
+  }
+
+
+  project.name =
+    cleanName;
+
+
+  gbUpdateProject(
+    project
+  );
+
+
+  renderStats();
+
+  renderProjects();
+
+
+  gbToast(
+    "نام پروژه تغییر کرد.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   DELETE
+   ===================================================== */
+
+function deleteProject(
+  id
+) {
+
+  const project =
+    gbFindProject(id);
+
+
+  if (!project) {
+    return;
+  }
+
+
+  gbConfirm(
+    "پروژه «" +
+    project.name +
+    "» حذف شود؟ این کار قابل بازگشت نیست.",
+    confirmed => {
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      gbDeleteProject(
+        id
+      );
+
+
+      const current =
+        gbGetCurrentProject();
+
+
+      if (
+        current &&
+        String(current.id) ===
+        String(id)
+      ) {
+
+        gbRemove(
+          "ghost_builder_current_project"
+        );
+
+      }
+
+
+      renderStats();
+
+      renderProjects();
+
+
+      gbToast(
+        "پروژه حذف شد.",
+        "success"
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   MENU
+   ===================================================== */
+
+function showProjectMenu(
+  event,
+  id
+) {
+
+  event.stopPropagation();
+
+
+  const project =
+    gbFindProject(id);
+
+
+  if (!project) {
+    return;
+  }
+
+
+  const action =
+    prompt(
+      "عملیات را انتخاب کنید:\n\n" +
+      "1 = ویرایش\n" +
+      "2 = پیش‌نمایش\n" +
+      "3 = تغییر نام\n" +
+      "4 = کپی\n" +
+      "5 = انتشار\n" +
+      "6 = حذف"
+    );
+
+
+  switch (
+    action
+  ) {
+
+    case "1":
+      editProject(id);
+      break;
+
+    case "2":
+      previewProject(id);
+      break;
+
+    case "3":
+      renameProject(id);
+      break;
+
+    case "4":
+      duplicateProject(id);
+      break;
+
+    case "5":
+      publishProject(id);
+      break;
+
+    case "6":
+      deleteProject(id);
+      break;
+
+  }
+
+}
+
+
+/* =====================================================
+   REFRESH
+   ===================================================== */
+
+function refreshProjects() {
+
+  renderStats();
+
+  renderProjects();
+
+
+  gbToast(
+    "پروژه‌ها بروزرسانی شدند.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   KEYBOARD
+   ===================================================== */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      (
+        event.ctrlKey ||
+        event.metaKey
+      ) &&
+      event.key.toLowerCase() ===
+      "n"
+    ) {
+
+      event.preventDefault();
+
+      createNewProject();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   INIT
+   ===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    renderStats();
+
     renderProjects();
 
-}
-
-
-/* =========================
-   STATS
-========================= */
-
-function updateStats(){
-
-    document.getElementById("totalCount").textContent =
-        projects.length;
-
-    document.getElementById("webCount").textContent =
-        projects.filter(p => p.type === "website").length;
-
-    document.getElementById("appCount").textContent =
-        projects.filter(p => p.type === "app").length;
-
-    document.getElementById("gameCount").textContent =
-        projects.filter(
-            p => p.type === "game2d" || p.type === "game3d"
-        ).length;
-
-}
-
-
-/* =========================
-   NEW PROJECT
-========================= */
-
-function newProject(){
-
-    const project = {
-
-        id: Date.now(),
-
-        name: "پروژه جدید",
-
-        type: "website",
-
-        title: "پروژه جدید",
-
-        description:
-            "پروژه خود را با Ghost Builder بسازید.",
-
-        button:
-            "شروع کنید",
-
-        background:
-            "#ffffff",
-
-        primary:
-            "#7c5cff",
-
-        radius:
-            18,
-
-        width:
-            390,
-
-        height:
-            700,
-
-        quality:
-            "Medium",
-
-        resolution:
-            "720p",
-
-        elements:[]
-
-    };
-
-
-    localStorage.setItem(
-        "ghost_builder_current_project",
-        JSON.stringify(project)
-    );
-
-
-    projects.push(project);
-
-    saveProjects();
-
-
-    location.href =
-        "builder.html?project=" +
-        encodeURIComponent(project.id);
-
-}
-
-
-/* =========================
-   HOME
-========================= */
-
-function goHome(){
-
-    location.href =
-        "index.html";
-
-}
-
-
-/* =========================
-   ESCAPE HTML
-========================= */
-
-function escapeHTML(value){
-
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================
-   TOAST
-========================= */
-
-function showToast(message){
-
-    const toast =
-        document.getElementById("toast");
-
-    toast.textContent =
-        message;
-
-    toast.classList.add("show");
-
-    setTimeout(() => {
-        toast.classList.remove("show");
-    },2200);
-
-}
-
-
-/* =========================
-   START
-========================= */
-
-loadProjects();
+  }
+);
 
 </script>
 
