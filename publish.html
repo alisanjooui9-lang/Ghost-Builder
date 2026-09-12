@@ -1,985 +1,1524 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Ghost Builder | انتشار</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+  <title>Ghost Builder — انتشار</title>
 
-body{
-  font-family:Tahoma,Arial,sans-serif;
-  background:#07070b;
-  color:#fff;
-  min-height:100vh;
-}
+  <link rel="stylesheet" href="style.css">
 
-button,input{
-  font-family:inherit;
-}
+  <style>
+    .publish-page {
+      min-height: 100vh;
+      padding-bottom: 50px;
+    }
 
-.topbar{
-  height:70px;
-  background:#0d0d14;
-  border-bottom:1px solid #252535;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 22px;
-}
+    .publish-hero {
+      padding: 30px 0;
+      text-align: center;
+    }
 
-.logo{
-  font-size:21px;
-  font-weight:900;
-  color:#805fff;
-}
+    .publish-icon {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 16px;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      background: linear-gradient(135deg,#7c5cff,#4f46e5);
+      color: white;
+      box-shadow: 0 15px 35px rgba(92,72,220,.25);
+    }
 
-.logo span{
-  color:#fff;
-}
+    .publish-hero h1 {
+      margin: 0;
+      font-size: 28px;
+    }
 
-.actions{
-  display:flex;
-  gap:8px;
-}
+    .publish-hero p {
+      color: var(--muted);
+      line-height: 1.9;
+      max-width: 650px;
+      margin: 10px auto 0;
+    }
 
-.btn{
-  border:1px solid #302d43;
-  background:#15141d;
-  color:#fff;
-  padding:10px 15px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-}
+    .publish-layout {
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 18px;
+      display: grid;
+      grid-template-columns: 1.35fr .65fr;
+      gap: 18px;
+    }
 
-.btn.primary{
-  background:#7655ff;
-  border-color:#7655ff;
-}
+    .publish-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
 
-.container{
-  width:min(1100px,94%);
-  margin:35px auto;
-}
+    .publish-card h2 {
+      margin-top: 0;
+      font-size: 18px;
+    }
 
-.hero{
-  text-align:center;
-  margin-bottom:30px;
-}
+    .project-summary {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px;
+      border-radius: 17px;
+      background: var(--bg);
+    }
 
-.hero-icon{
-  font-size:55px;
-  margin-bottom:12px;
-}
+    .project-summary-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      background: rgba(124,92,255,.12);
+      flex-shrink: 0;
+    }
 
-.hero h1{
-  font-size:30px;
-  margin-bottom:10px;
-}
+    .project-summary-info {
+      min-width: 0;
+    }
 
-.hero p{
-  color:#999;
-  line-height:1.9;
-}
+    .project-summary-info strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
-.project-card{
-  background:#0e0e15;
-  border:1px solid #282738;
-  border-radius:20px;
-  padding:22px;
-  margin-bottom:20px;
-}
+    .project-summary-info span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
 
-.project-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:20px;
-}
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 12px;
+    }
 
-.project-title h2{
-  font-size:20px;
-}
+    .output-option {
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 18px;
+      cursor: pointer;
+      transition: .2s;
+      background: var(--bg);
+    }
 
-.badge{
-  background:#191724;
-  border:1px solid #302d43;
-  color:#aaa;
-  padding:7px 11px;
-  border-radius:9px;
-  font-size:12px;
-}
+    .output-option:hover {
+      transform: translateY(-2px);
+      border-color: #7c5cff;
+    }
 
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-}
+    .output-option.active {
+      border-color: #7c5cff;
+      box-shadow: 0 0 0 2px rgba(124,92,255,.12);
+    }
 
-.stat{
-  background:#14131c;
-  border:1px solid #29283a;
-  border-radius:13px;
-  padding:15px;
-}
+    .output-option-icon {
+      font-size: 30px;
+      margin-bottom: 9px;
+    }
 
-.stat small{
-  color:#777;
-  display:block;
-  margin-bottom:7px;
-}
+    .output-option strong {
+      display: block;
+    }
 
-.stat strong{
-  font-size:15px;
-}
+    .output-option span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+      margin-top: 5px;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-}
+    .publish-url {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
 
-.option{
-  background:#0e0e15;
-  border:1px solid #29283a;
-  border-radius:20px;
-  padding:25px;
-}
+    .publish-url input {
+      flex: 1;
+      min-width: 0;
+    }
 
-.option-icon{
-  font-size:40px;
-  margin-bottom:12px;
-}
+    .status-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 15px;
+      background: rgba(34,197,94,.08);
+      border: 1px solid rgba(34,197,94,.18);
+    }
 
-.option h2{
-  margin-bottom:10px;
-}
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #22c55e;
+      flex-shrink: 0;
+    }
 
-.option p{
-  color:#999;
-  line-height:1.9;
-  font-size:13px;
-  margin-bottom:18px;
-}
+    .status-box.pending {
+      background: rgba(245,158,11,.08);
+      border-color: rgba(245,158,11,.18);
+    }
 
-.url-box{
-  display:flex;
-  gap:7px;
-  margin-bottom:12px;
-}
+    .status-box.pending .status-dot {
+      background: #f59e0b;
+    }
 
-.url-box input{
-  flex:1;
-  min-width:0;
-  background:#09090d;
-  border:1px solid #302f40;
-  color:#fff;
-  border-radius:10px;
-  padding:11px;
-  direction:ltr;
-  text-align:left;
-  font-size:12px;
-}
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
 
-.copy{
-  border:1px solid #302d43;
-  background:#181722;
-  color:#fff;
-  border-radius:10px;
-  padding:0 13px;
-  cursor:pointer;
-}
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
 
-.big-btn{
-  width:100%;
-  padding:13px;
-  border-radius:11px;
-  border:1px solid #302d43;
-  background:#171620;
-  color:#fff;
-  cursor:pointer;
-  font-weight:bold;
-  margin-top:8px;
-}
+    .step-number {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #7c5cff;
+      color: white;
+      font-size: 12px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
 
-.big-btn.primary{
-  background:#7655ff;
-  border-color:#7655ff;
-}
+    .step-content strong {
+      display: block;
+      margin-bottom: 3px;
+    }
 
-.big-btn.success{
-  background:#151d18;
-  border-color:#31523a;
-}
+    .step-content span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
 
-.steps{
-  margin-top:20px;
-}
+    .warning {
+      padding: 14px;
+      border-radius: 15px;
+      background: rgba(245,158,11,.08);
+      border: 1px solid rgba(245,158,11,.18);
+      line-height: 1.9;
+      font-size: 13px;
+    }
 
-.step{
-  display:flex;
-  gap:13px;
-  margin-bottom:15px;
-  padding:13px;
-  background:#12121a;
-  border:1px solid #252536;
-  border-radius:12px;
-}
+    .success-box {
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(34,197,94,.08);
+      border: 1px solid rgba(34,197,94,.18);
+      line-height: 1.8;
+    }
 
-.step-num{
-  width:30px;
-  height:30px;
-  min-width:30px;
-  border-radius:50%;
-  background:#7655ff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-}
+    .publish-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
 
-.step-text{
-  color:#aaa;
-  line-height:1.8;
-  font-size:13px;
-}
+    .progress-container {
+      display: none;
+      margin-top: 15px;
+    }
 
-.warning{
-  background:#18150e;
-  border:1px solid #493d1c;
-  color:#c8b77b;
-  padding:14px;
-  border-radius:12px;
-  line-height:1.9;
-  font-size:12px;
-  margin-top:15px;
-}
+    .progress-container.show {
+      display: block;
+    }
 
-.footer-note{
-  text-align:center;
-  color:#666;
-  padding:30px;
-  font-size:12px;
-}
+    .progress-bar {
+      height: 9px;
+      background: var(--bg);
+      border-radius: 20px;
+      overflow: hidden;
+    }
 
-.hidden{
-  display:none!important;
-}
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg,#7c5cff,#4f46e5);
+      transition: width .3s;
+    }
 
-@media(max-width:750px){
-  .topbar{
-    height:auto;
-    padding:12px;
-    gap:10px;
-  }
+    .progress-text {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 7px;
+    }
 
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
+    @media(max-width:850px) {
+      .publish-layout {
+        grid-template-columns: 1fr;
+      }
+    }
 
-  .grid{
-    grid-template-columns:1fr;
-  }
+    @media(max-width:550px) {
+      .output-grid {
+        grid-template-columns: 1fr;
+      }
 
-  .project-title{
-    align-items:flex-start;
-    flex-direction:column;
-  }
+      .publish-url {
+        flex-direction: column;
+      }
 
-  .actions .btn{
-    padding:8px 10px;
-    font-size:11px;
-  }
-}
-</style>
+      .publish-card {
+        padding: 15px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="topbar">
+<div class="publish-page">
 
-  <div class="logo">
-    Ghost <span>Builder</span>
-  </div>
+  <!-- HEADER -->
 
-  <div class="actions">
-    <button class="btn" onclick="goBack()">بازگشت</button>
-    <button class="btn" onclick="openPreview()">پیش‌نمایش</button>
-    <button class="btn primary" onclick="openBuilder()">ویرایش</button>
-  </div>
+  <header class="topbar">
 
-</header>
+    <div class="topbar-title">
+      <div>
+        <strong>🚀 انتشار پروژه</strong>
+        <span>ساخت خروجی و آماده‌سازی پروژه</span>
+      </div>
+    </div>
+
+    <div class="topbar-actions">
+
+      <button
+        class="btn"
+        onclick="goBuilder()">
+        ✏️ ویرایش
+      </button>
+
+      <button
+        class="btn"
+        onclick="goPreview()">
+        👁️ پیش‌نمایش
+      </button>
+
+    </div>
+
+  </header>
 
 
-<main class="container">
+  <!-- HERO -->
 
-  <section class="hero">
+  <section class="publish-hero">
 
-    <div class="hero-icon">🚀</div>
+    <div class="publish-icon">
+      🚀
+    </div>
 
-    <h1>انتشار پروژه</h1>
+    <h1>
+      انتشار پروژه
+    </h1>
 
     <p>
-      پروژه خود را آماده انتشار کنید و نسخه وب آن را در اختیار کاربران قرار دهید.
+      پروژه خود را بررسی کنید، نسخه وب آن را آماده کنید
+      و در صورت نیاز برای ساخت APK آماده‌سازی کنید.
     </p>
 
   </section>
 
 
-  <section class="project-card">
+  <!-- MAIN -->
 
-    <div class="project-title">
+  <main class="publish-layout">
 
-      <h2 id="projectName">
-        پروژه جدید
-      </h2>
+    <!-- LEFT -->
 
-      <div class="badge" id="projectType">
-        وب‌سایت
-      </div>
+    <div>
+
+      <!-- PROJECT -->
+
+      <section class="publish-card">
+
+        <h2>
+          📦 پروژه
+        </h2>
+
+        <div
+          id="projectSummary"
+          class="project-summary">
+        </div>
+
+      </section>
+
+
+      <!-- OUTPUT -->
+
+      <section class="publish-card">
+
+        <h2>
+          📤 نوع خروجی
+        </h2>
+
+        <div class="output-grid">
+
+          <div
+            id="webOption"
+            class="output-option active"
+            onclick="selectOutput('web')">
+
+            <div class="output-option-icon">
+              🌐
+            </div>
+
+            <strong>
+              نسخه Web
+            </strong>
+
+            <span>
+              مناسب برای اجرای پروژه در مرورگر
+              و آماده‌سازی برای انتشار آنلاین.
+            </span>
+
+          </div>
+
+
+          <div
+            id="apkOption"
+            class="output-option"
+            onclick="selectOutput('apk')">
+
+            <div class="output-option-icon">
+              📱
+            </div>
+
+            <strong>
+              APK
+            </strong>
+
+            <span>
+              پروژه وب را برای استفاده در
+              ابزارهای Web → APK آماده کنید.
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- WEB -->
+
+      <section
+        id="webSection"
+        class="publish-card">
+
+        <h2>
+          🌐 لینک پیش‌نمایش وب
+        </h2>
+
+        <p
+          style="
+            color:var(--muted);
+            font-size:13px;
+            line-height:1.8;
+          ">
+
+          این لینک مسیر پیش‌نمایش پروژه در Ghost Builder
+          است. برای انتشار عمومی واقعی، پروژه باید روی
+          یک سرویس میزبانی وب قرار بگیرد.
+
+        </p>
+
+
+        <div class="publish-url">
+
+          <input
+            id="webUrl"
+            class="form-input"
+            readonly>
+
+          <button
+            class="btn"
+            onclick="copyWebUrl()">
+            📋 کپی
+          </button>
+
+          <button
+            class="btn"
+            onclick="openWebUrl()">
+            🔗 باز کردن
+          </button>
+
+        </div>
+
+
+        <div class="publish-actions">
+
+          <button
+            class="btn btn-primary"
+            onclick="publishWeb()">
+            🌐 آماده‌سازی نسخه وب
+          </button>
+
+        </div>
+
+
+        <div
+          id="webProgress"
+          class="progress-container">
+
+          <div class="progress-bar">
+            <div
+              id="webProgressFill"
+              class="progress-fill">
+            </div>
+          </div>
+
+          <div
+            id="webProgressText"
+            class="progress-text">
+            در حال آماده‌سازی...
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- APK -->
+
+      <section
+        id="apkSection"
+        class="publish-card"
+        style="display:none;">
+
+        <h2>
+          📱 ساخت APK
+        </h2>
+
+        <div class="warning">
+
+          ⚠️
+          Ghost Builder در حالت فعلی یک سیستم ساخت APK
+          روی خود GitHub Pages ندارد. ابتدا باید نسخه Web
+          پروژه آماده شود و سپس لینک آن را در یک سرویس
+          معتبر Web → APK وارد کنید.
+
+        </div>
+
+
+        <div
+          class="steps"
+          style="margin-top:18px;">
+
+          <div class="step">
+
+            <div class="step-number">
+              1
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                پروژه را آماده کنید
+              </strong>
+
+              <span>
+                ابتدا نسخه وب پروژه را ذخیره و آماده کنید.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="step">
+
+            <div class="step-number">
+              2
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                لینک پروژه را دریافت کنید
+              </strong>
+
+              <span>
+                لینک نسخه وب را از قسمت بالا کپی کنید.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="step">
+
+            <div class="step-number">
+              3
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                سرویس Web → APK
+              </strong>
+
+              <span>
+                یک سرویس معتبر تبدیل Web به APK را باز کنید
+                و لینک پروژه را وارد کنید.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="step">
+
+            <div class="step-number">
+              4
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                نام و آیکون برنامه
+              </strong>
+
+              <span>
+                نام برنامه، آیکون و تنظیمات موردنیاز را
+                در سرویس انتخاب کنید.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="step">
+
+            <div class="step-number">
+              5
+            </div>
+
+            <div class="step-content">
+
+              <strong>
+                دریافت APK
+              </strong>
+
+              <span>
+                بعد از ساخت، فایل APK را از همان سرویس
+                دریافت کنید.
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="publish-actions">
+
+          <button
+            class="btn btn-primary"
+            onclick="copyWebUrl()">
+            📋 کپی لینک پروژه
+          </button>
+
+          <button
+            class="btn"
+            onclick="selectOutput('web')">
+            🌐 بازگشت به Web
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- STATUS -->
+
+      <section class="publish-card">
+
+        <h2>
+          📊 وضعیت انتشار
+        </h2>
+
+        <div
+          id="statusBox"
+          class="status-box pending">
+
+          <div class="status-dot"></div>
+
+          <div>
+
+            <strong id="statusTitle">
+              آماده انتشار
+            </strong>
+
+            <div
+              id="statusDescription"
+              style="
+                color:var(--muted);
+                font-size:12px;
+                margin-top:4px;
+              ">
+              پروژه هنوز به عنوان منتشرشده علامت‌گذاری نشده است.
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="publish-actions">
+
+          <button
+            class="btn"
+            onclick="markPublished()">
+            ✅ علامت‌گذاری به عنوان منتشرشده
+          </button>
+
+        </div>
+
+      </section>
 
     </div>
 
 
-    <div class="stats">
+    <!-- RIGHT -->
 
-      <div class="stat">
-        <small>وضعیت</small>
-        <strong id="status">
-          آماده انتشار
-        </strong>
-      </div>
+    <aside>
 
-      <div class="stat">
-        <small>کیفیت</small>
-        <strong id="quality">
-          Medium
-        </strong>
-      </div>
+      <!-- SETTINGS -->
 
-      <div class="stat">
-        <small>رزولوشن</small>
-        <strong id="resolution">
-          720p
-        </strong>
-      </div>
+      <section class="publish-card">
 
-      <div class="stat">
-        <small>نوع خروجی</small>
-        <strong id="outputType">
-          Web
-        </strong>
-      </div>
+        <h2>
+          ⚙️ مشخصات خروجی
+        </h2>
 
-    </div>
+        <div class="form-group">
 
-  </section>
+          <label>
+            کیفیت
+          </label>
 
-
-  <div class="grid">
-
-    <!-- WEB -->
-    <section class="option">
-
-      <div class="option-icon">🌐</div>
-
-      <h2>نسخه وب</h2>
-
-      <p>
-        پروژه خود را به صورت نسخه وب آماده کنید.
-        این روش برای نمایش پروژه روی مرورگر مناسب است.
-      </p>
-
-
-      <div class="url-box">
-
-        <input
-          id="projectUrl"
-          readonly
-          value="در حال آماده‌سازی..."
-        >
-
-        <button
-          class="copy"
-          onclick="copyURL()">
-          کپی
-        </button>
-
-      </div>
-
-
-      <button
-        class="big-btn primary"
-        onclick="publishWeb()">
-        🌐 انتشار پروژه وب
-      </button>
-
-
-      <button
-        class="big-btn"
-        onclick="openProjectURL()">
-        🔗 باز کردن لینک
-      </button>
-
-    </section>
-
-
-    <!-- APK -->
-    <section class="option">
-
-      <div class="option-icon">📱</div>
-
-      <h2>خروجی APK</h2>
-
-      <p>
-        Ghost Builder در نسخه فعلی، پروژه وب شما را آماده می‌کند.
-        برای تبدیل آن به APK می‌توانید لینک وب پروژه را داخل یک سرویس
-        Web → APK قرار دهید.
-      </p>
-
-
-      <button
-        class="big-btn primary"
-        onclick="showAPKSteps()">
-        📱 دریافت APK
-      </button>
-
-
-      <div
-        id="apkSteps"
-        class="steps hidden">
-
-        <div class="step">
-
-          <div class="step-num">1</div>
-
-          <div class="step-text">
-            ابتدا پروژه وب خود را منتشر کنید.
-          </div>
+          <input
+            id="quality"
+            class="form-input"
+            readonly>
 
         </div>
 
 
-        <div class="step">
+        <div class="form-group">
 
-          <div class="step-num">2</div>
+          <label>
+            رزولوشن
+          </label>
 
-          <div class="step-text">
-            لینک پروژه را از کادر بالا کپی کنید.
-          </div>
-
-        </div>
-
-
-        <div class="step">
-
-          <div class="step-num">3</div>
-
-          <div class="step-text">
-            لینک را در یک سرویس معتبر تبدیل Web → APK وارد کنید.
-          </div>
+          <input
+            id="resolution"
+            class="form-input"
+            readonly>
 
         </div>
 
 
-        <div class="step">
+        <div class="form-group">
 
-          <div class="step-num">4</div>
+          <label>
+            نوع پروژه
+          </label>
 
-          <div class="step-text">
-            نام برنامه، آیکون و تنظیمات APK را انتخاب کنید.
-          </div>
-
-        </div>
-
-
-        <div class="step">
-
-          <div class="step-num">5</div>
-
-          <div class="step-text">
-            فایل APK ساخته‌شده را دریافت کنید.
-          </div>
+          <input
+            id="projectType"
+            class="form-input"
+            readonly>
 
         </div>
 
-      </div>
+      </section>
 
 
-      <div class="warning">
+      <!-- CHECKLIST -->
 
-        ⚠️ برای ساخت APK واقعی، یک سرویس Build لازم است.
-        در نسخه فعلی Ghost Builder، خود GitHub Pages امکان
-        ساخت مستقیم APK را ندارد.
+      <section class="publish-card">
 
-      </div>
+        <h2>
+          ✅ بررسی پروژه
+        </h2>
 
-    </section>
+        <div
+          id="checklist"
+          style="
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+          ">
+        </div>
 
-  </div>
-
-
-  <section class="project-card">
-
-    <div class="project-title">
-
-      <h2>آماده انتشار</h2>
-
-      <div class="badge">
-        Ghost Builder
-      </div>
-
-    </div>
+      </section>
 
 
-    <button
-      class="big-btn success"
-      onclick="markPublished()">
-      ✅ علامت‌گذاری به عنوان منتشرشده
-    </button>
+      <!-- QUICK -->
+
+      <section class="publish-card">
+
+        <h2>
+          ⚡ دسترسی سریع
+        </h2>
+
+        <div
+          style="
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+          ">
+
+          <button
+            class="btn"
+            onclick="goProjects()">
+            📁 پروژه‌های من
+          </button>
+
+          <button
+            class="btn"
+            onclick="goMedia()">
+            🖼️ رسانه‌ها
+          </button>
+
+          <button
+            class="btn"
+            onclick="goSettings()">
+            ⚙️ تنظیمات
+          </button>
+
+        </div>
+
+      </section>
+
+    </aside>
+
+  </main>
+
+</div>
 
 
-    <button
-      class="big-btn"
-      onclick="copyProjectData()">
-      📋 کپی اطلاعات پروژه
-    </button>
-
-  </section>
-
-
-  <div class="footer-note">
-
-    Ghost Builder — ساخت وب‌سایت، اپلیکیشن و بازی
-
-  </div>
-
-</main>
-
+<script src="app.js"></script>
 
 <script>
 
-const params =
-  new URLSearchParams(location.search);
+"use strict";
 
-const projectId =
-  params.get("project");
 
-const requestedType =
-  params.get("type");
+/* =====================================================
+   STATE
+   ===================================================== */
 
 let project = null;
 
+let outputType = "web";
 
-/* =========================
-   LOAD
-========================= */
 
-function loadProject(){
+/* =====================================================
+   LOAD PROJECT
+   ===================================================== */
 
-  const projects =
-    JSON.parse(
-      localStorage.getItem(
-        "ghost_builder_projects"
-      ) || "[]"
+function loadProject() {
+
+  const id =
+    gbParam("project");
+
+
+  if (id) {
+
+    project =
+      gbFindProject(id);
+
+  }
+
+
+  if (!project) {
+
+    project =
+      gbGetCurrentProject();
+
+  }
+
+
+  if (!project) {
+
+    project =
+      gbGetProjects()[0] || null;
+
+  }
+
+
+  if (!project) {
+
+    showNoProject();
+
+    return;
+
+  }
+
+
+  gbSetCurrentProject(
+    project
+  );
+
+
+  renderProject();
+
+}
+
+
+/* =====================================================
+   RENDER PROJECT
+   ===================================================== */
+
+function renderProject() {
+
+  const name =
+    project.name ||
+    project.title ||
+    "پروژه جدید";
+
+
+  const type =
+    gbProjectTypeLabel(
+      project.type
     );
 
 
-  if(projectId){
-
-    project =
-      projects.find(
-        p => String(p.id) === String(projectId)
-      );
-
-  }
-
-
-  if(!project){
-
-    project =
-      JSON.parse(
-        localStorage.getItem(
-          "ghost_builder_current_project"
-        ) || "null"
-      );
-
-  }
-
-
-  if(!project){
-
-    project = {
-
-      id:"demo",
-
-      name:"پروژه نمونه",
-
-      type:"website",
-
-      quality:"Medium",
-
-      resolution:"720p",
-
-      title:"پروژه نمونه",
-
-      description:"پروژه ساخته‌شده با Ghost Builder",
-
-      background:"#ffffff",
-
-      primary:"#7655ff",
-
-      radius:18,
-
-      elements:[]
-
-    };
-
-  }
-
-
-  updateUI();
-
-}
-
-
-/* =========================
-   TYPE
-========================= */
-
-function getTypeName(type){
-
-  const names = {
-
-    website:"وب‌سایت",
-
-    app:"اپلیکیشن",
-
-    game2d:"بازی 2D",
-
-    game3d:"بازی 3D"
-
-  };
-
-  return names[type] || "پروژه";
-
-}
-
-
-/* =========================
-   UI
-========================= */
-
-function updateUI(){
-
-  document.getElementById(
-    "projectName"
-  ).textContent =
-    project.name || "پروژه جدید";
+  const icon =
+    gbProjectTypeIcon(
+      project.type
+    );
 
 
   document.getElementById(
-    "projectType"
-  ).textContent =
-    getTypeName(project.type);
+    "projectSummary"
+  ).innerHTML = `
+
+    <div class="project-summary-icon">
+      ${icon}
+    </div>
+
+    <div class="project-summary-info">
+
+      <strong>
+        ${gbEscapeHTML(name)}
+      </strong>
+
+      <span>
+        ${gbEscapeHTML(type)}
+      </span>
+
+    </div>
+
+  `;
 
 
   document.getElementById(
     "quality"
-  ).textContent =
-    project.quality || "Medium";
+  ).value =
+    project.quality ||
+    "Medium";
 
 
   document.getElementById(
     "resolution"
-  ).textContent =
-    project.resolution || "720p";
-
-
-  if(requestedType === "apk"){
-
-    document.getElementById(
-      "outputType"
-    ).textContent = "APK";
-
-    document.getElementById(
-      "apkSteps"
-    ).classList.remove("hidden");
-
-  }
+  ).value =
+    project.resolution ||
+    "720p";
 
 
   document.getElementById(
-    "projectUrl"
+    "projectType"
   ).value =
-    createProjectURL();
+    type;
+
+
+  const url =
+    window.location.origin +
+    window.location.pathname
+      .replace(
+        "publish.html",
+        "preview.html"
+      ) +
+    "?project=" +
+    encodeURIComponent(
+      project.id
+    );
+
+
+  document.getElementById(
+    "webUrl"
+  ).value =
+    url;
+
+
+  renderChecklist();
+
+  updatePublishedStatus();
 
 }
 
 
-/* =========================
-   PROJECT URL
-========================= */
+/* =====================================================
+   CHECKLIST
+   ===================================================== */
 
-function createProjectURL(){
+function renderChecklist() {
 
-  const base =
-    location.origin +
-    location.pathname
-      .replace(
-        "publish.html",
-        "preview.html"
+  const elements =
+    Array.isArray(
+      project.elements
+    )
+      ? project.elements
+      : [];
+
+
+  const checks = [
+
+    {
+      ok: !!project.name,
+      text: "نام پروژه مشخص شده"
+    },
+
+    {
+      ok: !!project.type,
+      text: "نوع پروژه مشخص شده"
+    },
+
+    {
+      ok: !!project.quality,
+      text: "کیفیت خروجی مشخص شده"
+    },
+
+    {
+      ok: !!project.resolution,
+      text: "رزولوشن مشخص شده"
+    },
+
+    {
+      ok: elements.length > 0,
+      text: "حداقل یک عنصر در پروژه وجود دارد"
+    }
+
+  ];
+
+
+  document.getElementById(
+    "checklist"
+  ).innerHTML =
+    checks.map(
+      check => `
+
+        <div
+          style="
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-size:13px;
+          ">
+
+          <span>
+            ${
+              check.ok
+                ? "✅"
+                : "⚠️"
+            }
+          </span>
+
+          <span>
+            ${check.text}
+          </span>
+
+        </div>
+
+      `
+    ).join("");
+
+}
+
+
+/* =====================================================
+   SELECT OUTPUT
+   ===================================================== */
+
+function selectOutput(
+  type
+) {
+
+  outputType =
+    type;
+
+
+  const webOption =
+    document.getElementById(
+      "webOption"
+    );
+
+  const apkOption =
+    document.getElementById(
+      "apkOption"
+    );
+
+  const webSection =
+    document.getElementById(
+      "webSection"
+    );
+
+  const apkSection =
+    document.getElementById(
+      "apkSection"
+    );
+
+
+  webOption.classList.toggle(
+    "active",
+    type === "web"
+  );
+
+
+  apkOption.classList.toggle(
+    "active",
+    type === "apk"
+  );
+
+
+  webSection.style.display =
+    type === "web"
+      ? "block"
+      : "none";
+
+
+  apkSection.style.display =
+    type === "apk"
+      ? "block"
+      : "none";
+
+}
+
+
+/* =====================================================
+   PUBLISH WEB
+   ===================================================== */
+
+function publishWeb() {
+
+  if (!project) {
+
+    gbToast(
+      "پروژه‌ای انتخاب نشده است.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const progress =
+    document.getElementById(
+      "webProgress"
+    );
+
+  const fill =
+    document.getElementById(
+      "webProgressFill"
+    );
+
+  const text =
+    document.getElementById(
+      "webProgressText"
+    );
+
+
+  progress.classList.add(
+    "show"
+  );
+
+
+  fill.style.width =
+    "10%";
+
+
+  text.textContent =
+    "در حال بررسی پروژه...";
+
+
+  setTimeout(
+    () => {
+
+      fill.style.width =
+        "35%";
+
+      text.textContent =
+        "در حال ذخیره تنظیمات...";
+
+    },
+    350
+  );
+
+
+  setTimeout(
+    () => {
+
+      gbPublish(
+        project.id,
+        "web"
       );
 
 
-  return (
-    base +
-    "?project=" +
-    encodeURIComponent(project.id)
+      project =
+        gbFindProject(
+          project.id
+        );
+
+
+      fill.style.width =
+        "70%";
+
+      text.textContent =
+        "در حال آماده‌سازی نسخه وب...";
+
+    },
+    700
+  );
+
+
+  setTimeout(
+    () => {
+
+      fill.style.width =
+        "100%";
+
+      text.textContent =
+        "نسخه وب آماده شد.";
+
+      updatePublishedStatus();
+
+      gbToast(
+        "نسخه وب پروژه آماده شد.",
+        "success"
+      );
+
+    },
+    1100
   );
 
 }
 
 
-/* =========================
-   COPY
-========================= */
+/* =====================================================
+   PUBLISHED STATUS
+   ===================================================== */
 
-function copyURL(){
+function updatePublishedStatus() {
 
-  const input =
-    document.getElementById(
-      "projectUrl"
-    );
-
-  const text =
-    input.value;
-
-
-  if(navigator.clipboard){
-
-    navigator.clipboard.writeText(text)
-      .then(() => {
-
-        alert(
-          "لینک پروژه کپی شد."
-        );
-
-      });
-
+  if (!project) {
+    return;
   }
 
-  else{
 
-    input.select();
+  const published =
+    gbIsPublished
+      ? gbIsPublished(
+          project.id
+        )
+      : false;
 
-    document.execCommand("copy");
 
-    alert(
-      "لینک پروژه کپی شد."
+  const box =
+    document.getElementById(
+      "statusBox"
     );
+
+  const title =
+    document.getElementById(
+      "statusTitle"
+    );
+
+  const description =
+    document.getElementById(
+      "statusDescription"
+    );
+
+
+  if (published) {
+
+    box.classList.remove(
+      "pending"
+    );
+
+
+    title.textContent =
+      "منتشرشده";
+
+
+    description.textContent =
+      "این پروژه به عنوان نسخه منتشرشده ثبت شده است.";
+
+  } else {
+
+    box.classList.add(
+      "pending"
+    );
+
+
+    title.textContent =
+      "آماده انتشار";
+
+
+    description.textContent =
+      "پروژه هنوز به عنوان منتشرشده علامت‌گذاری نشده است.";
 
   }
 
 }
 
 
-/* =========================
-   OPEN URL
-========================= */
+/* =====================================================
+   MARK PUBLISHED
+   ===================================================== */
 
-function openProjectURL(){
+function markPublished() {
+
+  if (!project) {
+    return;
+  }
+
+
+  gbPublish(
+    project.id,
+    "web"
+  );
+
+
+  project =
+    gbFindProject(
+      project.id
+    );
+
+
+  updatePublishedStatus();
+
+
+  gbToast(
+    "پروژه به عنوان منتشرشده ثبت شد.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   COPY URL
+   ===================================================== */
+
+function copyWebUrl() {
+
+  const url =
+    document.getElementById(
+      "webUrl"
+    ).value;
+
+
+  gbCopy(
+    url
+  );
+
+
+  gbToast(
+    "لینک پیش‌نمایش کپی شد.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   OPEN URL
+   ===================================================== */
+
+function openWebUrl() {
+
+  const url =
+    document.getElementById(
+      "webUrl"
+    ).value;
+
 
   window.open(
-    document.getElementById(
-      "projectUrl"
-    ).value,
+    url,
     "_blank"
   );
 
 }
 
 
-/* =========================
-   PUBLISH WEB
-========================= */
+/* =====================================================
+   NAVIGATION
+   ===================================================== */
 
-function publishWeb(){
+function goBuilder() {
 
-  localStorage.setItem(
-    "ghost_builder_published_" +
-    project.id,
-    "true"
-  );
-
-  document.getElementById(
-    "status"
-  ).textContent =
-    "منتشرشده";
-
-  alert(
-    "نسخه وب پروژه آماده شد.\n\n" +
-    "لینک پروژه در کادر بالا قرار دارد."
-  );
-
-}
-
-
-/* =========================
-   APK
-========================= */
-
-function showAPKSteps(){
-
-  const box =
-    document.getElementById(
-      "apkSteps"
-    );
-
-  box.classList.remove(
-    "hidden"
-  );
-
-  document.getElementById(
-    "outputType"
-  ).textContent =
-    "APK";
-
-  window.scrollTo({
-    top:document.body.scrollHeight,
-    behavior:"smooth"
-  });
-
-}
-
-
-/* =========================
-   BUILDER
-========================= */
-
-function openBuilder(){
-
-  localStorage.setItem(
-    "ghost_builder_current_project",
-    JSON.stringify(project)
-  );
-
-  location.href =
-    "builder.html?project=" +
-    encodeURIComponent(project.id);
-
-}
-
-
-/* =========================
-   PREVIEW
-========================= */
-
-function openPreview(){
-
-  location.href =
-    "preview.html?project=" +
-    encodeURIComponent(project.id);
-
-}
-
-
-/* =========================
-   BACK
-========================= */
-
-function goBack(){
-
-  history.back();
-
-}
-
-
-/* =========================
-   MARK PUBLISHED
-========================= */
-
-function markPublished(){
-
-  localStorage.setItem(
-    "ghost_builder_published_" +
-    project.id,
-    "true"
-  );
-
-  document.getElementById(
-    "status"
-  ).textContent =
-    "منتشرشده";
-
-  alert(
-    "پروژه به عنوان منتشرشده ثبت شد."
-  );
-
-}
-
-
-/* =========================
-   COPY PROJECT DATA
-========================= */
-
-function copyProjectData(){
-
-  const data = {
-
-    id:project.id,
-
-    name:project.name,
-
-    type:project.type,
-
-    quality:project.quality,
-
-    resolution:project.resolution,
-
-    url:createProjectURL()
-
-  };
-
-
-  const text =
-    JSON.stringify(
-      data,
-      null,
-      2
-    );
-
-
-  if(navigator.clipboard){
-
-    navigator.clipboard.writeText(text)
-      .then(() => {
-
-        alert(
-          "اطلاعات پروژه کپی شد."
-        );
-
-      });
-
+  if (!project) {
+    return;
   }
 
+
+  window.location.href =
+    "builder.html?project=" +
+    encodeURIComponent(
+      project.id
+    );
+
 }
 
 
-/* =========================
-   START
-========================= */
+function goPreview() {
 
-loadProject();
+  if (!project) {
+    return;
+  }
+
+
+  window.location.href =
+    "preview.html?project=" +
+    encodeURIComponent(
+      project.id
+    );
+
+}
+
+
+function goProjects() {
+
+  window.location.href =
+    "projects.html";
+
+}
+
+
+function goMedia() {
+
+  window.location.href =
+    "media.html";
+
+}
+
+
+function goSettings() {
+
+  window.location.href =
+    "settings.html";
+
+}
+
+
+/* =====================================================
+   NO PROJECT
+   ===================================================== */
+
+function showNoProject() {
+
+  document.querySelector(
+    ".publish-layout"
+  ).innerHTML = `
+
+    <section
+      class="publish-card"
+      style="
+        grid-column:1/-1;
+        text-align:center;
+        padding:60px 20px;
+      ">
+
+      <div
+        style="
+          font-size:60px;
+          margin-bottom:15px;
+        ">
+        📂
+      </div>
+
+      <h2>
+        پروژه‌ای پیدا نشد
+      </h2>
+
+      <p
+        style="
+          color:var(--muted);
+          line-height:1.9;
+        ">
+
+        ابتدا یک پروژه بسازید و سپس
+        وارد بخش انتشار شوید.
+
+      </p>
+
+      <button
+        class="btn btn-primary"
+        onclick="goProjects()">
+
+        📁 رفتن به پروژه‌ها
+
+      </button>
+
+    </section>
+
+  `;
+
+}
+
+
+/* =====================================================
+   INIT
+   ===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    loadProject();
+
+  }
+);
 
 </script>
 
 </body>
-  </html>
+</html>
