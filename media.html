@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Ghost Builder | Media</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Tahoma,Arial,sans-serif;
+  background:#07070b;
+  color:#fff;
+  min-height:100vh;
+}
+
+button,input{
+  font-family:inherit;
+}
+
+.topbar{
+  height:70px;
+  background:#0d0d14;
+  border-bottom:1px solid #252535;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+}
+
+.logo{
+  font-size:21px;
+  font-weight:900;
+  color:#805fff;
+}
+
+.logo span{
+  color:#fff;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+.btn{
+  border:1px solid #302d43;
+  background:#15141d;
+  color:#fff;
+  padding:10px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.btn.primary{
+  background:#7655ff;
+  border-color:#7655ff;
+}
+
+.container{
+  width:min(1200px,94%);
+  margin:30px auto;
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.header h1{
+  font-size:27px;
+  margin-bottom:8px;
+}
+
+.header p{
+  color:#888;
+  font-size:13px;
+  line-height:1.8;
+}
+
+.upload{
+  position:relative;
+  overflow:hidden;
+}
+
+.upload input{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  cursor:pointer;
+}
+
+.toolbar{
+  background:#0e0e15;
+  border:1px solid #29283a;
+  border-radius:16px;
+  padding:14px;
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.search{
+  flex:1;
+  background:#09090d;
+  border:1px solid #302f40;
+  color:#fff;
+  border-radius:10px;
+  padding:11px 13px;
+  outline:none;
+}
+
+.filter{
+  background:#15141d;
+  color:#aaa;
+  border:1px solid #302d43;
+  border-radius:10px;
+  padding:10px 13px;
+  cursor:pointer;
+}
+
+.filter.active{
+  color:#fff;
+  background:#7655ff;
+  border-color:#7655ff;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.stat{
+  background:#0e0e15;
+  border:1px solid #29283a;
+  border-radius:14px;
+  padding:16px;
+}
+
+.stat small{
+  color:#777;
+  display:block;
+  margin-bottom:8px;
+}
+
+.stat strong{
+  font-size:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+}
+
+.media-card{
+  background:#0e0e15;
+  border:1px solid #29283a;
+  border-radius:16px;
+  overflow:hidden;
+  transition:.2s;
+}
+
+.media-card:hover{
+  transform:translateY(-3px);
+  border-color:#51447c;
+}
+
+.media-preview{
+  height:150px;
+  background:
+    radial-gradient(circle at 30% 30%,#7655ff55,transparent 30%),
+    linear-gradient(135deg,#171525,#08080c);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:50px;
+}
+
+.media-info{
+  padding:13px;
+}
+
+.media-name{
+  font-weight:bold;
+  margin-bottom:6px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.media-type{
+  color:#777;
+  font-size:11px;
+  margin-bottom:12px;
+}
+
+.media-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+
+.small-btn{
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #302d43;
+  background:#15141d;
+  color:#fff;
+  cursor:pointer;
+  font-size:11px;
+}
+
+.small-btn.danger{
+  color:#ff8585;
+}
+
+.empty{
+  grid-column:1/-1;
+  background:#0e0e15;
+  border:1px dashed #343346;
+  border-radius:18px;
+  padding:60px 20px;
+  text-align:center;
+  color:#777;
+}
+
+.empty-icon{
+  font-size:55px;
+  margin-bottom:12px;
+}
+
+.note{
+  margin-top:20px;
+  background:#111018;
+  border:1px solid #29283a;
+  border-radius:14px;
+  padding:15px;
+  color:#888;
+  font-size:12px;
+  line-height:1.9;
+}
+
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:650px){
+  .topbar{
+    height:auto;
+    min-height:65px;
+    padding:10px;
+    gap:8px;
+  }
+
+  .header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .toolbar{
+    flex-wrap:wrap;
+  }
+
+  .search{
+    flex-basis:100%;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <div class="logo">
+    Ghost <span>Builder</span>
+  </div>
+
+  <div class="actions">
+
+    <button class="btn" onclick="goHome()">
+      خانه
+    </button>
+
+    <button class="btn primary" onclick="goBuilder()">
+      ساخت پروژه
+    </button>
+
+  </div>
+
+</header>
+
+
+<main class="container">
+
+  <section class="header">
+
+    <div>
+
+      <h1>📁 فایل‌های رسانه‌ای</h1>
+
+      <p>
+        تصاویر، ویدیوها و فایل‌های موردنیاز پروژه‌های خود را مدیریت کنید.
+      </p>
+
+    </div>
+
+
+    <label class="btn primary upload">
+
+      ⬆️ افزودن فایل
+
+      <input
+        type="file"
+        id="fileInput"
+        multiple
+        accept="image/*,video/*,audio/*,.json,.txt,.svg"
+      >
+
+    </label>
+
+  </section>
+
+
+  <section class="stats">
+
+    <div class="stat">
+      <small>همه فایل‌ها</small>
+      <strong id="totalCount">0</strong>
+    </div>
+
+    <div class="stat">
+      <small>تصاویر</small>
+      <strong id="imageCount">0</strong>
+    </div>
+
+    <div class="stat">
+      <small>ویدیو</small>
+      <strong id="videoCount">0</strong>
+    </div>
+
+    <div class="stat">
+      <small>سایر فایل‌ها</small>
+      <strong id="otherCount">0</strong>
+    </div>
+
+  </section>
+
+
+  <section class="toolbar">
+
+    <input
+      id="search"
+      class="search"
+      placeholder="جستجوی فایل..."
+      oninput="render()"
+    >
+
+
+    <button
+      class="filter active"
+      id="allFilter"
+      onclick="setFilter('all')">
+      همه
+    </button>
+
+    <button
+      class="filter"
+      id="imageFilter"
+      onclick="setFilter('image')">
+      تصاویر
+    </button>
+
+    <button
+      class="filter"
+      id="videoFilter"
+      onclick="setFilter('video')">
+      ویدیو
+    </button>
+
+    <button
+      class="filter"
+      id="otherFilter"
+      onclick="setFilter('other')">
+      سایر
+    </button>
+
+  </section>
+
+
+  <section
+    class="grid"
+    id="mediaGrid">
+  </section>
+
+
+  <div class="note">
+
+    💡 فایل‌های این بخش فعلاً در حافظه مرورگر این دستگاه مدیریت می‌شوند.
+    برای پروژه‌های واقعی، می‌توان در مرحله بعد سیستم ذخیره‌سازی آنلاین
+    و آپلود ابری را به Ghost Builder متصل کرد.
+
+  </div>
+
+</main>
+
+
+<script>
+
+const STORAGE_KEY =
+  "ghost_builder_media";
+
+let media =
+  JSON.parse(
+    localStorage.getItem(STORAGE_KEY) || "[]"
+  );
+
+let currentFilter = "all";
+
+
+/* =========================
+   FILTER
+========================= */
+
+function setFilter(filter){
+
+  currentFilter = filter;
+
+  document
+    .querySelectorAll(".filter")
+    .forEach(btn =>
+      btn.classList.remove("active")
+    );
+
+  if(filter === "all"){
+    document
+      .getElementById("allFilter")
+      .classList.add("active");
+  }
+
+  if(filter === "image"){
+    document
+      .getElementById("imageFilter")
+      .classList.add("active");
+  }
+
+  if(filter === "video"){
+    document
+      .getElementById("videoFilter")
+      .classList.add("active");
+  }
+
+  if(filter === "other"){
+    document
+      .getElementById("otherFilter")
+      .classList.add("active");
+  }
+
+  render();
+
+}
+
+
+/* =========================
+   FILE TYPE
+========================= */
+
+function getFileType(file){
+
+  if(file.type.startsWith("image/")){
+    return "image";
+  }
+
+  if(file.type.startsWith("video/")){
+    return "video";
+  }
+
+  return "other";
+
+}
+
+
+/* =========================
+   ADD FILES
+========================= */
+
+document
+  .getElementById("fileInput")
+  .addEventListener(
+    "change",
+    async function(){
+
+      const files =
+        Array.from(this.files);
+
+      for(const file of files){
+
+        const type =
+          getFileType(file);
+
+        let preview = "";
+
+        if(type === "image"){
+
+          try{
+
+            preview =
+              await fileToDataURL(file);
+
+          }catch(e){
+
+            preview = "";
+
+          }
+
+        }
+
+
+        media.push({
+
+          id:
+            Date.now() +
+            Math.random()
+              .toString(16)
+              .slice(2),
+
+          name:file.name,
+
+          type:type,
+
+          mime:file.type,
+
+          size:file.size,
+
+          preview:preview,
+
+          createdAt:
+            new Date().toISOString()
+
+        });
+
+      }
+
+
+      save();
+
+      render();
+
+      this.value = "";
+
+    }
+  );
+
+
+/* =========================
+   FILE TO DATA URL
+========================= */
+
+function fileToDataURL(file){
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        () => resolve(
+          reader.result
+        );
+
+      reader.onerror =
+        reject;
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function render(){
+
+  const grid =
+    document.getElementById(
+      "mediaGrid"
+    );
+
+  const search =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
+
+
+  let filtered =
+    media.filter(item => {
+
+      const matchesSearch =
+        item.name
+          .toLowerCase()
+          .includes(search);
+
+      const matchesFilter =
+        currentFilter === "all" ||
+        item.type === currentFilter;
+
+      return (
+        matchesSearch &&
+        matchesFilter
+      );
+
+    });
+
+
+  updateStats();
+
+
+  if(filtered.length === 0){
+
+    grid.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          📂
+        </div>
+
+        <h3>
+          فایل رسانه‌ای پیدا نشد
+        </h3>
+
+        <p>
+          یک فایل جدید به پروژه اضافه کنید.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  grid.innerHTML =
+    filtered.map(item => {
+
+      let preview = "📄";
+
+
+      if(item.type === "image"){
+
+        if(item.preview){
+
+          preview = `
+            <img
+              src="${item.preview}"
+              style="
+                width:100%;
+                height:100%;
+                object-fit:cover;
+              "
+            >
+          `;
+
+        }else{
+
+          preview = "🖼️";
+
+        }
+
+      }
+
+      else if(item.type === "video"){
+
+        preview = "🎬";
+
+      }
+
+      else{
+
+        preview = "📄";
+
+      }
+
+
+      return `
+
+        <div class="media-card">
+
+          <div class="media-preview">
+
+            ${preview}
+
+          </div>
+
+
+          <div class="media-info">
+
+            <div class="media-name"
+              title="${escapeHTML(item.name)}">
+
+              ${escapeHTML(item.name)}
+
+            </div>
+
+
+            <div class="media-type">
+
+              ${getTypeLabel(item)}
+
+              •
+              ${formatSize(item.size)}
+
+            </div>
+
+
+            <div class="media-actions">
+
+              <button
+                class="small-btn"
+                onclick="useFile('${item.id}')">
+
+                استفاده
+
+              </button>
+
+
+              <button
+                class="small-btn danger"
+                onclick="deleteFile('${item.id}')">
+
+                حذف
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+function getTypeLabel(item){
+
+  if(item.type === "image"){
+    return "تصویر";
+  }
+
+  if(item.type === "video"){
+    return "ویدیو";
+  }
+
+  return "فایل";
+
+}
+
+
+/* =========================
+   SIZE
+========================= */
+
+function formatSize(bytes){
+
+  if(!bytes){
+    return "0 KB";
+  }
+
+  if(bytes < 1024){
+    return bytes + " B";
+  }
+
+  if(bytes < 1024 * 1024){
+
+    return (
+      (bytes / 1024)
+        .toFixed(1) +
+      " KB"
+    );
+
+  }
+
+  return (
+    (bytes / (1024 * 1024))
+      .toFixed(1) +
+    " MB"
+  );
+
+}
+
+
+/* =========================
+   USE FILE
+========================= */
+
+function useFile(id){
+
+  const item =
+    media.find(
+      x => x.id === id
+    );
+
+  if(!item){
+    return;
+  }
+
+
+  localStorage.setItem(
+    "ghost_builder_selected_media",
+    JSON.stringify(item)
+  );
+
+
+  alert(
+    "فایل انتخاب شد.\n\n" +
+    "حالا وارد Builder شوید تا از آن در پروژه استفاده کنید."
+  );
+
+}
+
+
+/* =========================
+   DELETE
+========================= */
+
+function deleteFile(id){
+
+  const item =
+    media.find(
+      x => x.id === id
+    );
+
+  if(!item){
+    return;
+  }
+
+
+  const ok =
+    confirm(
+      "آیا از حذف این فایل مطمئن هستید؟\n\n" +
+      item.name
+    );
+
+
+  if(!ok){
+    return;
+  }
+
+
+  media =
+    media.filter(
+      x => x.id !== id
+    );
+
+
+  save();
+
+  render();
+
+}
+
+
+/* =========================
+   SAVE
+========================= */
+
+function save(){
+
+  try{
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(media)
+    );
+
+  }catch(error){
+
+    alert(
+      "فضای ذخیره‌سازی مرورگر پر شده است.\n" +
+      "فایل‌های بزرگ را حذف کنید."
+    );
+
+  }
+
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+function updateStats(){
+
+  const images =
+    media.filter(
+      x => x.type === "image"
+    ).length;
+
+  const videos =
+    media.filter(
+      x => x.type === "video"
+    ).length;
+
+  const others =
+    media.length -
+    images -
+    videos;
+
+
+  document.getElementById(
+    "totalCount"
+  ).textContent =
+    media.length;
+
+  document.getElementById(
+    "imageCount"
+  ).textContent =
+    images;
+
+  document.getElementById(
+    "videoCount"
+  ).textContent =
+    videos;
+
+  document.getElementById(
+    "otherCount"
+  ).textContent =
+    others;
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function goHome(){
+
+  location.href =
+    "index.html";
+
+}
+
+
+function goBuilder(){
+
+  location.href =
+    "builder.html";
+
+}
+
+
+/* =========================
+   ESCAPE
+========================= */
+
+function escapeHTML(value){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+render();
+
+</script>
+
+</body>
+</html>
