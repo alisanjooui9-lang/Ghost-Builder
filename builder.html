@@ -1,1797 +1,2469 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ghost Builder — Builder</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
+  <title>Ghost Builder — ویرایشگر</title>
 
-:root{
-    --bg:#080b12;
-    --panel:#101521;
-    --panel2:#151b29;
-    --border:#252d3d;
-    --text:#f4f7ff;
-    --muted:#8e99ad;
-    --primary:#7c5cff;
-    --primary2:#5b3df5;
-    --success:#22c55e;
-    --danger:#ef4444;
-    --cyan:#22d3ee;
-    --orange:#f59e0b;
-}
-
-body{
-    font-family:Arial,Tahoma,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    overflow:hidden;
-}
-
-button,
-input,
-select,
-textarea{
-    font-family:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-/* =========================
-   TOP BAR
-========================= */
-
-.topbar{
-    height:64px;
-    background:#0d111b;
-    border-bottom:1px solid var(--border);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 18px;
-    position:fixed;
-    top:0;
-    right:0;
-    left:0;
-    z-index:100;
-}
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    font-weight:900;
-    font-size:19px;
-}
-
-.logo{
-    width:38px;
-    height:38px;
-    border-radius:11px;
-    background:linear-gradient(135deg,#7c5cff,#22d3ee);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:white;
-    font-weight:900;
-}
-
-.project-name{
-    color:#fff;
-}
-
-.project-name span{
-    color:var(--muted);
-    font-size:12px;
-    display:block;
-    margin-top:3px;
-}
-
-.top-actions{
-    display:flex;
-    align-items:center;
-    gap:8px;
-}
-
-.top-btn{
-    border:1px solid var(--border);
-    background:var(--panel);
-    color:white;
-    padding:9px 13px;
-    border-radius:9px;
-    font-size:13px;
-}
-
-.top-btn:hover{
-    border-color:var(--primary);
-}
-
-.preview-btn{
-    background:#172033;
-}
-
-.build-btn{
-    background:linear-gradient(135deg,var(--primary),var(--primary2));
-    border:none;
-}
-
-/* =========================
-   LAYOUT
-========================= */
-
-.workspace{
-    display:flex;
-    position:absolute;
-    top:64px;
-    bottom:0;
-    right:0;
-    left:0;
-}
-
-/* =========================
-   LEFT TOOLBAR
-========================= */
-
-.tools{
-    width:75px;
-    background:#0d111a;
-    border-left:1px solid var(--border);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:12px 7px;
-    gap:8px;
-    overflow-y:auto;
-}
-
-.tool{
-    width:60px;
-    min-height:60px;
-    border:1px solid transparent;
-    border-radius:12px;
-    background:transparent;
-    color:#aeb8ca;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:5px;
-    font-size:10px;
-}
-
-.tool .icon{
-    font-size:21px;
-}
-
-.tool:hover,
-.tool.active{
-    background:#171d2b;
-    border-color:#30394c;
-    color:#fff;
-}
-
-.tool.active{
-    box-shadow:inset 3px 0 0 var(--primary);
-}
-
-/* =========================
-   CENTER CANVAS
-========================= */
-
-.canvas-area{
-    flex:1;
-    background:
-        radial-gradient(circle at center,rgba(124,92,255,.08),transparent 35%),
-        #080b12;
-    position:relative;
-    overflow:auto;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    padding:55px;
-}
-
-.grid{
-    position:absolute;
-    inset:0;
-    background-image:
-        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
-    background-size:24px 24px;
-    pointer-events:none;
-}
-
-.device{
-    width:390px;
-    min-height:700px;
-    background:#fff;
-    color:#111;
-    border-radius:18px;
-    box-shadow:
-        0 30px 80px rgba(0,0,0,.55),
-        0 0 0 8px #151b26;
-    position:relative;
-    overflow:hidden;
-    z-index:2;
-    transition:.25s;
-}
-
-.device.web{
-    width:900px;
-    min-height:650px;
-    border-radius:8px;
-}
-
-.device.app{
-    width:390px;
-    min-height:700px;
-}
-
-.device.game{
-    width:900px;
-    min-height:600px;
-    background:#111;
-    color:white;
-}
-
-.device-header{
-    height:50px;
-    background:#f4f4f4;
-    border-bottom:1px solid #ddd;
-    display:flex;
-    align-items:center;
-    padding:0 15px;
-    gap:7px;
-}
-
-.device-header .dot{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:#ccc;
-}
-
-.preview-content{
-    min-height:650px;
-    padding:25px;
-}
-
-/* =========================
-   RIGHT PANEL
-========================= */
-
-.properties{
-    width:310px;
-    background:#0d111a;
-    border-right:1px solid var(--border);
-    overflow-y:auto;
-    padding:15px;
-}
-
-.panel-title{
-    font-size:15px;
-    font-weight:900;
-    margin-bottom:14px;
-}
-
-.section{
-    border:1px solid var(--border);
-    background:#111722;
-    border-radius:12px;
-    margin-bottom:12px;
-    overflow:hidden;
-}
-
-.section-title{
-    padding:12px;
-    border-bottom:1px solid var(--border);
-    font-size:12px;
-    font-weight:bold;
-}
-
-.section-body{
-    padding:12px;
-}
-
-.field{
-    margin-bottom:12px;
-}
-
-.field:last-child{
-    margin-bottom:0;
-}
-
-.field label{
-    display:block;
-    color:var(--muted);
-    font-size:11px;
-    margin-bottom:6px;
-}
-
-.field input,
-.field select,
-.field textarea{
-    width:100%;
-    background:#090d15;
-    border:1px solid #293245;
-    color:white;
-    border-radius:8px;
-    padding:9px;
-    outline:none;
-}
-
-.field textarea{
-    min-height:80px;
-    resize:vertical;
-}
-
-.field input:focus,
-.field select:focus,
-.field textarea:focus{
-    border-color:var(--primary);
-}
-
-.row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-}
-
-.color-input{
-    width:100%;
-    height:40px;
-    padding:3px;
-    border-radius:8px;
-    background:#090d15;
-    border:1px solid #293245;
-}
-
-/* =========================
-   COMPONENTS
-========================= */
-
-.component{
-    width:100%;
-    padding:10px;
-    border:1px solid #2a3345;
-    background:#151b27;
-    color:white;
-    border-radius:8px;
-    margin-bottom:7px;
-    text-align:right;
-}
-
-.component:hover{
-    border-color:var(--primary);
-}
-
-/* =========================
-   PROJECT MODAL
-========================= */
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.72);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:500;
-    padding:20px;
-}
-
-.modal.show{
-    display:flex;
-}
-
-.modal-box{
-    width:100%;
-    max-width:550px;
-    background:#111722;
-    border:1px solid var(--border);
-    border-radius:18px;
-    padding:20px;
-    box-shadow:0 30px 100px rgba(0,0,0,.5);
-}
-
-.modal-title{
-    font-size:19px;
-    font-weight:900;
-    margin-bottom:8px;
-}
-
-.modal-subtitle{
-    color:var(--muted);
-    font-size:12px;
-    margin-bottom:18px;
-}
-
-.output-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-
-.output{
-    padding:18px;
-    border:1px solid var(--border);
-    background:#0c1119;
-    border-radius:12px;
-    color:white;
-    text-align:center;
-}
-
-.output:hover{
-    border-color:var(--primary);
-    background:#141a28;
-}
-
-.output-icon{
-    font-size:28px;
-    margin-bottom:8px;
-}
-
-.modal-actions{
-    display:flex;
-    gap:8px;
-    margin-top:18px;
-}
-
-.modal-actions button{
-    flex:1;
-    padding:11px;
-    border-radius:9px;
-    border:1px solid var(--border);
-    background:#181f2d;
-    color:white;
-}
-
-.modal-actions .primary{
-    background:var(--primary);
-    border-color:var(--primary);
-}
-
-/* =========================
-   TOAST
-========================= */
-
-.toast{
-    position:fixed;
-    bottom:20px;
-    left:50%;
-    transform:translateX(-50%) translateY(30px);
-    background:#151c2a;
-    border:1px solid #303a4d;
-    padding:12px 18px;
-    border-radius:10px;
-    opacity:0;
-    pointer-events:none;
-    transition:.3s;
-    z-index:900;
-    font-size:13px;
-}
-
-.toast.show{
-    opacity:1;
-    transform:translateX(-50%) translateY(0);
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:900px){
-
-    .properties{
-        position:fixed;
-        right:0;
-        top:64px;
-        bottom:0;
-        width:290px;
-        transform:translateX(100%);
-        transition:.25s;
-        z-index:200;
-    }
-
-    .properties.open{
-        transform:translateX(0);
-    }
-
-    .tools{
-        width:64px;
-    }
-
-    .tool{
-        width:52px;
-        min-height:55px;
-    }
-
-    .canvas-area{
-        padding:30px;
-    }
-
-    .device.web,
-    .device.game{
-        width:700px;
-    }
-
-    .property-toggle{
-        display:block !important;
-    }
-}
-
-.property-toggle{
-    display:none;
-}
-
-@media(max-width:550px){
-
-    .project-name{
-        display:none;
-    }
-
-    .topbar{
-        padding:0 8px;
-    }
-
-    .top-btn{
-        padding:8px;
-        font-size:11px;
-    }
-
-    .tools{
-        width:58px;
-    }
-
-    .tool{
-        width:48px;
-        min-height:52px;
-    }
-
-    .tool .icon{
-        font-size:18px;
-    }
-
-    .canvas-area{
-        padding:25px;
-    }
-
-    .device{
-        transform-origin:top center;
-    }
-}
-</style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- =========================
-     TOP BAR
-========================= -->
+<div class="app">
 
-<header class="topbar">
+  <!-- =====================================================
+       SIDEBAR
+       ===================================================== -->
+
+  <aside class="sidebar">
 
     <div class="brand">
-        <div class="logo">G</div>
 
-        <div class="project-name">
-            <span id="projectNameTop">پروژه جدید</span>
-            <span id="projectTypeTop">Website Builder</span>
+      <div class="brand-logo">
+        G
+      </div>
+
+      <div>
+        <div class="brand-name">
+          Ghost Builder
         </div>
-    </div>
 
-    <div class="top-actions">
-
-        <button class="top-btn" onclick="goBack()">
-            ← بازگشت
-        </button>
-
-        <button class="top-btn" onclick="saveProject()">
-            💾 ذخیره
-        </button>
-
-        <button class="top-btn preview-btn" onclick="previewProject()">
-            👁️ پیش‌نمایش
-        </button>
-
-        <button class="top-btn build-btn" onclick="openBuildModal()">
-            🚀 ساخت
-        </button>
+        <div class="brand-subtitle">
+          ویرایشگر پروژه
+        </div>
+      </div>
 
     </div>
 
-</header>
+
+    <div class="nav-title">
+      پروژه
+    </div>
+
+    <nav class="nav">
+
+      <a href="index.html">
+        <span class="nav-icon">🏠</span>
+        <span>داشبورد</span>
+      </a>
+
+      <a href="projects.html">
+        <span class="nav-icon">📁</span>
+        <span>پروژه‌ها</span>
+      </a>
+
+      <a href="templates.html">
+        <span class="nav-icon">🎨</span>
+        <span>قالب‌ها</span>
+      </a>
+
+    </nav>
 
 
-<div class="workspace">
+    <div class="nav-title">
+      ابزارها
+    </div>
 
-    <!-- =========================
-         TOOLS
-    ========================= -->
+    <div class="nav">
 
-    <aside class="tools">
+      <button
+        onclick="addElement('text')">
+        <span class="nav-icon">T</span>
+        <span>متن</span>
+      </button>
 
-        <button class="tool active" onclick="selectTool(this,'select')">
-            <span class="icon">↖️</span>
-            انتخاب
+      <button
+        onclick="addElement('button')">
+        <span class="nav-icon">🔘</span>
+        <span>دکمه</span>
+      </button>
+
+      <button
+        onclick="addElement('card')">
+        <span class="nav-icon">▣</span>
+        <span>کارت</span>
+      </button>
+
+      <button
+        onclick="addElement('image')">
+        <span class="nav-icon">🖼️</span>
+        <span>تصویر</span>
+      </button>
+
+      <button
+        onclick="addElement('input')">
+        <span class="nav-icon">⌨️</span>
+        <span>ورودی</span>
+      </button>
+
+      <button
+        onclick="addElement('section')">
+        <span class="nav-icon">▤</span>
+        <span>بخش</span>
+      </button>
+
+    </div>
+
+
+    <div class="nav-title">
+      مدیریت
+    </div>
+
+    <nav class="nav">
+
+      <a href="media.html">
+        <span class="nav-icon">🖼️</span>
+        <span>رسانه‌ها</span>
+      </a>
+
+      <a href="settings.html">
+        <span class="nav-icon">⚙️</span>
+        <span>تنظیمات</span>
+      </a>
+
+      <a href="help.html">
+        <span class="nav-icon">❓</span>
+        <span>راهنما</span>
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
+
+  <main class="main">
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <button
+          class="btn btn-small"
+          onclick="goBack()">
+          ← بازگشت
         </button>
 
-        <button class="tool" onclick="selectTool(this,'text')">
-            <span class="icon">T</span>
-            متن
-        </button>
+        <div>
 
-        <button class="tool" onclick="selectTool(this,'button')">
-            <span class="icon">🔘</span>
-            دکمه
-        </button>
+          <div
+            class="page-title"
+            id="topProjectName">
+            پروژه جدید
+          </div>
 
-        <button class="tool" onclick="selectTool(this,'image')">
-            <span class="icon">🖼️</span>
-            تصویر
-        </button>
-
-        <button class="tool" onclick="selectTool(this,'video')">
-            <span class="icon">🎬</span>
-            ویدیو
-        </button>
-
-        <button class="tool" onclick="selectTool(this,'card')">
-            <span class="icon">▣</span>
-            کارت
-        </button>
-
-        <button class="tool" onclick="selectTool(this,'input')">
-            <span class="icon">⌨️</span>
-            فرم
-        </button>
-
-        <button class="tool" onclick="selectTool(this,'menu')">
-            <span class="icon">☰</span>
-            منو
-        </button>
-
-        <button class="tool" onclick="selectTool(this,'game')">
-            <span class="icon">🎮</span>
-            بازی
-        </button>
-
-        <button class="tool" onclick="selectTool(this,'code')">
-            <span class="icon">💻</span>
-            کد
-        </button>
-
-        <button class="tool property-toggle" onclick="toggleProperties()">
-            <span class="icon">⚙️</span>
-            تنظیمات
-        </button>
-
-    </aside>
-
-
-    <!-- =========================
-         CANVAS
-    ========================= -->
-
-    <main class="canvas-area">
-
-        <div class="grid"></div>
-
-        <div class="device" id="device">
-
-            <div class="device-header">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
-
-            <div class="preview-content" id="previewContent">
-
-                <h1 id="heroTitle">
-                    پروژه جدید
-                </h1>
-
-                <p id="heroText" style="margin-top:12px;color:#666;">
-                    پروژه خود را با Ghost Builder بسازید.
-                </p>
-
-                <button
-                    id="heroButton"
-                    style="
-                    margin-top:20px;
-                    padding:12px 20px;
-                    border:0;
-                    border-radius:9px;
-                    background:#7c5cff;
-                    color:white;
-                    ">
-                    شروع کنید
-                </button>
-
-            </div>
+          <div
+            class="page-subtitle"
+            id="topProjectType">
+            وب‌سایت
+          </div>
 
         </div>
 
-    </main>
+      </div>
 
 
-    <!-- =========================
-         PROPERTIES
-    ========================= -->
+      <div class="topbar-right">
 
-    <aside class="properties" id="properties">
+        <button
+          class="btn"
+          onclick="saveProject(true)"
+          data-save-project>
+          💾 ذخیره
+        </button>
 
-        <div class="panel-title">
-            ⚙️ تنظیمات پروژه
-        </div>
+        <button
+          class="btn"
+          onclick="openPreview()">
+          👁️ پیش‌نمایش
+        </button>
 
+        <button
+          class="btn btn-primary"
+          onclick="openPublish()">
+          🚀 انتشار
+        </button>
 
-        <div class="section">
+      </div>
 
-            <div class="section-title">
-                پروژه
-            </div>
-
-            <div class="section-body">
-
-                <div class="field">
-                    <label>نام پروژه</label>
-                    <input
-                        id="projectName"
-                        type="text"
-                        placeholder="نام پروژه"
-                        oninput="changeProjectName(this.value)"
-                    >
-                </div>
-
-                <div class="field">
-                    <label>نوع پروژه</label>
-
-                    <select id="projectType" onchange="changeProjectType(this.value)">
-                        <option value="website">🌐 وب‌سایت</option>
-                        <option value="app">📱 اپلیکیشن</option>
-                        <option value="game2d">🎮 بازی 2D</option>
-                        <option value="game3d">🎮 بازی 3D</option>
-                    </select>
-
-                </div>
-
-            </div>
-
-        </div>
+    </header>
 
 
-        <div class="section">
+    <!-- =================================================
+         BUILDER LAYOUT
+         ================================================= -->
 
-            <div class="section-title">
-                🧩 افزودن اجزا
-            </div>
-
-            <div class="section-body">
-
-                <button class="component" onclick="addElement('text')">
-                    ➕ متن
-                </button>
-
-                <button class="component" onclick="addElement('button')">
-                    ➕ دکمه
-                </button>
-
-                <button class="component" onclick="addElement('card')">
-                    ➕ کارت
-                </button>
-
-                <button class="component" onclick="addElement('image')">
-                    ➕ تصویر
-                </button>
-
-                <button class="component" onclick="addElement('input')">
-                    ➕ فیلد ورود
-                </button>
-
-                <button class="component" onclick="addElement('section')">
-                    ➕ بخش جدید
-                </button>
-
-            </div>
-
-        </div>
+    <div class="builder-layout">
 
 
-        <div class="section">
+      <!-- =================================================
+           LEFT TOOLBAR
+           ================================================= -->
 
-            <div class="section-title">
-                🎨 ظاهر
-            </div>
+      <aside class="builder-sidebar">
 
-            <div class="section-body">
+        <div class="builder-section">
 
-                <div class="field">
-                    <label>رنگ پس‌زمینه</label>
-
-                    <input
-                        class="color-input"
-                        id="bgColor"
-                        type="color"
-                        value="#ffffff"
-                        onchange="changeBackground(this.value)"
-                    >
-                </div>
-
-                <div class="field">
-                    <label>رنگ اصلی</label>
-
-                    <input
-                        class="color-input"
-                        id="primaryColor"
-                        type="color"
-                        value="#7c5cff"
-                        onchange="changePrimary(this.value)"
-                    >
-                </div>
-
-                <div class="field">
-                    <label>اندازه گوشه‌ها</label>
-
-                    <input
-                        id="radius"
-                        type="range"
-                        min="0"
-                        max="40"
-                        value="18"
-                        oninput="changeRadius(this.value)"
-                    >
-
-                </div>
-
-            </div>
-
-        </div>
+          <div class="builder-section-title">
+            ابزارها
+          </div>
 
 
-        <div class="section">
+          <div class="tool-grid">
 
-            <div class="section-title">
-                📐 اندازه خروجی
-            </div>
+            <button
+              class="tool"
+              onclick="addElement('text')">
 
-            <div class="section-body">
+              <div style="font-size:20px">
+                T
+              </div>
 
-                <div class="row">
+              متن
 
-                    <div class="field">
-                        <label>عرض</label>
-                        <input
-                            id="canvasWidth"
-                            type="number"
-                            value="390"
-                            onchange="changeCanvasSize()"
-                        >
-                    </div>
+            </button>
 
-                    <div class="field">
-                        <label>ارتفاع</label>
-                        <input
-                            id="canvasHeight"
-                            type="number"
-                            value="700"
-                            onchange="changeCanvasSize()"
-                        >
-                    </div>
 
-                </div>
+            <button
+              class="tool"
+              onclick="addElement('button')">
 
-            </div>
+              <div style="font-size:20px">
+                🔘
+              </div>
+
+              دکمه
+
+            </button>
+
+
+            <button
+              class="tool"
+              onclick="addElement('card')">
+
+              <div style="font-size:20px">
+                ▣
+              </div>
+
+              کارت
+
+            </button>
+
+
+            <button
+              class="tool"
+              onclick="addElement('image')">
+
+              <div style="font-size:20px">
+                🖼️
+              </div>
+
+              تصویر
+
+            </button>
+
+
+            <button
+              class="tool"
+              onclick="addElement('input')">
+
+              <div style="font-size:20px">
+                ⌨️
+              </div>
+
+              ورودی
+
+            </button>
+
+
+            <button
+              class="tool"
+              onclick="addElement('section')">
+
+              <div style="font-size:20px">
+                ▤
+              </div>
+
+              بخش
+
+            </button>
+
+          </div>
 
         </div>
 
 
-        <div class="section">
+        <div class="builder-section">
 
-            <div class="section-title">
-                📝 محتوای اصلی
-            </div>
+          <div class="builder-section-title">
+            نوع پروژه
+          </div>
 
-            <div class="section-body">
+          <select
+            class="form-select"
+            id="projectType"
+            onchange="changeProjectType()">
 
-                <div class="field">
-                    <label>عنوان</label>
+            <option value="website">
+              🌐 وب‌سایت
+            </option>
 
-                    <input
-                        id="titleInput"
-                        value="پروژه جدید"
-                        oninput="changeTitle(this.value)"
-                    >
-                </div>
+            <option value="app">
+              📱 اپلیکیشن
+            </option>
 
-                <div class="field">
-                    <label>توضیحات</label>
+            <option value="game2d">
+              🎮 بازی 2D
+            </option>
 
-                    <textarea
-                        id="descriptionInput"
-                        oninput="changeDescription(this.value)"
-                    >پروژه خود را با Ghost Builder بسازید.</textarea>
-                </div>
+            <option value="game3d">
+              🕹️ بازی 3D
+            </option>
 
-                <div class="field">
-                    <label>متن دکمه</label>
-
-                    <input
-                        id="buttonInput"
-                        value="شروع کنید"
-                        oninput="changeButton(this.value)"
-                    >
-                </div>
-
-            </div>
+          </select>
 
         </div>
 
 
-        <div class="section">
+        <div class="builder-section">
 
-            <div class="section-title">
-                🎮 امکانات
-            </div>
+          <div class="builder-section-title">
+            حالت نمایش
+          </div>
 
-            <div class="section-body">
+          <div class="tool-grid">
 
-                <div class="field">
-                    <label>گرافیک</label>
+            <button
+              class="tool active"
+              onclick="setDevice('mobile', this)">
+              📱
+              <br>
+              موبایل
+            </button>
 
-                    <select id="quality">
-                        <option>Low</option>
-                        <option selected>Medium</option>
-                        <option>High</option>
-                        <option>Ultra</option>
-                        <option>Custom</option>
-                    </select>
+            <button
+              class="tool"
+              onclick="setDevice('tablet', this)">
+              ▣
+              <br>
+              تبلت
+            </button>
 
-                </div>
+            <button
+              class="tool"
+              style="grid-column:1/-1"
+              onclick="setDevice('desktop', this)">
+              🖥️
+              دسکتاپ
+            </button>
 
-                <div class="field">
-                    <label>رزولوشن</label>
-
-                    <select id="resolution">
-                        <option>480p</option>
-                        <option selected>720p</option>
-                        <option>1080p</option>
-                        <option>1440p</option>
-                        <option>2160p / 4K</option>
-                    </select>
-
-                </div>
-
-            </div>
+          </div>
 
         </div>
 
-    </aside>
+
+        <div class="builder-section">
+
+          <div class="builder-section-title">
+            امکانات سریع
+          </div>
+
+          <button
+            class="btn"
+            style="width:100%;margin-bottom:7px"
+            onclick="clearElements()">
+            🗑️ پاک کردن عناصر
+          </button>
+
+          <button
+            class="btn"
+            style="width:100%"
+            onclick="loadSampleElements()">
+            ✨ نمونه آماده
+          </button>
+
+        </div>
+
+      </aside>
+
+
+      <!-- =================================================
+           CENTER CANVAS
+           ================================================= -->
+
+      <section class="builder-center">
+
+        <div
+          id="deviceFrame"
+          class="device-frame mobile">
+
+          <div
+            id="canvas"
+            class="canvas">
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           RIGHT PROPERTIES
+           ================================================= -->
+
+      <aside class="properties-panel">
+
+
+        <!-- PROJECT -->
+
+        <div class="builder-section">
+
+          <div class="builder-section-title">
+            پروژه
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              نام پروژه
+            </label>
+
+            <input
+              id="projectName"
+              class="form-input"
+              type="text"
+              placeholder="نام پروژه"
+              oninput="updateProjectName(this.value)">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              عنوان
+            </label>
+
+            <input
+              id="projectTitle"
+              class="form-input"
+              type="text"
+              placeholder="عنوان پروژه"
+              oninput="updateProjectField('title', this.value)">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              توضیحات
+            </label>
+
+            <textarea
+              id="projectDescription"
+              class="form-textarea"
+              placeholder="توضیحات پروژه"
+              oninput="updateProjectField('description', this.value)">
+            </textarea>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              متن دکمه
+            </label>
+
+            <input
+              id="projectButton"
+              class="form-input"
+              type="text"
+              oninput="updateProjectField('button', this.value)">
+
+          </div>
+
+        </div>
+
+
+        <!-- COLORS -->
+
+        <div class="builder-section">
+
+          <div class="builder-section-title">
+            ظاهر
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              رنگ پس‌زمینه
+            </label>
+
+            <input
+              id="backgroundColor"
+              class="form-input"
+              type="color"
+              onchange="updateProjectField('background', this.value)"
+              style="height:45px;padding:5px">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              رنگ اصلی
+            </label>
+
+            <input
+              id="primaryColor"
+              class="form-input"
+              type="color"
+              onchange="updateProjectField('primary', this.value)"
+              style="height:45px;padding:5px">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              گردی گوشه‌ها
+            </label>
+
+            <input
+              id="radius"
+              class="form-input"
+              type="range"
+              min="0"
+              max="50"
+              value="18"
+              oninput="updateProjectField('radius', Number(this.value))">
+
+            <div
+              style="font-size:11px;color:var(--muted)"
+              id="radiusValue">
+              18px
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- CANVAS -->
+
+        <div class="builder-section">
+
+          <div class="builder-section-title">
+            اندازه صفحه
+          </div>
+
+
+          <div class="grid grid-2">
+
+            <div class="form-group">
+
+              <label class="form-label">
+                عرض
+              </label>
+
+              <input
+                id="canvasWidth"
+                class="form-input"
+                type="number"
+                value="390"
+                onchange="updateCanvasSize()">
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label class="form-label">
+                ارتفاع
+              </label>
+
+              <input
+                id="canvasHeight"
+                class="form-input"
+                type="number"
+                value="700"
+                onchange="updateCanvasSize()">
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- QUALITY -->
+
+        <div class="builder-section">
+
+          <div class="builder-section-title">
+            کیفیت خروجی
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              کیفیت گرافیک
+            </label>
+
+            <select
+              id="quality"
+              class="form-select"
+              onchange="updateProjectField('quality', this.value)">
+
+              <option value="Low">
+                Low
+              </option>
+
+              <option value="Medium">
+                Medium
+              </option>
+
+              <option value="High">
+                High
+              </option>
+
+              <option value="Ultra">
+                Ultra
+              </option>
+
+              <option value="Custom">
+                Custom
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              رزولوشن
+            </label>
+
+            <select
+              id="resolution"
+              class="form-select"
+              onchange="updateProjectField('resolution', this.value)">
+
+              <option value="480p">
+                480p
+              </option>
+
+              <option value="720p">
+                720p
+              </option>
+
+              <option value="1080p">
+                1080p
+              </option>
+
+              <option value="1440p">
+                1440p
+              </option>
+
+              <option value="2160p">
+                2160p
+              </option>
+
+              <option value="4K">
+                4K
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <!-- SELECTED ELEMENT -->
+
+        <div
+          class="builder-section"
+          id="elementProperties">
+
+          <div class="builder-section-title">
+            عنصر انتخاب‌شده
+          </div>
+
+          <div
+            id="selectedElementInfo"
+            style="
+            color:var(--muted);
+            font-size:12px;
+            ">
+            هنوز عنصری انتخاب نشده است.
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </main>
 
 </div>
 
 
-<!-- =========================
-     BUILD MODAL
-========================= -->
+<!-- =====================================================
+     SCRIPT
+     ===================================================== -->
 
-<div class="modal" id="buildModal">
-
-    <div class="modal-box">
-
-        <div class="modal-title">
-            🚀 ساخت پروژه
-        </div>
-
-        <div class="modal-subtitle">
-            خروجی موردنظر خود را انتخاب کنید.
-        </div>
-
-        <div class="output-grid">
-
-            <button class="output" onclick="buildWeb()">
-
-                <div class="output-icon">🌐</div>
-
-                <strong>خروجی Web</strong>
-
-                <p style="font-size:11px;color:#8e99ad;margin-top:7px;">
-                    دریافت لینک پروژه
-                </p>
-
-            </button>
-
-
-            <button class="output" onclick="buildAPK()">
-
-                <div class="output-icon">📱</div>
-
-                <strong>دریافت APK</strong>
-
-                <p style="font-size:11px;color:#8e99ad;margin-top:7px;">
-                    تبدیل لینک پروژه به APK
-                </p>
-
-            </button>
-
-        </div>
-
-
-        <div class="modal-actions">
-
-            <button onclick="closeBuildModal()">
-                انصراف
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<div class="toast" id="toast"></div>
-
+<script src="app.js"></script>
 
 <script>
 
-/* ==========================================
-   PROJECT DATA
-========================================== */
-
-let project = {
-    id: Date.now(),
-    name: "پروژه جدید",
-    type: "website",
-    title: "پروژه جدید",
-    description: "پروژه خود را با Ghost Builder بسازید.",
-    button: "شروع کنید",
-    background: "#ffffff",
-    primary: "#7c5cff",
-    radius: 18,
-    width: 390,
-    height: 700,
-    quality: "Medium",
-    resolution: "720p",
-    elements: []
-};
+"use strict";
 
 
-/* ==========================================
+/* =====================================================
+   STATE
+   ===================================================== */
+
+let project = null;
+
+let selectedElementId = null;
+
+let currentDevice = "mobile";
+
+
+/* =====================================================
+   GET PROJECT
+   ===================================================== */
+
+function getProjectFromURL() {
+
+  const projectId =
+    gbParam("project");
+
+
+  if (projectId) {
+
+    const found =
+      gbFindProject(projectId);
+
+    if (found) {
+
+      gbSetCurrentProject(
+        found
+      );
+
+      return found;
+
+    }
+
+  }
+
+
+  const current =
+    gbGetCurrentProject();
+
+
+  if (current) {
+    return current;
+  }
+
+
+  return gbCreateProject({
+    type:
+      gbParam("type") ||
+      "website"
+  });
+
+}
+
+
+/* =====================================================
    INIT
-========================================== */
+   ===================================================== */
 
-document.addEventListener("DOMContentLoaded", function(){
+function initBuilder() {
 
-    loadProjectFromStorage();
-
-    const params = new URLSearchParams(location.search);
-
-    const type = params.get("type");
-
-    if(type){
-
-        if(type === "app"){
-            project.type = "app";
-        }
-
-        if(type === "game"){
-            project.type = "game2d";
-        }
-
-        if(type === "game2d"){
-            project.type = "game2d";
-        }
-
-        if(type === "game3d"){
-            project.type = "game3d";
-        }
-
-    }
-
-    updateUI();
-
-});
+  project =
+    getProjectFromURL();
 
 
-/* ==========================================
-   LOAD PROJECT
-========================================== */
+  if (!project.elements) {
+    project.elements = [];
+  }
 
-function loadProjectFromStorage(){
 
-    try{
+  fillProjectForm();
 
-        const saved = localStorage.getItem("ghost_builder_current_project");
-
-        if(saved){
-
-            const data = JSON.parse(saved);
-
-            project = {
-                ...project,
-                ...data
-            };
-
-        }
-
-    }catch(error){
-
-        console.log("Project load error:",error);
-
-    }
+  renderCanvas();
 
 }
 
 
-/* ==========================================
-   UPDATE UI
-========================================== */
+/* =====================================================
+   FILL FORM
+   ===================================================== */
 
-function updateUI(){
+function fillProjectForm() {
 
-    document.getElementById("projectName").value = project.name;
+  if (!project) {
+    return;
+  }
 
-    document.getElementById("projectNameTop").textContent =
-        project.name;
 
-    document.getElementById("titleInput").value =
-        project.title;
+  document.getElementById(
+    "topProjectName"
+  ).textContent =
+    project.name;
 
-    document.getElementById("descriptionInput").value =
-        project.description;
 
-    document.getElementById("buttonInput").value =
-        project.button;
-
-    document.getElementById("bgColor").value =
-        project.background;
-
-    document.getElementById("primaryColor").value =
-        project.primary;
-
-    document.getElementById("radius").value =
-        project.radius;
-
-    document.getElementById("canvasWidth").value =
-        project.width;
-
-    document.getElementById("canvasHeight").value =
-        project.height;
-
-    document.getElementById("projectType").value =
-        project.type;
-
-    document.getElementById("quality").value =
-        project.quality;
-
-    document.getElementById("resolution").value =
-        project.resolution;
-
-    updateProjectType();
-
-    renderCanvas();
-
-}
-
-
-/* ==========================================
-   PROJECT NAME
-========================================== */
-
-function changeProjectName(value){
-
-    project.name =
-        value || "پروژه جدید";
-
-    document.getElementById("projectNameTop").textContent =
-        project.name;
-
-    saveProject(false);
-
-}
-
-
-/* ==========================================
-   PROJECT TYPE
-========================================== */
-
-function changeProjectType(value){
-
-    project.type = value;
-
-    updateProjectType();
-
-    saveProject(false);
-
-}
-
-
-function updateProjectType(){
-
-    let text = "Website Builder";
-
-    if(project.type === "app"){
-        text = "App Builder";
-    }
-
-    if(project.type === "game2d"){
-        text = "2D Game Builder";
-    }
-
-    if(project.type === "game3d"){
-        text = "3D Game Builder";
-    }
-
-    document.getElementById("projectTypeTop").textContent =
-        text;
-
-    const device =
-        document.getElementById("device");
-
-    device.classList.remove("web","app","game");
-
-    if(project.type === "website"){
-        device.classList.add("web");
-    }
-
-    if(project.type === "app"){
-        device.classList.add("app");
-    }
-
-    if(project.type === "game2d" || project.type === "game3d"){
-        device.classList.add("game");
-    }
-
-}
-
-
-/* ==========================================
-   TITLE
-========================================== */
-
-function changeTitle(value){
-
-    project.title =
-        value || "پروژه جدید";
-
-    document.getElementById("heroTitle").textContent =
-        project.title;
-
-    saveProject(false);
-
-}
-
-
-/* ==========================================
-   DESCRIPTION
-========================================== */
-
-function changeDescription(value){
-
-    project.description =
-        value;
-
-    document.getElementById("heroText").textContent =
-        value;
-
-    saveProject(false);
-
-}
-
-
-/* ==========================================
-   BUTTON
-========================================== */
-
-function changeButton(value){
-
-    project.button =
-        value;
-
-    document.getElementById("heroButton").textContent =
-        value;
-
-    saveProject(false);
-
-}
-
-
-/* ==========================================
-   BACKGROUND
-========================================== */
-
-function changeBackground(value){
-
-    project.background =
-        value;
-
-    document.getElementById("previewContent").style.background =
-        value;
-
-    saveProject(false);
-
-}
-
-
-/* ==========================================
-   PRIMARY COLOR
-========================================== */
-
-function changePrimary(value){
-
-    project.primary =
-        value;
-
-    document.getElementById("heroButton").style.background =
-        value;
-
-    saveProject(false);
-
-}
-
-
-/* ==========================================
-   RADIUS
-========================================== */
-
-function changeRadius(value){
-
-    project.radius =
-        Number(value);
-
-    document.getElementById("device").style.borderRadius =
-        value + "px";
-
-    saveProject(false);
-
-}
-
-
-/* ==========================================
-   CANVAS SIZE
-========================================== */
-
-function changeCanvasSize(){
-
-    project.width =
-        Number(document.getElementById("canvasWidth").value) || 390;
-
-    project.height =
-        Number(document.getElementById("canvasHeight").value) || 700;
-
-    const device =
-        document.getElementById("device");
-
-    device.style.width =
-        project.width + "px";
-
-    device.style.minHeight =
-        project.height + "px";
-
-    saveProject(false);
-
-}
-
-
-/* ==========================================
-   ADD ELEMENT
-========================================== */
-
-function addElement(type){
-
-    const content =
-        document.getElementById("previewContent");
-
-    const element =
-        document.createElement("div");
-
-    element.style.marginTop =
-        "15px";
-
-    element.style.padding =
-        "15px";
-
-    element.style.borderRadius =
-        "10px";
-
-    element.style.border =
-        "1px solid #ddd";
-
-    if(type === "text"){
-
-        element.textContent =
-            "متن جدید";
-
-    }
-
-    if(type === "button"){
-
-        element.textContent =
-            "دکمه جدید";
-
-        element.style.background =
-            project.primary;
-
-        element.style.color =
-            "#fff";
-
-        element.style.display =
-            "inline-block";
-
-        element.style.border =
-            "none";
-
-    }
-
-    if(type === "card"){
-
-        element.innerHTML =
-            "<strong>کارت جدید</strong><br><small>توضیحات کارت</small>";
-
-        element.style.background =
-            "#f5f5f5";
-
-    }
-
-    if(type === "image"){
-
-        element.innerHTML =
-            "🖼️<br><small>محل تصویر</small>";
-
-        element.style.textAlign =
-            "center";
-
-    }
-
-    if(type === "input"){
-
-        element.innerHTML =
-            "<input placeholder='متن خود را وارد کنید' style='width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;'>";
-
-    }
-
-    if(type === "section"){
-
-        element.innerHTML =
-            "<h2>بخش جدید</h2><p>محتوای بخش جدید</p>";
-
-        element.style.background =
-            "#fafafa";
-
-    }
-
-    content.appendChild(element);
-
-    project.elements.push({
-        type:type
-    });
-
-    saveProject(false);
-
-    showToast("جزء جدید اضافه شد ✓");
-
-}
-
-
-/* ==========================================
-   RENDER
-========================================== */
-
-function renderCanvas(){
-
-    const content =
-        document.getElementById("previewContent");
-
-    content.style.background =
-        project.background;
-
-    document.getElementById("heroTitle").textContent =
-        project.title;
-
-    document.getElementById("heroText").textContent =
-        project.description;
-
-    document.getElementById("heroButton").textContent =
-        project.button;
-
-    document.getElementById("heroButton").style.background =
-        project.primary;
-
-    document.getElementById("device").style.borderRadius =
-        project.radius + "px";
-
-    if(project.elements && project.elements.length){
-
-        project.elements.forEach(item => {
-            addElementVisual(item.type);
-        });
-
-    }
-
-}
-
-
-/* ==========================================
-   VISUAL ELEMENT
-========================================== */
-
-function addElementVisual(type){
-
-    const content =
-        document.getElementById("previewContent");
-
-    const element =
-        document.createElement("div");
-
-    element.style.marginTop =
-        "15px";
-
-    element.style.padding =
-        "15px";
-
-    element.style.borderRadius =
-        "10px";
-
-    element.style.border =
-        "1px solid #ddd";
-
-    if(type === "text"){
-        element.textContent = "متن جدید";
-    }
-
-    if(type === "button"){
-        element.textContent = "دکمه جدید";
-        element.style.background = project.primary;
-        element.style.color = "#fff";
-    }
-
-    if(type === "card"){
-        element.innerHTML =
-            "<strong>کارت جدید</strong><br><small>توضیحات کارت</small>";
-    }
-
-    if(type === "image"){
-        element.innerHTML =
-            "🖼️<br><small>محل تصویر</small>";
-    }
-
-    if(type === "input"){
-        element.innerHTML =
-            "<input placeholder='متن خود را وارد کنید' style='width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;'>";
-    }
-
-    if(type === "section"){
-        element.innerHTML =
-            "<h2>بخش جدید</h2><p>محتوای بخش جدید</p>";
-    }
-
-    content.appendChild(element);
-
-}
-
-
-/* ==========================================
-   TOOL
-========================================== */
-
-function selectTool(button,type){
-
-    document.querySelectorAll(".tool")
-        .forEach(item => item.classList.remove("active"));
-
-    button.classList.add("active");
-
-    if(type !== "select"){
-        addElement(type === "game" ? "section" : type);
-    }
-
-}
-
-
-/* ==========================================
-   PROPERTIES MOBILE
-========================================== */
-
-function toggleProperties(){
-
-    document
-        .getElementById("properties")
-        .classList.toggle("open");
-
-}
-
-
-/* ==========================================
-   SAVE
-========================================== */
-
-function saveProject(showMessage=true){
-
-    project.quality =
-        document.getElementById("quality").value;
-
-    project.resolution =
-        document.getElementById("resolution").value;
-
-    localStorage.setItem(
-        "ghost_builder_current_project",
-        JSON.stringify(project)
+  document.getElementById(
+    "topProjectType"
+  ).textContent =
+    gbProjectTypeLabel(
+      project.type
     );
 
-    let projects = [];
 
-    try{
-        projects =
-            JSON.parse(
-                localStorage.getItem("ghost_builder_projects")
-            ) || [];
-    }catch(e){
-        projects = [];
+  document.getElementById(
+    "projectName"
+  ).value =
+    project.name || "";
+
+
+  document.getElementById(
+    "projectTitle"
+  ).value =
+    project.title || "";
+
+
+  document.getElementById(
+    "projectDescription"
+  ).value =
+    project.description || "";
+
+
+  document.getElementById(
+    "projectButton"
+  ).value =
+    project.button || "";
+
+
+  document.getElementById(
+    "projectType"
+  ).value =
+    project.type ||
+    "website";
+
+
+  document.getElementById(
+    "backgroundColor"
+  ).value =
+    project.background ||
+    "#ffffff";
+
+
+  document.getElementById(
+    "primaryColor"
+  ).value =
+    project.primary ||
+    "#7c5cff";
+
+
+  document.getElementById(
+    "radius"
+  ).value =
+    project.radius ?? 18;
+
+
+  document.getElementById(
+    "radiusValue"
+  ).textContent =
+    (project.radius ?? 18) +
+    "px";
+
+
+  document.getElementById(
+    "canvasWidth"
+  ).value =
+    project.width ||
+    390;
+
+
+  document.getElementById(
+    "canvasHeight"
+  ).value =
+    project.height ||
+    700;
+
+
+  document.getElementById(
+    "quality"
+  ).value =
+    project.quality ||
+    "Medium";
+
+
+  document.getElementById(
+    "resolution"
+  ).value =
+    project.resolution ||
+    "720p";
+
+}
+
+
+/* =====================================================
+   PROJECT NAME
+   ===================================================== */
+
+function updateProjectName(value) {
+
+  project.name =
+    value ||
+    "پروژه جدید";
+
+
+  document.getElementById(
+    "topProjectName"
+  ).textContent =
+    project.name;
+
+
+  autoSave();
+
+}
+
+
+/* =====================================================
+   PROJECT FIELD
+   ===================================================== */
+
+function updateProjectField(
+  field,
+  value
+) {
+
+  project[field] =
+    value;
+
+
+  if (
+    field ===
+    "radius"
+  ) {
+
+    document.getElementById(
+      "radiusValue"
+    ).textContent =
+      value +
+      "px";
+
+  }
+
+
+  autoSave();
+
+  renderCanvas();
+
+}
+
+
+/* =====================================================
+   PROJECT TYPE
+   ===================================================== */
+
+function changeProjectType() {
+
+  const type =
+    document.getElementById(
+      "projectType"
+    ).value;
+
+
+  project.type =
+    type;
+
+
+  document.getElementById(
+    "topProjectType"
+  ).textContent =
+    gbProjectTypeLabel(
+      type
+    );
+
+
+  autoSave();
+
+  renderCanvas();
+
+}
+
+
+/* =====================================================
+   CANVAS SIZE
+   ===================================================== */
+
+function updateCanvasSize() {
+
+  const width =
+    Number(
+      document.getElementById(
+        "canvasWidth"
+      ).value
+    );
+
+
+  const height =
+    Number(
+      document.getElementById(
+        "canvasHeight"
+      ).value
+    );
+
+
+  project.width =
+    width || 390;
+
+
+  project.height =
+    height || 700;
+
+
+  renderCanvas();
+
+  autoSave();
+
+}
+
+
+/* =====================================================
+   ADD ELEMENT
+   ===================================================== */
+
+function addElement(type) {
+
+  if (!project) {
+    return;
+  }
+
+
+  const element =
+    gbCreateElement(
+      type
+    );
+
+
+  project.elements.push(
+    element
+  );
+
+
+  selectedElementId =
+    element.id;
+
+
+  renderCanvas();
+
+  renderSelectedElement();
+
+  autoSave();
+
+
+  gbToast(
+    "عنصر اضافه شد.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   REMOVE ELEMENT
+   ===================================================== */
+
+function removeElement(id) {
+
+  project.elements =
+    project.elements.filter(
+      element =>
+        element.id !== id
+    );
+
+
+  if (
+    selectedElementId === id
+  ) {
+
+    selectedElementId =
+      null;
+
+  }
+
+
+  renderCanvas();
+
+  renderSelectedElement();
+
+  autoSave();
+
+}
+
+
+/* =====================================================
+   CLEAR
+   ===================================================== */
+
+function clearElements() {
+
+  if (
+    project.elements.length ===
+    0
+  ) {
+
+    gbToast(
+      "عنصری برای حذف وجود ندارد.",
+      "warning"
+    );
+
+    return;
+
+  }
+
+
+  gbConfirm(
+    "همه عناصر این پروژه حذف شوند؟",
+    confirmed => {
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      project.elements = [];
+
+      selectedElementId = null;
+
+      renderCanvas();
+
+      renderSelectedElement();
+
+      autoSave();
+
+
+      gbToast(
+        "عناصر حذف شدند.",
+        "success"
+      );
+
     }
+  );
 
-    const existing =
-        projects.findIndex(
-            p => p.id === project.id
+}
+
+
+/* =====================================================
+   SAMPLE
+   ===================================================== */
+
+function loadSampleElements() {
+
+  project.elements = [
+
+    gbCreateElement(
+      "text",
+      {
+        text:
+          project.title ||
+          "به Ghost Builder خوش آمدید",
+
+        fontSize: 28,
+
+        color:
+          "#111111"
+      }
+    ),
+
+
+    gbCreateElement(
+      "text",
+      {
+        text:
+          project.description ||
+          "این یک پروژه نمونه است.",
+
+        fontSize: 15,
+
+        color:
+          "#555555"
+      }
+    ),
+
+
+    gbCreateElement(
+      "button",
+      {
+        text:
+          project.button ||
+          "شروع کنید",
+
+        color:
+          project.primary ||
+          "#7c5cff"
+      }
+    ),
+
+
+    gbCreateElement(
+      "card",
+      {
+        title:
+          "ویژگی‌های پروژه",
+
+        description:
+          "این کارت توسط Ghost Builder ساخته شده است."
+      }
+    )
+
+  ];
+
+
+  selectedElementId =
+    project.elements[0]?.id ||
+    null;
+
+
+  renderCanvas();
+
+  renderSelectedElement();
+
+  autoSave();
+
+
+  gbToast(
+    "نمونه آماده اضافه شد.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   RENDER CANVAS
+   ===================================================== */
+
+function renderCanvas() {
+
+  const canvas =
+    document.getElementById(
+      "canvas"
+    );
+
+
+  const frame =
+    document.getElementById(
+      "deviceFrame"
+    );
+
+
+  if (!canvas || !frame) {
+    return;
+  }
+
+
+  frame.style.width =
+    currentDevice === "mobile"
+      ? Math.min(
+          Number(project.width) || 390,
+          390
+        ) + "px"
+      : currentDevice === "tablet"
+        ? Math.min(
+            Number(project.width) || 768,
+            768
+          ) + "px"
+        : Math.min(
+            Number(project.width) || 1100,
+            1100
+          ) + "px";
+
+
+  frame.style.minHeight =
+    Math.max(
+      Number(project.height) || 700,
+      currentDevice === "mobile"
+        ? 700
+        : 500
+    ) + "px";
+
+
+  canvas.style.background =
+    project.background ||
+    "#ffffff";
+
+
+  canvas.style.borderRadius =
+    (project.radius ?? 18) +
+    "px";
+
+
+  canvas.innerHTML = "";
+
+
+  /* -----------------------------------------------
+     Default Project Header
+     ----------------------------------------------- */
+
+  if (
+    project.elements.length ===
+    0
+  ) {
+
+    const empty =
+      document.createElement(
+        "div"
+      );
+
+    empty.style.padding =
+      "45px 25px";
+
+    empty.style.textAlign =
+      "center";
+
+    empty.innerHTML = `
+
+      <div style="
+        font-size:48px;
+        margin-bottom:15px;
+      ">
+        ${
+          gbProjectTypeIcon(
+            project.type
+          )
+        }
+      </div>
+
+      <h1 style="
+        font-size:26px;
+        margin-bottom:8px;
+      ">
+        ${gbEscapeHTML(
+          project.title ||
+          project.name
+        )}
+      </h1>
+
+      <p style="
+        color:#666;
+        font-size:14px;
+        margin-bottom:20px;
+      ">
+        ${gbEscapeHTML(
+          project.description ||
+          "پروژه خود را بسازید."
+        )}
+      </p>
+
+      <button
+        style="
+          background:${
+            project.primary ||
+            "#7c5cff"
+          };
+          color:white;
+          border:0;
+          padding:12px 22px;
+          border-radius:${
+            project.radius ??
+            18
+          }px;
+          font-weight:bold;
+        "
+      >
+        ${gbEscapeHTML(
+          project.button ||
+          "شروع کنید"
+        )}
+      </button>
+
+    `;
+
+
+    canvas.appendChild(
+      empty
+    );
+
+
+    return;
+
+  }
+
+
+  /* -----------------------------------------------
+     Dynamic Elements
+     ----------------------------------------------- */
+
+  project.elements.forEach(
+    element => {
+
+      const wrapper =
+        document.createElement(
+          "div"
         );
 
-    if(existing >= 0){
-        projects[existing] = project;
-    }else{
-        projects.push(project);
-    }
 
-    localStorage.setItem(
-        "ghost_builder_projects",
-        JSON.stringify(projects)
-    );
+      wrapper.className =
+        "canvas-element";
 
-    if(showMessage){
-        showToast("پروژه ذخیره شد ✓");
+
+      if (
+        selectedElementId ===
+        element.id
+      ) {
+
+        wrapper.classList.add(
+          "selected"
+        );
+
+      }
+
+
+      wrapper.dataset.id =
+        element.id;
+
+
+      wrapper.onclick =
+        event => {
+
+          event.stopPropagation();
+
+          selectElement(
+            element.id
+          );
+
+        };
+
+
+      /* TEXT */
+
+      if (
+        element.type ===
+        "text"
+      ) {
+
+        wrapper.innerHTML = `
+
+          <div style="
+            font-size:${
+              Number(
+                element.fontSize ||
+                20
+              )
+            }px;
+
+            color:${
+              element.color ||
+              "#111"
+            };
+
+            font-weight:700;
+          ">
+            ${gbEscapeHTML(
+              element.text ||
+              "متن جدید"
+            )}
+          </div>
+
+        `;
+
+      }
+
+
+      /* BUTTON */
+
+      else if (
+        element.type ===
+        "button"
+      ) {
+
+        wrapper.innerHTML = `
+
+          <button
+            class="canvas-button"
+            style="
+              background:${
+                element.color ||
+                project.primary ||
+                "#7c5cff"
+              };
+
+              color:${
+                element.textColor ||
+                "#fff"
+              };
+
+              border-radius:${
+                project.radius ??
+                18
+              }px;
+            "
+          >
+            ${gbEscapeHTML(
+              element.text ||
+              "دکمه"
+            )}
+          </button>
+
+        `;
+
+      }
+
+
+      /* CARD */
+
+      else if (
+        element.type ===
+        "card"
+      ) {
+
+        wrapper.innerHTML = `
+
+          <div class="canvas-card"
+               style="
+                 border-radius:${
+                   project.radius ??
+                   18
+                 }px;
+               ">
+
+            <h3>
+              ${gbEscapeHTML(
+                element.title ||
+                "کارت جدید"
+              )}
+            </h3>
+
+            <p style="
+              margin-top:7px;
+              color:#666;
+              font-size:13px;
+            ">
+              ${gbEscapeHTML(
+                element.description ||
+                ""
+              )}
+            </p>
+
+          </div>
+
+        `;
+
+      }
+
+
+      /* IMAGE */
+
+      else if (
+        element.type ===
+        "image"
+      ) {
+
+        if (
+          element.src
+        ) {
+
+          wrapper.innerHTML = `
+
+            <img
+              src="${
+                element.src
+              }"
+              alt="${
+                gbEscapeHTML(
+                  element.alt ||
+                  "تصویر"
+                )
+              }"
+              style="
+                width:100%;
+                max-height:280px;
+                object-fit:cover;
+                border-radius:${
+                  project.radius ??
+                  18
+                }px;
+              "
+            >
+
+          `;
+
+        } else {
+
+          wrapper.innerHTML = `
+
+            <div style="
+              min-height:150px;
+              display:grid;
+              place-items:center;
+              background:#eef0f5;
+              border-radius:${
+                project.radius ??
+                18
+              }px;
+              color:#777;
+              font-size:40px;
+            ">
+              🖼️
+            </div>
+
+          `;
+
+        }
+
+      }
+
+
+      /* INPUT */
+
+      else if (
+        element.type ===
+        "input"
+      ) {
+
+        wrapper.innerHTML = `
+
+          <input
+            type="text"
+            placeholder="${
+              gbEscapeHTML(
+                element.placeholder ||
+                "متن خود را وارد کنید..."
+              )
+            }"
+            style="
+              width:100%;
+              padding:12px;
+              border:1px solid #ddd;
+              border-radius:${
+                project.radius ??
+                18
+              }px;
+              outline:none;
+              color:#222;
+            "
+          >
+
+        `;
+
+      }
+
+
+      /* SECTION */
+
+      else if (
+        element.type ===
+        "section"
+      ) {
+
+        wrapper.innerHTML = `
+
+          <div
+            class="canvas-section"
+            style="
+              background:${
+                element.background ||
+                "#f0f2f7"
+              };
+
+              border-radius:${
+                project.radius ??
+                18
+              }px;
+
+              min-height:140px;
+            "
+          >
+          </div>
+
+        `;
+
+      }
+
+
+      canvas.appendChild(
+        wrapper
+      );
+
     }
+  );
 
 }
 
 
-/* ==========================================
+/* =====================================================
+   SELECT ELEMENT
+   ===================================================== */
+
+function selectElement(id) {
+
+  selectedElementId =
+    id;
+
+
+  renderCanvas();
+
+  renderSelectedElement();
+
+}
+
+
+/* =====================================================
+   SELECTED ELEMENT PANEL
+   ===================================================== */
+
+function renderSelectedElement() {
+
+  const container =
+    document.getElementById(
+      "selectedElementInfo"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  const element =
+    project.elements.find(
+      item =>
+        item.id ===
+        selectedElementId
+    );
+
+
+  if (!element) {
+
+    container.innerHTML = `
+      هنوز عنصری انتخاب نشده است.
+    `;
+
+    return;
+
+  }
+
+
+  let controls = "";
+
+
+  if (
+    element.type ===
+    "text"
+  ) {
+
+    controls = `
+
+      <div class="form-group">
+
+        <label class="form-label">
+          متن
+        </label>
+
+        <textarea
+          class="form-textarea"
+          id="selectedText"
+        >${gbEscapeHTML(
+          element.text || ""
+        )}</textarea>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label">
+          اندازه متن
+        </label>
+
+        <input
+          class="form-input"
+          id="selectedFontSize"
+          type="number"
+          value="${
+            element.fontSize ||
+            20
+          }"
+        >
+
+      </div>
+
+    `;
+
+  }
+
+
+  else if (
+    element.type ===
+    "button"
+  ) {
+
+    controls = `
+
+      <div class="form-group">
+
+        <label class="form-label">
+          متن دکمه
+        </label>
+
+        <input
+          class="form-input"
+          id="selectedButtonText"
+          value="${
+            gbEscapeHTML(
+              element.text ||
+              "دکمه"
+            )
+          }"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label class="form-label">
+          رنگ دکمه
+        </label>
+
+        <input
+          class="form-input"
+          id="selectedButtonColor"
+          type="color"
+          value="${
+            element.color ||
+            project.primary ||
+            "#7c5cff"
+          }"
+          style="height:45px;padding:5px"
+        >
+
+      </div>
+
+    `;
+
+  }
+
+
+  else if (
+    element.type ===
+    "card"
+  ) {
+
+    controls = `
+
+      <div class="form-group">
+
+        <label class="form-label">
+          عنوان کارت
+        </label>
+
+        <input
+          class="form-input"
+          id="selectedCardTitle"
+          value="${
+            gbEscapeHTML(
+              element.title ||
+              ""
+            )
+          }"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label class="form-label">
+          توضیحات
+        </label>
+
+        <textarea
+          class="form-textarea"
+          id="selectedCardDescription"
+        >${gbEscapeHTML(
+          element.description ||
+          ""
+        )}</textarea>
+
+      </div>
+
+    `;
+
+  }
+
+
+  else if (
+    element.type ===
+    "input"
+  ) {
+
+    controls = `
+
+      <div class="form-group">
+
+        <label class="form-label">
+          Placeholder
+        </label>
+
+        <input
+          class="form-input"
+          id="selectedPlaceholder"
+          value="${
+            gbEscapeHTML(
+              element.placeholder ||
+              ""
+            )
+          }"
+        >
+
+      </div>
+
+    `;
+
+  }
+
+
+  else if (
+    element.type ===
+    "image"
+  ) {
+
+    controls = `
+
+      <div class="form-group">
+
+        <label class="form-label">
+          آدرس تصویر
+        </label>
+
+        <input
+          class="form-input"
+          id="selectedImageSrc"
+          placeholder="https://..."
+          value="${
+            gbEscapeHTML(
+              element.src ||
+              ""
+            )
+          }"
+        >
+
+      </div>
+
+      <button
+        class="btn"
+        style="width:100%;margin-bottom:8px"
+        onclick="openMedia()">
+        🖼️ انتخاب از رسانه‌ها
+      </button>
+
+    `;
+
+  }
+
+
+  else if (
+    element.type ===
+    "section"
+  ) {
+
+    controls = `
+
+      <div class="form-group">
+
+        <label class="form-label">
+          رنگ بخش
+        </label>
+
+        <input
+          class="form-input"
+          id="selectedSectionColor"
+          type="color"
+          value="${
+            element.background ||
+            "#f0f2f7"
+          }"
+          style="height:45px;padding:5px"
+        >
+
+      </div>
+
+    `;
+
+  }
+
+
+  container.innerHTML = `
+
+    <div style="
+      margin-bottom:12px;
+      color:var(--primary-2);
+      font-weight:800;
+    ">
+      ${gbProjectTypeLabel(
+        project.type
+      )}
+      /
+      ${element.type}
+    </div>
+
+    ${controls}
+
+    <button
+      class="btn btn-success"
+      style="width:100%;margin-bottom:7px"
+      onclick="applyElementChanges()">
+      ✓ اعمال تغییرات
+    </button>
+
+    <button
+      class="btn btn-danger"
+      style="width:100%"
+      onclick="deleteSelectedElement()">
+      🗑️ حذف عنصر
+    </button>
+
+  `;
+
+}
+
+
+/* =====================================================
+   APPLY ELEMENT
+   ===================================================== */
+
+function applyElementChanges() {
+
+  const element =
+    project.elements.find(
+      item =>
+        item.id ===
+        selectedElementId
+    );
+
+
+  if (!element) {
+    return;
+  }
+
+
+  if (
+    element.type ===
+    "text"
+  ) {
+
+    element.text =
+      document.getElementById(
+        "selectedText"
+      )?.value ||
+      "متن جدید";
+
+
+    element.fontSize =
+      Number(
+        document.getElementById(
+          "selectedFontSize"
+        )?.value ||
+        20
+      );
+
+  }
+
+
+  else if (
+    element.type ===
+    "button"
+  ) {
+
+    element.text =
+      document.getElementById(
+        "selectedButtonText"
+      )?.value ||
+      "دکمه";
+
+
+    element.color =
+      document.getElementById(
+        "selectedButtonColor"
+      )?.value ||
+      project.primary;
+
+  }
+
+
+  else if (
+    element.type ===
+    "card"
+  ) {
+
+    element.title =
+      document.getElementById(
+        "selectedCardTitle"
+      )?.value ||
+      "کارت جدید";
+
+
+    element.description =
+      document.getElementById(
+        "selectedCardDescription"
+      )?.value ||
+      "";
+
+  }
+
+
+  else if (
+    element.type ===
+    "input"
+  ) {
+
+    element.placeholder =
+      document.getElementById(
+        "selectedPlaceholder"
+      )?.value ||
+      "";
+
+  }
+
+
+  else if (
+    element.type ===
+    "image"
+  ) {
+
+    element.src =
+      document.getElementById(
+        "selectedImageSrc"
+      )?.value ||
+      "";
+
+  }
+
+
+  else if (
+    element.type ===
+    "section"
+  ) {
+
+    element.background =
+      document.getElementById(
+        "selectedSectionColor"
+      )?.value ||
+      "#f0f2f7";
+
+  }
+
+
+  renderCanvas();
+
+  renderSelectedElement();
+
+  autoSave();
+
+
+  gbToast(
+    "تغییرات اعمال شد.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   DELETE SELECTED
+   ===================================================== */
+
+function deleteSelectedElement() {
+
+  if (!selectedElementId) {
+    return;
+  }
+
+
+  const id =
+    selectedElementId;
+
+
+  gbConfirm(
+    "این عنصر حذف شود؟",
+    confirmed => {
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      removeElement(id);
+
+      gbToast(
+        "عنصر حذف شد.",
+        "success"
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   DEVICE
+   ===================================================== */
+
+function setDevice(
+  device,
+  button
+) {
+
+  currentDevice =
+    device;
+
+
+  const frame =
+    document.getElementById(
+      "deviceFrame"
+    );
+
+
+  frame.classList.remove(
+    "mobile",
+    "tablet",
+    "desktop"
+  );
+
+
+  frame.classList.add(
+    device
+  );
+
+
+  document
+    .querySelectorAll(
+      ".tool"
+    )
+    .forEach(
+      item => {
+        if (
+          item.textContent.includes(
+            "موبایل"
+          ) ||
+          item.textContent.includes(
+            "تبلت"
+          ) ||
+          item.textContent.includes(
+            "دسکتاپ"
+          )
+        ) {
+          item.classList.remove(
+            "active"
+          );
+        }
+      }
+    );
+
+
+  if (button) {
+    button.classList.add(
+      "active"
+    );
+  }
+
+
+  renderCanvas();
+
+}
+
+
+/* =====================================================
+   SAVE
+   ===================================================== */
+
+function saveProject(
+  showMessage = false
+) {
+
+  if (!project) {
+    return;
+  }
+
+
+  gbUpdateProject(
+    project
+  );
+
+
+  if (showMessage) {
+
+    gbToast(
+      "پروژه با موفقیت ذخیره شد.",
+      "success"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   AUTO SAVE
+   ===================================================== */
+
+function autoSave() {
+
+  gbEnableAutoSave(
+    () => {
+
+      if (!project) {
+        return;
+      }
+
+      gbUpdateProject(
+        project
+      );
+
+    },
+    700
+  );
+
+}
+
+
+/* =====================================================
    PREVIEW
-========================================== */
+   ===================================================== */
 
-function previewProject(){
+function openPreview() {
 
-    saveProject(false);
+  saveProject(false);
 
-    location.href =
-        "preview.html?project=" +
-        encodeURIComponent(project.id);
-
-}
-
-
-/* ==========================================
-   BUILD MODAL
-========================================== */
-
-function openBuildModal(){
-
-    saveProject(false);
-
-    document
-        .getElementById("buildModal")
-        .classList.add("show");
+  gbPreview(
+    project.id
+  );
 
 }
 
 
-function closeBuildModal(){
+/* =====================================================
+   PUBLISH
+   ===================================================== */
 
-    document
-        .getElementById("buildModal")
-        .classList.remove("show");
+function openPublish() {
 
-}
+  saveProject(false);
 
-
-/* ==========================================
-   BUILD WEB
-========================================== */
-
-function buildWeb(){
-
-    saveProject(false);
-
-    localStorage.setItem(
-        "ghost_builder_build_type",
-        "web"
-    );
-
-    location.href =
-        "publish.html?type=web&project=" +
-        encodeURIComponent(project.id);
+  gbPublish(
+    project.id,
+    "web"
+  );
 
 }
 
 
-/* ==========================================
-   BUILD APK
-========================================== */
+/* =====================================================
+   MEDIA
+   ===================================================== */
 
-function buildAPK(){
+function openMedia() {
 
-    saveProject(false);
+  gbGo(
+    "media.html",
+    {
+      project:
+        project.id,
 
-    localStorage.setItem(
-        "ghost_builder_build_type",
-        "apk"
-    );
-
-    location.href =
-        "publish.html?type=apk&project=" +
-        encodeURIComponent(project.id);
+      select:
+        selectedElementId
+    }
+  );
 
 }
 
 
-/* ==========================================
+/* =====================================================
    BACK
-========================================== */
+   ===================================================== */
 
-function goBack(){
+function goBack() {
 
-    if(document.referrer){
-        history.back();
-    }else{
-        location.href = "index.html";
-    }
+  saveProject(false);
 
-}
-
-
-/* ==========================================
-   TOAST
-========================================== */
-
-function showToast(message){
-
-    const toast =
-        document.getElementById("toast");
-
-    toast.textContent =
-        message;
-
-    toast.classList.add("show");
-
-    setTimeout(() => {
-
-        toast.classList.remove("show");
-
-    },2500);
+  window.location.href =
+    "projects.html";
 
 }
 
 
-/* ==========================================
-   ESCAPE MODAL
-========================================== */
+/* =====================================================
+   CANVAS CLICK
+   ===================================================== */
 
-document.addEventListener("keydown",function(e){
+document.addEventListener(
+  "click",
+  event => {
 
-    if(e.key === "Escape"){
-        closeBuildModal();
+    const canvas =
+      document.getElementById(
+        "canvas"
+      );
+
+
+    if (
+      canvas &&
+      event.target === canvas
+    ) {
+
+      selectedElementId =
+        null;
+
+      renderCanvas();
+
+      renderSelectedElement();
+
     }
 
-});
+  }
+);
+
+
+/* =====================================================
+   START
+   ===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    initBuilder();
+
+  }
+);
 
 </script>
 
 </body>
-  </html>
+    </html>
