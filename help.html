@@ -1,1043 +1,1592 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Ghost Builder | Help</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+  <title>Ghost Builder — راهنما</title>
 
-body{
-  font-family:Tahoma,Arial,sans-serif;
-  background:#07070b;
-  color:#fff;
-  min-height:100vh;
-}
+  <link rel="stylesheet" href="style.css">
 
-button,input,textarea{
-  font-family:inherit;
-}
+  <style>
+    .help-page {
+      min-height: 100vh;
+      padding-bottom: 50px;
+    }
 
-.topbar{
-  height:70px;
-  background:#0d0d14;
-  border-bottom:1px solid #252535;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 22px;
-}
+    .help-container {
+      max-width: 1150px;
+      margin: auto;
+      padding: 25px 18px;
+    }
 
-.logo{
-  font-size:21px;
-  font-weight:900;
-  color:#805fff;
-}
+    .help-hero {
+      background:
+        radial-gradient(circle at 80% 20%, rgba(124,92,255,.22), transparent 35%),
+        var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
 
-.logo span{
-  color:#fff;
-}
+    .help-hero h1 {
+      margin: 0;
+      font-size: 29px;
+    }
 
-.actions{
-  display:flex;
-  gap:8px;
-}
+    .help-hero p {
+      color: var(--muted);
+      line-height: 1.9;
+      max-width: 750px;
+      margin: 10px 0 0;
+      font-size: 13px;
+    }
 
-.btn{
-  border:1px solid #302d43;
-  background:#15141d;
-  color:#fff;
-  padding:10px 15px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-}
+    .search-box {
+      margin-top: 20px;
+      position: relative;
+    }
 
-.btn.primary{
-  background:#7655ff;
-  border-color:#7655ff;
-}
+    .search-box input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px 45px 14px 15px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+    }
 
-.container{
-  width:min(1100px,94%);
-  margin:30px auto;
-}
+    .search-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
 
-.hero{
-  text-align:center;
-  margin-bottom:30px;
-}
+    .help-layout {
+      display: grid;
+      grid-template-columns: 225px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
 
-.hero-icon{
-  font-size:55px;
-  margin-bottom:10px;
-}
+    .help-nav {
+      position: sticky;
+      top: 80px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 8px;
+    }
 
-.hero h1{
-  font-size:29px;
-  margin-bottom:10px;
-}
+    .help-nav button {
+      display: block;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 12px;
+      text-align: right;
+      padding: 11px;
+      border-radius: 11px;
+      cursor: pointer;
+      margin-bottom: 3px;
+    }
 
-.hero p{
-  color:#888;
-  line-height:1.9;
-  font-size:13px;
-}
+    .help-nav button:hover,
+    .help-nav button.active {
+      background: rgba(124,92,255,.11);
+      color: #7c5cff;
+      font-weight: 800;
+    }
 
-.search-box{
-  background:#0e0e15;
-  border:1px solid #29283a;
-  border-radius:16px;
-  padding:15px;
-  margin-bottom:20px;
-}
+    .help-section {
+      margin-bottom: 18px;
+    }
 
-.search{
-  width:100%;
-  background:#09090d;
-  color:#fff;
-  border:1px solid #302f40;
-  border-radius:10px;
-  padding:13px;
-  outline:none;
-}
+    .help-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 21px;
+      margin-bottom: 15px;
+    }
 
-.search:focus{
-  border-color:#7655ff;
-}
+    .help-card h2 {
+      margin: 0;
+      font-size: 19px;
+    }
 
-.categories{
-  display:flex;
-  gap:8px;
-  overflow-x:auto;
-  padding-bottom:5px;
-  margin-bottom:20px;
-}
+    .help-card h3 {
+      font-size: 14px;
+      margin: 22px 0 8px;
+    }
 
-.category{
-  white-space:nowrap;
-  border:1px solid #302d43;
-  background:#15141d;
-  color:#999;
-  padding:9px 13px;
-  border-radius:9px;
-  cursor:pointer;
-}
+    .help-card p {
+      color: var(--muted);
+      line-height: 1.95;
+      font-size: 12px;
+      margin: 8px 0;
+    }
 
-.category.active{
-  background:#7655ff;
-  border-color:#7655ff;
-  color:#fff;
-}
+    .help-card ul,
+    .help-card ol {
+      color: var(--muted);
+      line-height: 2;
+      font-size: 12px;
+      padding-right: 22px;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:15px;
-}
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
 
-.card{
-  background:#0e0e15;
-  border:1px solid #29283a;
-  border-radius:16px;
-  padding:20px;
-}
+    .feature {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 15px;
+    }
 
-.card-icon{
-  font-size:32px;
-  margin-bottom:12px;
-}
+    .feature-icon {
+      font-size: 24px;
+      margin-bottom: 7px;
+    }
 
-.card h2{
-  font-size:17px;
-  margin-bottom:9px;
-}
+    .feature strong {
+      display: block;
+      font-size: 12px;
+    }
 
-.card p{
-  color:#888;
-  font-size:12px;
-  line-height:1.9;
-}
+    .feature span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.7;
+      margin-top: 4px;
+    }
 
-.card button{
-  margin-top:14px;
-  border:1px solid #302d43;
-  background:#15141d;
-  color:#fff;
-  padding:9px 12px;
-  border-radius:9px;
-  cursor:pointer;
-}
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-top: 14px;
+      padding: 13px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: 14px;
+    }
 
-.faq{
-  margin-top:25px;
-}
+    .step-number {
+      width: 31px;
+      height: 31px;
+      min-width: 31px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: #7c5cff;
+      color: white;
+      font-weight: 900;
+      font-size: 12px;
+    }
 
-.faq-title{
-  font-size:21px;
-  margin-bottom:15px;
-}
+    .step strong {
+      font-size: 12px;
+      display: block;
+    }
 
-.faq-item{
-  background:#0e0e15;
-  border:1px solid #29283a;
-  border-radius:13px;
-  margin-bottom:9px;
-  overflow:hidden;
-}
+    .step p {
+      margin: 3px 0 0;
+      font-size: 11px;
+    }
 
-.faq-question{
-  width:100%;
-  border:0;
-  background:transparent;
-  color:#fff;
-  padding:15px;
-  text-align:right;
-  cursor:pointer;
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  font-weight:bold;
-}
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
 
-.faq-answer{
-  display:none;
-  padding:0 15px 15px;
-  color:#888;
-  line-height:1.9;
-  font-size:12px;
-}
+    .faq-question {
+      width: 100%;
+      border: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      text-align: right;
+      padding: 14px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
 
-.faq-item.open .faq-answer{
-  display:block;
-}
+    .faq-answer {
+      display: none;
+      padding: 0 14px 14px;
+      background: var(--bg);
+    }
 
-.contact{
-  margin-top:25px;
-  background:#0e0e15;
-  border:1px solid #29283a;
-  border-radius:18px;
-  padding:22px;
-}
+    .faq-answer p {
+      margin: 0;
+      font-size: 11px;
+    }
 
-.contact h2{
-  margin-bottom:8px;
-}
+    .faq-item.open .faq-answer {
+      display: block;
+    }
 
-.contact p{
-  color:#888;
-  font-size:12px;
-  line-height:1.8;
-  margin-bottom:17px;
-}
+    .faq-item.open .faq-arrow {
+      transform: rotate(180deg);
+    }
 
-.form{
-  display:grid;
-  gap:10px;
-}
+    .faq-arrow {
+      transition: .2s;
+    }
 
-.input,
-.textarea{
-  width:100%;
-  background:#09090d;
-  color:#fff;
-  border:1px solid #302f40;
-  border-radius:10px;
-  padding:12px;
-  outline:none;
-}
+    .tip {
+      border-right: 4px solid #7c5cff;
+      background: rgba(124,92,255,.08);
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-top: 12px;
+    }
 
-.textarea{
-  min-height:120px;
-  resize:vertical;
-}
+    .tip p {
+      margin: 0;
+    }
 
-.input:focus,
-.textarea:focus{
-  border-color:#7655ff;
-}
+    .warning {
+      border-right: 4px solid #f59e0b;
+      background: rgba(245,158,11,.08);
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-top: 12px;
+    }
 
-.empty{
-  grid-column:1/-1;
-  background:#0e0e15;
-  border:1px dashed #343346;
-  border-radius:16px;
-  padding:45px;
-  text-align:center;
-  color:#777;
-}
+    .warning p {
+      margin: 0;
+    }
 
-.footer{
-  text-align:center;
-  color:#666;
-  padding:30px 0;
-  font-size:11px;
-}
+    .empty-search {
+      display: none;
+      text-align: center;
+      padding: 35px;
+      color: var(--muted);
+    }
 
-@media(max-width:650px){
-  .topbar{
-    height:auto;
-    min-height:65px;
-    padding:10px;
-  }
+    .contact-box {
+      text-align: center;
+      padding: 25px;
+    }
 
-  .grid{
-    grid-template-columns:1fr;
-  }
-}
-</style>
+    .contact-box h2 {
+      margin: 0;
+    }
+
+    .contact-box p {
+      max-width: 600px;
+      margin: 9px auto 18px;
+    }
+
+    .shortcut {
+      display: inline-block;
+      padding: 3px 7px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: 6px;
+      font-size: 10px;
+      color: var(--text);
+    }
+
+    @media(max-width:800px) {
+      .help-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .help-nav {
+        position: static;
+        display: flex;
+        overflow-x: auto;
+        gap: 4px;
+      }
+
+      .help-nav button {
+        width: auto;
+        min-width: max-content;
+        white-space: nowrap;
+        margin: 0;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:500px) {
+      .help-hero {
+        padding: 20px;
+      }
+
+      .help-hero h1 {
+        font-size: 24px;
+      }
+
+      .help-card {
+        padding: 16px;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="topbar">
+<div class="help-page">
 
-  <div class="logo">
-    Ghost <span>Builder</span>
-  </div>
+  <!-- TOPBAR -->
 
-  <div class="actions">
+  <header class="topbar">
 
-    <button
-      class="btn"
-      onclick="goHome()">
-      خانه
-    </button>
-
-    <button
-      class="btn primary"
-      onclick="goBuilder()">
-      ساخت پروژه
-    </button>
-
-  </div>
-
-</header>
-
-
-<main class="container">
-
-  <section class="hero">
-
-    <div class="hero-icon">👻</div>
-
-    <h1>
-      مرکز راهنمای Ghost Builder
-    </h1>
-
-    <p>
-      آموزش ساخت وب‌سایت، اپلیکیشن و بازی با Ghost Builder
-    </p>
-
-  </section>
-
-
-  <section class="search-box">
-
-    <input
-      id="search"
-      class="search"
-      placeholder="جستجو در راهنما..."
-      oninput="searchHelp()">
-
-  </section>
-
-
-  <div class="categories">
-
-    <button
-      class="category active"
-      onclick="setCategory('all',this)">
-      همه
-    </button>
-
-    <button
-      class="category"
-      onclick="setCategory('start',this)">
-      شروع کار
-    </button>
-
-    <button
-      class="category"
-      onclick="setCategory('website',this)">
-      وب‌سایت
-    </button>
-
-    <button
-      class="category"
-      onclick="setCategory('app',this)">
-      اپلیکیشن
-    </button>
-
-    <button
-      class="category"
-      onclick="setCategory('game',this)">
-      بازی
-    </button>
-
-    <button
-      class="category"
-      onclick="setCategory('publish',this)">
-      انتشار
-    </button>
-
-  </div>
-
-
-  <section
-    class="grid"
-    id="helpGrid">
-
-    <article
-      class="card"
-      data-category="start"
-      data-search="شروع ghost builder پروژه جدید ساخت">
-
-      <div class="card-icon">
-        🚀
+    <div class="topbar-title">
+      <div>
+        <strong>❓ راهنمای Ghost Builder</strong>
+        <span>یادگیری ساخت سایت، اپلیکیشن و بازی</span>
       </div>
-
-      <h2>
-        شروع کار
-      </h2>
-
-      <p>
-        برای شروع، از صفحه اصلی روی «پروژه جدید» بزنید،
-        نوع پروژه را انتخاب کنید و وارد Builder شوید.
-      </p>
-
-      <button onclick="showMessage(
-        'از صفحه اصلی یک پروژه جدید بسازید، نوع آن را انتخاب کنید و سپس وارد محیط Builder شوید.'
-      )">
-        بیشتر بدانید
-      </button>
-
-    </article>
-
-
-    <article
-      class="card"
-      data-category="website"
-      data-search="ساخت سایت وب سایت website">
-
-      <div class="card-icon">
-        🌐
-      </div>
-
-      <h2>
-        ساخت وب‌سایت
-      </h2>
-
-      <p>
-        در Builder می‌توانید عنوان، متن، دکمه، کارت،
-        تصویر، فرم و بخش‌های مختلف سایت را ایجاد کنید.
-      </p>
-
-      <button onclick="showMessage(
-        'نوع پروژه را Website انتخاب کنید و سپس از پنل Builder عناصر موردنیاز را اضافه کنید.'
-      )">
-        آموزش
-      </button>
-
-    </article>
-
-
-    <article
-      class="card"
-      data-category="app"
-      data-search="اپلیکیشن app برنامه موبایل">
-
-      <div class="card-icon">
-        📱
-      </div>
-
-      <h2>
-        ساخت اپلیکیشن
-      </h2>
-
-      <p>
-        پروژه App را انتخاب کنید و رابط کاربری و بخش‌های
-        موردنیاز اپلیکیشن را در Builder طراحی کنید.
-      </p>
-
-      <button onclick="showMessage(
-        'برای ساخت اپلیکیشن، هنگام ایجاد پروژه نوع App را انتخاب کنید.'
-      )">
-        آموزش
-      </button>
-
-    </article>
-
-
-    <article
-      class="card"
-      data-category="game"
-      data-search="بازی game بازی دو بعدی سه بعدی 2d 3d">
-
-      <div class="card-icon">
-        🎮
-      </div>
-
-      <h2>
-        ساخت بازی
-      </h2>
-
-      <p>
-        Ghost Builder برای پروژه‌های بازی 2D و 3D طراحی شده
-        و در نسخه‌های آینده امکانات بیشتری دریافت می‌کند.
-      </p>
-
-      <button onclick="showMessage(
-        'برای شروع ساخت بازی، Game 2D یا Game 3D را انتخاب کنید.'
-      )">
-        آموزش
-      </button>
-
-    </article>
-
-
-    <article
-      class="card"
-      data-category="game"
-      data-search="گرافیک کیفیت رزولوشن بازی">
-
-      <div class="card-icon">
-        🎨
-      </div>
-
-      <h2>
-        کیفیت و رزولوشن
-      </h2>
-
-      <p>
-        کیفیت پروژه و رزولوشن را می‌توانید از تنظیمات پروژه
-        مشخص کنید؛ از کیفیت پایین تا Ultra و رزولوشن‌های بالاتر.
-      </p>
-
-      <button onclick="showMessage(
-        'برای تغییر کیفیت، وارد Builder شوید و از پنل تنظیمات پروژه کیفیت و رزولوشن را انتخاب کنید.'
-      )">
-        آموزش
-      </button>
-
-    </article>
-
-
-    <article
-      class="card"
-      data-category="publish"
-      data-search="انتشار web publish لینک سایت">
-
-      <div class="card-icon">
-        🌍
-      </div>
-
-      <h2>
-        انتشار نسخه وب
-      </h2>
-
-      <p>
-        پس از تکمیل پروژه، وارد صفحه انتشار شوید و
-        لینک نسخه وب پروژه را دریافت کنید.
-      </p>
-
-      <button onclick="showMessage(
-        'از Builder روی انتشار بزنید. سپس در صفحه Publish می‌توانید لینک پروژه را مشاهده و کپی کنید.'
-      )">
-        آموزش
-      </button>
-
-    </article>
-
-
-    <article
-      class="card"
-      data-category="publish"
-      data-search="apk اندروید تبدیل web apk">
-
-      <div class="card-icon">
-        📦
-      </div>
-
-      <h2>
-        دریافت APK
-      </h2>
-
-      <p>
-        نسخه فعلی Ghost Builder لینک وب پروژه را آماده می‌کند.
-        برای APK می‌توان از سرویس Web به APK استفاده کرد.
-      </p>
-
-      <button onclick="showMessage(
-        'ابتدا نسخه وب را منتشر کنید، سپس لینک پروژه را در یک سرویس معتبر Web → APK وارد کنید.'
-      )">
-        آموزش
-      </button>
-
-    </article>
-
-
-    <article
-      class="card"
-      data-category="start"
-      data-search="رسانه فایل تصویر ویدیو media">
-
-      <div class="card-icon">
-        📁
-      </div>
-
-      <h2>
-        مدیریت فایل‌ها
-      </h2>
-
-      <p>
-        از بخش Media می‌توانید تصاویر، ویدیوها و فایل‌های
-        پروژه را مدیریت کنید.
-      </p>
-
-      <button onclick="showMessage(
-        'از منوی Media فایل موردنظر را اضافه کنید و بعد در Builder از آن استفاده کنید.'
-      )">
-        آموزش
-      </button>
-
-    </article>
-
-  </section>
-
-
-  <section class="faq">
-
-    <h2 class="faq-title">
-      ❓ سوالات متداول
-    </h2>
-
-
-    <div class="faq-item">
-
-      <button
-        class="faq-question"
-        onclick="toggleFAQ(this)">
-        Ghost Builder چیست؟
-        <span>＋</span>
-      </button>
-
-      <div class="faq-answer">
-        Ghost Builder یک محیط برای ساخت وب‌سایت،
-        اپلیکیشن و بازی است که هدف آن ساده‌کردن روند ساخت
-        پروژه برای کاربران است.
-      </div>
-
     </div>
 
-
-    <div class="faq-item">
+    <div class="topbar-actions">
 
       <button
-        class="faq-question"
-        onclick="toggleFAQ(this)">
-        آیا برای استفاده نیاز به کدنویسی دارم؟
-        <span>＋</span>
+        class="btn"
+        onclick="location.href='index.html'">
+        🏠 خانه
       </button>
 
-      <div class="faq-answer">
-        هدف Ghost Builder این است که بخش زیادی از ساخت پروژه
-        بدون نیاز به کدنویسی انجام شود. امکانات پیشرفته‌تر
-        می‌توانند در نسخه‌های بعدی اضافه شوند.
-      </div>
-
-    </div>
-
-
-    <div class="faq-item">
-
       <button
-        class="faq-question"
-        onclick="toggleFAQ(this)">
-        پروژه‌ها کجا ذخیره می‌شوند؟
-        <span>＋</span>
-      </button>
-
-      <div class="faq-answer">
-        در نسخه فعلی، اطلاعات پروژه‌ها در حافظه محلی مرورگر
-        دستگاه ذخیره می‌شود.
-      </div>
-
-    </div>
-
-
-    <div class="faq-item">
-
-      <button
-        class="faq-question"
-        onclick="toggleFAQ(this)">
-        آیا می‌توان APK ساخت؟
-        <span>＋</span>
-      </button>
-
-      <div class="faq-answer">
-        صفحه Publish لینک نسخه وب پروژه را آماده می‌کند.
-        برای تبدیل مستقیم Web به APK، یک سرویس Build خارجی
-        یا زیرساخت اختصاصی لازم است.
-      </div>
-
-    </div>
-
-
-    <div class="faq-item">
-
-      <button
-        class="faq-question"
-        onclick="toggleFAQ(this)">
-        آیا ساخت بازی 3D امکان‌پذیر است؟
-        <span>＋</span>
-      </button>
-
-      <div class="faq-answer">
-        نوع پروژه Game 3D در Ghost Builder وجود دارد.
-        سیستم کامل بازی‌سازی سه‌بعدی می‌تواند در مراحل
-        بعدی توسعه داده شود.
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <section class="contact">
-
-    <h2>
-      💬 پشتیبانی
-    </h2>
-
-    <p>
-      اگر در استفاده از Ghost Builder مشکلی دارید،
-      پیام خود را ثبت کنید تا در نسخه‌های بعدی برای آن
-      راهکار در نظر گرفته شود.
-    </p>
-
-
-    <div class="form">
-
-      <input
-        id="supportTitle"
-        class="input"
-        placeholder="موضوع مشکل">
-
-      <textarea
-        id="supportMessage"
-        class="textarea"
-        placeholder="توضیح مشکل..."></textarea>
-
-      <button
-        class="btn primary"
-        onclick="sendSupport()">
-        ارسال پیام
+        class="btn btn-primary"
+        onclick="location.href='builder.html'">
+        🚀 شروع ساخت
       </button>
 
     </div>
 
-  </section>
+  </header>
 
 
-  <div class="footer">
-    Ghost Builder • Help Center • Version 1.0.0
-  </div>
+  <main class="help-container">
 
-</main>
+    <!-- HERO -->
 
+    <section class="help-hero">
+
+      <h1>
+        👋 چطور با Ghost Builder کار کنیم؟
+      </h1>
+
+      <p>
+        Ghost Builder یک محیط ساخت پروژه برای ایجاد سایت،
+        اپلیکیشن و بازی است. بدون نیاز به شروع از صفر،
+        می‌توانید از قالب‌ها استفاده کنید، پروژه را شخصی‌سازی
+        کنید و نتیجه را در پیش‌نمایش مشاهده کنید.
+      </p>
+
+
+      <div class="search-box">
+
+        <span class="search-icon">
+          🔎
+        </span>
+
+        <input
+          id="helpSearch"
+          type="search"
+          placeholder="مثلاً: ساخت بازی، قالب، پروژه، APK..."
+          oninput="searchHelp(this.value)">
+
+      </div>
+
+    </section>
+
+
+    <div class="help-layout">
+
+
+      <!-- NAV -->
+
+      <aside class="help-nav">
+
+        <button
+          class="active"
+          data-section="start"
+          onclick="scrollToHelp('start',this)">
+          🚀 شروع کار
+        </button>
+
+        <button
+          data-section="projects"
+          onclick="scrollToHelp('projects',this)">
+          📁 پروژه‌ها
+        </button>
+
+        <button
+          data-section="builder"
+          onclick="scrollToHelp('builder',this)">
+          🛠️ ویرایشگر
+        </button>
+
+        <button
+          data-section="templates"
+          onclick="scrollToHelp('templates',this)">
+          🎨 قالب‌ها
+        </button>
+
+        <button
+          data-section="games"
+          onclick="scrollToHelp('games',this)">
+          🎮 ساخت بازی
+        </button>
+
+        <button
+          data-section="publish"
+          onclick="scrollToHelp('publish',this)">
+          🚀 انتشار
+        </button>
+
+        <button
+          data-section="faq"
+          onclick="scrollToHelp('faq',this)">
+          ❓ سوالات متداول
+        </button>
+
+      </aside>
+
+
+      <!-- CONTENT -->
+
+      <div id="helpContent">
+
+
+        <!-- START -->
+
+        <section
+          id="help-start"
+          class="help-section searchable">
+
+          <div class="help-card">
+
+            <h2>
+              🚀 شروع کار
+            </h2>
+
+            <p>
+              برای ساخت اولین پروژه کافی است نوع پروژه خود
+              را انتخاب کنید.
+            </p>
+
+
+            <div class="feature-grid">
+
+              <div class="feature">
+
+                <div class="feature-icon">
+                  🌐
+                </div>
+
+                <strong>
+                  Website
+                </strong>
+
+                <span>
+                  ساخت صفحات وب و سایت‌های شخصی یا تجاری.
+                </span>
+
+              </div>
+
+
+              <div class="feature">
+
+                <div class="feature-icon">
+                  📱
+                </div>
+
+                <strong>
+                  App
+                </strong>
+
+                <span>
+                  ساخت رابط پروژه‌های موبایلی.
+                </span>
+
+              </div>
+
+
+              <div class="feature">
+
+                <div class="feature-icon">
+                  🎮
+                </div>
+
+                <strong>
+                  Game 2D
+                </strong>
+
+                <span>
+                  ساخت بازی‌های دوبعدی.
+                </span>
+
+              </div>
+
+
+              <div class="feature">
+
+                <div class="feature-icon">
+                  🧊
+                </div>
+
+                <strong>
+                  Game 3D
+                </strong>
+
+                <span>
+                  ساخت پروژه‌های بازی سه‌بعدی.
+                </span>
+
+              </div>
+
+
+              <div class="feature">
+
+                <div class="feature-icon">
+                  🧩
+                </div>
+
+                <strong>
+                  Templates
+                </strong>
+
+                <span>
+                  شروع سریع با قالب‌های آماده.
+                </span>
+
+              </div>
+
+
+              <div class="feature">
+
+                <div class="feature-icon">
+                  💾
+                </div>
+
+                <strong>
+                  Local Storage
+                </strong>
+
+                <span>
+                  ذخیره پروژه‌ها روی دستگاه شما.
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <h3>
+              ساخت اولین پروژه
+            </h3>
+
+
+            <div class="step">
+
+              <div class="step-number">
+                1
+              </div>
+
+              <div>
+
+                <strong>
+                  انتخاب نوع پروژه
+                </strong>
+
+                <p>
+                  از داشبورد Website، App، Game 2D یا Game 3D
+                  را انتخاب کنید.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="step">
+
+              <div class="step-number">
+                2
+              </div>
+
+              <div>
+
+                <strong>
+                  انتخاب نام
+                </strong>
+
+                <p>
+                  برای پروژه یک نام مناسب وارد کنید.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="step">
+
+              <div class="step-number">
+                3
+              </div>
+
+              <div>
+
+                <strong>
+                  ورود به Builder
+                </strong>
+
+                <p>
+                  بعد از ساخت پروژه، وارد ویرایشگر شوید.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="step">
+
+              <div class="step-number">
+                4
+              </div>
+
+              <div>
+
+                <strong>
+                  ذخیره و Preview
+                </strong>
+
+                <p>
+                  تغییرات را ذخیره کنید و نتیجه را در پیش‌نمایش ببینید.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- PROJECTS -->
+
+        <section
+          id="help-projects"
+          class="help-section searchable">
+
+          <div class="help-card">
+
+            <h2>
+              📁 مدیریت پروژه‌ها
+            </h2>
+
+            <p>
+              از صفحه پروژه‌ها می‌توانید تمام پروژه‌های ساخته‌شده
+              را مشاهده و مدیریت کنید.
+            </p>
+
+
+            <h3>
+              امکانات پروژه‌ها
+            </h3>
+
+            <ul>
+
+              <li>
+                ✏️ ویرایش پروژه
+              </li>
+
+              <li>
+                👁️ مشاهده پیش‌نمایش
+              </li>
+
+              <li>
+                📋 کپی پروژه
+              </li>
+
+              <li>
+                ✏️ تغییر نام
+              </li>
+
+              <li>
+                🚀 ورود به انتشار
+              </li>
+
+              <li>
+                🗑️ حذف پروژه
+              </li>
+
+            </ul>
+
+
+            <div class="tip">
+
+              <p>
+                💡 پروژه‌ها فعلاً در حافظه محلی مرورگر دستگاه ذخیره
+                می‌شوند؛ بنابراین پاک کردن داده‌های مرورگر می‌تواند
+                اطلاعات محلی پروژه را حذف کند.
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- BUILDER -->
+
+        <section
+          id="help-builder"
+          class="help-section searchable">
+
+          <div class="help-card">
+
+            <h2>
+              🛠️ ویرایشگر Ghost Builder
+            </h2>
+
+            <p>
+              Builder قلب Ghost Builder است و برای ساخت و
+              شخصی‌سازی پروژه استفاده می‌شود.
+            </p>
+
+
+            <h3>
+              عناصر قابل اضافه کردن
+            </h3>
+
+            <div class="feature-grid">
+
+              <div class="feature">
+                <div class="feature-icon">📝</div>
+                <strong>Text</strong>
+                <span>اضافه کردن متن.</span>
+              </div>
+
+              <div class="feature">
+                <div class="feature-icon">🔘</div>
+                <strong>Button</strong>
+                <span>ساخت دکمه.</span>
+              </div>
+
+              <div class="feature">
+                <div class="feature-icon">🃏</div>
+                <strong>Card</strong>
+                <span>ساخت کارت محتوا.</span>
+              </div>
+
+              <div class="feature">
+                <div class="feature-icon">🖼️</div>
+                <strong>Image</strong>
+                <span>افزودن تصویر.</span>
+              </div>
+
+              <div class="feature">
+                <div class="feature-icon">⌨️</div>
+                <strong>Input</strong>
+                <span>فیلد ورود اطلاعات.</span>
+              </div>
+
+              <div class="feature">
+                <div class="feature-icon">📦</div>
+                <strong>Section</strong>
+                <span>ساخت بخش جدید.</span>
+              </div>
+
+            </div>
+
+
+            <h3>
+              میانبر
+            </h3>
+
+            <p>
+              برای ذخیره سریع پروژه می‌توانید از
+              <span class="shortcut">
+                Ctrl + S
+              </span>
+              یا در دستگاه‌های سازگار از
+              <span class="shortcut">
+                Cmd + S
+              </span>
+              استفاده کنید.
+            </p>
+
+          </div>
+
+        </section>
+
+
+        <!-- TEMPLATES -->
+
+        <section
+          id="help-templates"
+          class="help-section searchable">
+
+          <div class="help-card">
+
+            <h2>
+              🎨 قالب‌ها
+            </h2>
+
+            <p>
+              قالب‌ها برای شروع سریع پروژه طراحی شده‌اند.
+              می‌توانید یک قالب را انتخاب کرده و بعد آن را
+              در Builder تغییر دهید.
+            </p>
+
+
+            <h3>
+              دسته‌های قالب
+            </h3>
+
+            <ul>
+
+              <li>
+                🌐 سایت‌های مدرن
+              </li>
+
+              <li>
+                🛒 فروشگاه
+              </li>
+
+              <li>
+                🎓 آموزش
+              </li>
+
+              <li>
+                🤖 هوش مصنوعی
+              </li>
+
+              <li>
+                📱 اپلیکیشن
+              </li>
+
+              <li>
+                🎮 بازی 2D
+              </li>
+
+              <li>
+                🧊 بازی 3D
+              </li>
+
+              <li>
+                🏎️ Racing
+              </li>
+
+              <li>
+                🔫 Shooter
+              </li>
+
+              <li>
+                🧩 Puzzle
+              </li>
+
+            </ul>
+
+          </div>
+
+        </section>
+
+
+        <!-- GAMES -->
+
+        <section
+          id="help-games"
+          class="help-section searchable">
+
+          <div class="help-card">
+
+            <h2>
+              🎮 ساخت بازی
+            </h2>
+
+            <p>
+              Ghost Builder برای پروژه‌های بازی دوبعدی و سه‌بعدی
+              نیز ساختار جداگانه دارد.
+            </p>
+
+
+            <h3>
+              سبک‌های پیشنهادی
+            </h3>
+
+            <div class="feature-grid">
+
+              <div class="feature">
+                <div class="feature-icon">🏃</div>
+                <strong>Platformer</strong>
+                <span>بازی‌های پلتفرمر.</span>
+              </div>
+
+              <div class="feature">
+                <div class="feature-icon">🏎️</div>
+                <strong>Racing</strong>
+                <span>بازی‌های مسابقه‌ای.</span>
+              </div>
+
+              <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <strong>Shooter</strong>
+                <span>بازی‌های تیراندازی.</span>
+              </div>
+
+              <div class="feature">
+                <div class="feature-icon">🧩</div>
+                <strong>Puzzle</strong>
+                <span>بازی‌های معمایی.</span>
+              </div>
+
+              <div class="feature">
+                <div class="feature-icon">⚽</div>
+                <strong>Sports</strong>
+                <span>بازی‌های ورزشی.</span>
+              </div>
+
+              <div class="feature">
+                <div class="feature-icon">🧙</div>
+                <strong>RPG</strong>
+                <span>بازی‌های نقش‌آفرینی.</span>
+              </div>
+
+            </div>
+
+
+            <h3>
+              قابلیت‌های قابل توسعه
+            </h3>
+
+            <ul>
+
+              <li>
+                ❤️ سلامتی
+              </li>
+
+              <li>
+                ⭐ امتیاز
+              </li>
+
+              <li>
+                🪙 سکه
+              </li>
+
+              <li>
+                👾 دشمن
+              </li>
+
+              <li>
+                👑 Boss
+              </li>
+
+              <li>
+                🏁 Checkpoint
+              </li>
+
+              <li>
+                📷 Camera
+              </li>
+
+              <li>
+                💥 Particle Effects
+              </li>
+
+              <li>
+                🎵 Music / SFX
+              </li>
+
+              <li>
+                📱 Touch Controls
+              </li>
+
+            </ul>
+
+
+            <div class="warning">
+
+              <p>
+                ⚠️ ساخت خروجی واقعی و پیچیده 3D یا APK به یک
+                موتور/سرویس Build سمت سرور نیاز دارد. نسخه فعلی
+                Ghost Builder تمرکز خود را روی ساخت پروژه و
+                پیش‌نمایش وب گذاشته است.
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- PUBLISH -->
+
+        <section
+          id="help-publish"
+          class="help-section searchable">
+
+          <div class="help-card">
+
+            <h2>
+              🚀 انتشار پروژه
+            </h2>
+
+            <p>
+              بخش Publish برای آماده‌سازی نسخه قابل مشاهده
+              پروژه استفاده می‌شود.
+            </p>
+
+
+            <h3>
+              نسخه Web
+            </h3>
+
+            <ol>
+
+              <li>
+                پروژه را ذخیره کنید.
+              </li>
+
+              <li>
+                وارد Publish شوید.
+              </li>
+
+              <li>
+                خروجی Web را انتخاب کنید.
+              </li>
+
+              <li>
+                لینک Preview پروژه را ایجاد کنید.
+              </li>
+
+              <li>
+                لینک را باز یا کپی کنید.
+              </li>
+
+            </ol>
+
+
+            <h3>
+              نسخه APK
+            </h3>
+
+            <p>
+              برای تبدیل نسخه Web به APK، در معماری فعلی
+              می‌توان از یک سرویس Web-to-APK خارجی استفاده کرد.
+              ابتدا نسخه Web پروژه را آماده کنید و سپس URL آن
+              را به سرویس تبدیل APK بدهید.
+            </p>
+
+
+            <div class="tip">
+
+              <p>
+                💡 در نسخه‌های آینده می‌توان یک Build Service
+                اختصاصی به Ghost Builder متصل کرد تا فرآیند
+                ساخت APK مستقیماً داخل پلتفرم انجام شود.
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- FAQ -->
+
+        <section
+          id="help-faq"
+          class="help-section searchable">
+
+          <div class="help-card">
+
+            <h2>
+              ❓ سوالات متداول
+            </h2>
+
+
+            <div class="faq-item">
+
+              <button
+                class="faq-question"
+                onclick="toggleFaq(this)">
+
+                آیا پروژه‌ها ذخیره می‌شوند؟
+
+                <span class="faq-arrow">
+                  ▼
+                </span>
+
+              </button>
+
+              <div class="faq-answer">
+
+                <p>
+                  بله. نسخه فعلی اطلاعات پروژه‌ها را در
+                  Local Storage مرورگر ذخیره می‌کند.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="faq-item">
+
+              <button
+                class="faq-question"
+                onclick="toggleFaq(this)">
+
+                آیا می‌توانم پروژه را ویرایش کنم؟
+
+                <span class="faq-arrow">
+                  ▼
+                </span>
+
+              </button>
+
+              <div class="faq-answer">
+
+                <p>
+                  بله. از Projects پروژه موردنظر را انتخاب کرده
+                  و وارد Builder شوید.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="faq-item">
+
+              <button
+                class="faq-question"
+                onclick="toggleFaq(this)">
+
+                آیا Ghost Builder فقط سایت می‌سازد؟
+
+                <span class="faq-arrow">
+                  ▼
+                </span>
+
+              </button>
+
+              <div class="faq-answer">
+
+                <p>
+                  خیر. ساختار Ghost Builder برای Website،
+                  App و Game 2D/3D طراحی شده است.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="faq-item">
+
+              <button
+                class="faq-question"
+                onclick="toggleFaq(this)">
+
+                آیا APK مستقیماً ساخته می‌شود؟
+
+                <span class="faq-arrow">
+                  ▼
+                </span>
+
+              </button>
+
+              <div class="faq-answer">
+
+                <p>
+                  در نسخه فعلی خروجی Web و Preview آماده می‌شود.
+                  برای APK هنوز به سرویس Build خارجی یا
+                  Backend اختصاصی نیاز است.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="faq-item">
+
+              <button
+                class="faq-question"
+                onclick="toggleFaq(this)">
+
+                آیا قالب‌ها قابل شخصی‌سازی هستند؟
+
+                <span class="faq-arrow">
+                  ▼
+                </span>
+
+              </button>
+
+              <div class="faq-answer">
+
+                <p>
+                  بله. قالب صرفاً نقطه شروع پروژه است و می‌توانید
+                  عناصر و تنظیمات آن را در Builder تغییر دهید.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="faq-item">
+
+              <button
+                class="faq-question"
+                onclick="toggleFaq(this)">
+
+                آیا می‌توان پروژه را حذف کرد؟
+
+                <span class="faq-arrow">
+                  ▼
+                </span>
+
+              </button>
+
+              <div class="faq-answer">
+
+                <p>
+                  بله. از صفحه Projects گزینه حذف پروژه را
+                  انتخاب کنید.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- NO RESULT -->
+
+        <div
+          id="emptySearch"
+          class="empty-search">
+
+          🔎
+          <br><br>
+
+          نتیجه‌ای برای جستجوی شما پیدا نشد.
+
+        </div>
+
+
+        <!-- CONTACT -->
+
+        <div class="help-card contact-box">
+
+          <h2>
+            💬 هنوز سوالی دارید؟
+          </h2>
+
+          <p>
+            اگر در استفاده از Ghost Builder با مشکلی مواجه شدید،
+            می‌توانید بخش پشتیبانی پروژه را برای اضافه کردن
+            سیستم Support در نسخه‌های بعدی توسعه دهید.
+          </p>
+
+          <button
+            class="btn btn-primary"
+            onclick="location.href='index.html'">
+
+            🚀 بازگشت به Ghost Builder
+
+          </button>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<script src="app.js"></script>
 
 <script>
 
-let currentCategory = "all";
-
-
-/* =========================
-   CATEGORY
-========================= */
-
-function setCategory(category,button){
-
-  currentCategory = category;
-
-  document
-    .querySelectorAll(".category")
-    .forEach(btn =>
-      btn.classList.remove("active")
-    );
-
-  button.classList.add("active");
-
-  searchHelp();
-
-}
-
-
-/* =========================
-   SEARCH
-========================= */
-
-function searchHelp(){
-
-  const query =
-    document
-      .getElementById("search")
-      .value
-      .toLowerCase()
-      .trim();
-
-
-  const cards =
-    document.querySelectorAll(
-      "#helpGrid .card"
-    );
-
-  let visible = 0;
-
-
-  cards.forEach(card => {
-
-    const category =
-      card.dataset.category || "";
-
-    const text =
-      (
-        card.dataset.search +
-        " " +
-        card.innerText
-      ).toLowerCase();
-
-
-    const categoryMatch =
-      currentCategory === "all" ||
-      category === currentCategory;
-
-    const searchMatch =
-      !query ||
-      text.includes(query);
-
-
-    if(
-      categoryMatch &&
-      searchMatch
-    ){
-
-      card.style.display = "";
-
-      visible++;
-
-    }else{
-
-      card.style.display = "none";
-
-    }
-
-  });
-
-
-  let empty =
-    document.getElementById(
-      "searchEmpty"
-    );
-
-
-  if(!empty){
-
-    empty =
-      document.createElement("div");
-
-    empty.id = "searchEmpty";
-
-    empty.className = "empty";
-
-    empty.innerHTML = `
-      <div style="font-size:45px;margin-bottom:10px">
-        🔎
-      </div>
-      <h3>موردی پیدا نشد</h3>
-      <p style="margin-top:8px">
-        عبارت دیگری را جستجو کنید.
-      </p>
-    `;
-
-    document
-      .getElementById("helpGrid")
-      .appendChild(empty);
-
-  }
-
-
-  empty.style.display =
-    visible === 0
-      ? "block"
-      : "none";
-
-}
-
-
-/* =========================
+/* =====================================================
    FAQ
-========================= */
+   ===================================================== */
 
-function toggleFAQ(button){
+function toggleFaq(button) {
 
   const item =
-    button.parentElement;
+    button.closest(
+      ".faq-item"
+    );
 
-  const isOpen =
-    item.classList.contains("open");
+
+  if (!item) {
+    return;
+  }
+
+
+  item.classList.toggle(
+    "open"
+  );
+
+}
+
+
+/* =====================================================
+   SCROLL NAV
+   ===================================================== */
+
+function scrollToHelp(
+  section,
+  button
+) {
+
+  const target =
+    document.getElementById(
+      "help-" + section
+    );
+
+
+  if (!target) {
+    return;
+  }
 
 
   document
-    .querySelectorAll(".faq-item")
-    .forEach(x => {
+    .querySelectorAll(
+      ".help-nav button"
+    )
+    .forEach(
+      item =>
+        item.classList.remove(
+          "active"
+        )
+    );
 
-      x.classList.remove("open");
 
-      const span =
-        x.querySelector(
-          ".faq-question span"
+  if (button) {
+
+    button.classList.add(
+      "active"
+    );
+
+  }
+
+
+  target.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+}
+
+
+/* =====================================================
+   SEARCH
+   ===================================================== */
+
+function searchHelp(
+  query
+) {
+
+  query =
+    String(query || "")
+      .trim()
+      .toLowerCase();
+
+
+  const sections =
+    document.querySelectorAll(
+      ".searchable"
+    );
+
+
+  let found = 0;
+
+
+  sections.forEach(
+    section => {
+
+      const text =
+        section.textContent
+          .toLowerCase();
+
+
+      const matches =
+        !query ||
+        text.includes(
+          query
         );
 
-      if(span){
-        span.textContent = "＋";
+
+      section.style.display =
+        matches
+          ? ""
+          : "none";
+
+
+      if (matches) {
+        found++;
       }
 
-    });
+    }
+  );
 
 
-  if(!isOpen){
+  const empty =
+    document.getElementById(
+      "emptySearch"
+    );
 
-    item.classList.add("open");
 
-    const span =
-      button.querySelector("span");
+  if (empty) {
 
-    if(span){
-      span.textContent = "−";
+    empty.style.display =
+      found === 0
+        ? "block"
+        : "none";
+
+  }
+
+}
+
+
+/* =====================================================
+   ACTIVE SECTION WHILE SCROLLING
+   ===================================================== */
+
+const helpSections =
+  document.querySelectorAll(
+    ".help-section"
+  );
+
+
+const helpButtons =
+  document.querySelectorAll(
+    ".help-nav button"
+  );
+
+
+function updateActiveSection() {
+
+  let current =
+    "start";
+
+
+  helpSections.forEach(
+    section => {
+
+      const rect =
+        section.getBoundingClientRect();
+
+
+      if (
+        rect.top <= 180 &&
+        rect.bottom >= 150
+      ) {
+
+        current =
+          section.id.replace(
+            "help-",
+            ""
+          );
+
+      }
+
+    }
+  );
+
+
+  helpButtons.forEach(
+    button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.section ===
+        current
+      );
+
+    }
+  );
+
+}
+
+
+window.addEventListener(
+  "scroll",
+  updateActiveSection,
+  { passive: true }
+);
+
+
+/* =====================================================
+   KEYBOARD SEARCH
+   ===================================================== */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "/" &&
+      document.activeElement.tagName !==
+      "INPUT"
+    ) {
+
+      event.preventDefault();
+
+      document
+        .getElementById(
+          "helpSearch"
+        )
+        .focus();
+
     }
 
   }
-
-}
-
-
-/* =========================
-   MESSAGE
-========================= */
-
-function showMessage(message){
-
-  alert(message);
-
-}
-
-
-/* =========================
-   SUPPORT
-========================= */
-
-function sendSupport(){
-
-  const title =
-    document
-      .getElementById(
-        "supportTitle"
-      )
-      .value.trim();
-
-
-  const message =
-    document
-      .getElementById(
-        "supportMessage"
-      )
-      .value.trim();
-
-
-  if(!title || !message){
-
-    alert(
-      "لطفاً موضوع و توضیح مشکل را وارد کنید."
-    );
-
-    return;
-
-  }
-
-
-  const tickets =
-    JSON.parse(
-      localStorage.getItem(
-        "ghost_builder_support"
-      ) || "[]"
-    );
-
-
-  tickets.push({
-
-    id:
-      Date.now(),
-
-    title:title,
-
-    message:message,
-
-    createdAt:
-      new Date().toISOString(),
-
-    status:"new"
-
-  });
-
-
-  localStorage.setItem(
-    "ghost_builder_support",
-    JSON.stringify(tickets)
-  );
-
-
-  document.getElementById(
-    "supportTitle"
-  ).value = "";
-
-  document.getElementById(
-    "supportMessage"
-  ).value = "";
-
-
-  alert(
-    "✅ پیام شما در سیستم پشتیبانی ذخیره شد."
-  );
-
-}
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-function goHome(){
-
-  location.href =
-    "index.html";
-
-}
-
-
-function goBuilder(){
-
-  location.href =
-    "builder.html";
-
-}
+);
 
 </script>
 
 </body>
-    </html>
+</html>
