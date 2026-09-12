@@ -1,1236 +1,1196 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Ghost Builder | Settings</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+  <title>Ghost Builder — تنظیمات</title>
 
-body{
-  font-family:Tahoma,Arial,sans-serif;
-  background:#07070b;
-  color:#fff;
-  min-height:100vh;
-}
+  <link rel="stylesheet" href="style.css">
 
-button,input,select{
-  font-family:inherit;
-}
+  <style>
+    .settings-page {
+      min-height: 100vh;
+      padding-bottom: 50px;
+    }
 
-.topbar{
-  height:70px;
-  background:#0d0d14;
-  border-bottom:1px solid #252535;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 22px;
-}
+    .settings-container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 25px 18px;
+    }
 
-.logo{
-  font-size:21px;
-  font-weight:900;
-  color:#805fff;
-}
+    .settings-heading {
+      margin-bottom: 20px;
+    }
 
-.logo span{
-  color:#fff;
-}
+    .settings-heading h1 {
+      margin: 0;
+      font-size: 27px;
+    }
 
-.actions{
-  display:flex;
-  gap:8px;
-}
+    .settings-heading p {
+      color: var(--muted);
+      margin: 8px 0 0;
+      font-size: 13px;
+    }
 
-.btn{
-  border:1px solid #302d43;
-  background:#15141d;
-  color:#fff;
-  padding:10px 15px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-}
+    .settings-layout {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
 
-.btn.primary{
-  background:#7655ff;
-  border-color:#7655ff;
-}
+    .settings-menu {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 9px;
+      position: sticky;
+      top: 85px;
+    }
 
-.container{
-  width:min(1050px,94%);
-  margin:30px auto;
-}
+    .settings-tab {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      padding: 12px;
+      border-radius: 12px;
+      text-align: right;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
 
-.header{
-  margin-bottom:25px;
-}
+    .settings-tab:hover {
+      background: var(--bg);
+    }
 
-.header h1{
-  font-size:28px;
-  margin-bottom:8px;
-}
+    .settings-tab.active {
+      background: rgba(124,92,255,.12);
+      color: #7c5cff;
+      font-weight: 800;
+    }
 
-.header p{
-  color:#888;
-  line-height:1.8;
-  font-size:13px;
-}
+    .settings-content {
+      min-width: 0;
+    }
 
-.layout{
-  display:grid;
-  grid-template-columns:220px 1fr;
-  gap:20px;
-}
+    .settings-panel {
+      display: none;
+    }
 
-.sidebar{
-  background:#0e0e15;
-  border:1px solid #29283a;
-  border-radius:16px;
-  padding:10px;
-  height:max-content;
-}
+    .settings-panel.active {
+      display: block;
+    }
 
-.tab{
-  width:100%;
-  text-align:right;
-  border:0;
-  background:transparent;
-  color:#999;
-  padding:12px;
-  border-radius:9px;
-  cursor:pointer;
-  margin-bottom:4px;
-}
+    .settings-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 17px;
+    }
 
-.tab:hover{
-  background:#15141d;
-  color:#fff;
-}
+    .settings-card h2 {
+      margin: 0;
+      font-size: 18px;
+    }
 
-.tab.active{
-  background:#7655ff;
-  color:#fff;
-}
+    .settings-card-description {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+      margin: 7px 0 18px;
+    }
 
-.content{
-  min-width:0;
-}
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
 
-.section{
-  display:none;
-  background:#0e0e15;
-  border:1px solid #29283a;
-  border-radius:18px;
-  padding:22px;
-}
+    .setting-row:last-child {
+      border-bottom: 0;
+    }
 
-.section.active{
-  display:block;
-}
+    .setting-info {
+      min-width: 0;
+    }
 
-.section-title{
-  font-size:19px;
-  font-weight:900;
-  margin-bottom:7px;
-}
+    .setting-info strong {
+      display: block;
+      font-size: 13px;
+    }
 
-.section-description{
-  color:#888;
-  font-size:12px;
-  line-height:1.8;
-  margin-bottom:22px;
-}
+    .setting-info span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+      margin-top: 3px;
+    }
 
-.field{
-  margin-bottom:18px;
-}
+    .setting-control {
+      flex-shrink: 0;
+    }
 
-.field label{
-  display:block;
-  font-size:13px;
-  font-weight:bold;
-  margin-bottom:8px;
-}
+    .setting-select {
+      min-width: 150px;
+      padding: 9px 11px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      outline: none;
+    }
 
-.field small{
-  display:block;
-  color:#777;
-  font-size:11px;
-  margin-top:6px;
-  line-height:1.7;
-}
+    .toggle {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      display: inline-block;
+    }
 
-.input,
-.select{
-  width:100%;
-  background:#09090d;
-  color:#fff;
-  border:1px solid #302f40;
-  border-radius:10px;
-  padding:12px;
-  outline:none;
-}
+    .toggle input {
+      display: none;
+    }
 
-.input:focus,
-.select:focus{
-  border-color:#7655ff;
-}
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: #cbd0d8;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: .2s;
+    }
 
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
+    .toggle-slider::after {
+      content: "";
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      top: 3px;
+      right: 4px;
+      border-radius: 50%;
+      background: white;
+      transition: .2s;
+      box-shadow: 0 2px 7px rgba(0,0,0,.18);
+    }
 
-.color-row{
-  display:flex;
-  gap:10px;
-}
+    .toggle input:checked + .toggle-slider {
+      background: #7c5cff;
+    }
 
-.color{
-  width:55px;
-  height:45px;
-  border:1px solid #302f40;
-  border-radius:10px;
-  background:#fff;
-  padding:3px;
-}
+    .toggle input:checked + .toggle-slider::after {
+      transform: translateX(-20px);
+    }
 
-.color-text{
-  flex:1;
-}
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 12px;
+      margin-top: 15px;
+    }
 
-.switch-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  background:#12121a;
-  border:1px solid #282738;
-  padding:14px;
-  border-radius:12px;
-  margin-bottom:10px;
-}
+    .color-box {
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
 
-.switch-title{
-  font-weight:bold;
-  font-size:13px;
-  margin-bottom:4px;
-}
+    .color-box label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
 
-.switch-description{
-  color:#777;
-  font-size:11px;
-  line-height:1.7;
-}
+    .color-input-row {
+      display: flex;
+      gap: 7px;
+    }
 
-.switch{
-  position:relative;
-  width:48px;
-  height:26px;
-  flex-shrink:0;
-}
+    .color-input {
+      width: 45px;
+      height: 38px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+    }
 
-.switch input{
-  opacity:0;
-  width:0;
-  height:0;
-}
+    .color-text {
+      flex: 1;
+      min-width: 0;
+    }
 
-.slider{
-  position:absolute;
-  inset:0;
-  background:#292837;
-  border-radius:30px;
-  cursor:pointer;
-  transition:.2s;
-}
+    .danger-card {
+      border-color: rgba(239,68,68,.25);
+    }
 
-.slider:before{
-  content:"";
-  position:absolute;
-  width:20px;
-  height:20px;
-  right:3px;
-  top:3px;
-  background:#fff;
-  border-radius:50%;
-  transition:.2s;
-}
+    .danger-card h2 {
+      color: #ef4444;
+    }
 
-.switch input:checked + .slider{
-  background:#7655ff;
-}
+    .settings-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 17px;
+    }
 
-.switch input:checked + .slider:before{
-  transform:translateX(-22px);
-}
+    .about-box {
+      text-align: center;
+      padding: 25px;
+    }
 
-.save-area{
-  display:flex;
-  gap:10px;
-  margin-top:22px;
-  padding-top:18px;
-  border-top:1px solid #29283a;
-}
+    .about-logo {
+      width: 75px;
+      height: 75px;
+      border-radius: 23px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 14px;
+      background: linear-gradient(135deg,#7c5cff,#4f46e5);
+      color: white;
+      font-size: 34px;
+      font-weight: 900;
+      box-shadow: 0 15px 35px rgba(124,92,255,.25);
+    }
 
-.danger-box{
-  border:1px solid #542b32;
-  background:#171013;
-  border-radius:14px;
-  padding:15px;
-  margin-top:20px;
-}
+    .about-box h2 {
+      margin: 0;
+    }
 
-.danger-box h3{
-  color:#ff7c89;
-  margin-bottom:7px;
-}
+    .about-box p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.9;
+    }
 
-.danger-box p{
-  color:#999;
-  font-size:12px;
-  line-height:1.8;
-  margin-bottom:12px;
-}
+    .version-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 9px;
+      background: rgba(124,92,255,.1);
+      color: #7c5cff;
+      font-size: 11px;
+      font-weight: 800;
+    }
 
-.danger{
-  background:#37171d;
-  border-color:#67313a;
-  color:#ff9da7;
-}
+    @media(max-width:760px) {
+      .settings-layout {
+        grid-template-columns: 1fr;
+      }
 
-.status{
-  position:fixed;
-  left:20px;
-  bottom:20px;
-  background:#16151f;
-  border:1px solid #37334e;
-  padding:11px 15px;
-  border-radius:10px;
-  display:none;
-  z-index:100;
-  font-size:12px;
-}
+      .settings-menu {
+        position: static;
+        display: flex;
+        overflow-x: auto;
+        gap: 4px;
+      }
 
-.status.show{
-  display:block;
-}
+      .settings-tab {
+        width: auto;
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin: 0;
+      }
 
-.about{
-  text-align:center;
-  padding:25px 10px;
-}
+      .setting-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
 
-.about-logo{
-  font-size:55px;
-  margin-bottom:12px;
-}
+      .setting-control {
+        width: 100%;
+      }
 
-.about h2{
-  margin-bottom:8px;
-}
+      .setting-select {
+        width: 100%;
+      }
+    }
 
-.about p{
-  color:#888;
-  line-height:2;
-  font-size:13px;
-}
+    @media(max-width:500px) {
+      .color-grid {
+        grid-template-columns: 1fr;
+      }
 
-.version{
-  display:inline-block;
-  margin-top:12px;
-  background:#171621;
-  border:1px solid #302d43;
-  padding:7px 12px;
-  border-radius:9px;
-  color:#aaa;
-  font-size:11px;
-}
-
-@media(max-width:700px){
-  .topbar{
-    height:auto;
-    min-height:65px;
-    padding:10px;
-  }
-
-  .layout{
-    grid-template-columns:1fr;
-  }
-
-  .sidebar{
-    display:flex;
-    overflow-x:auto;
-    gap:5px;
-  }
-
-  .tab{
-    width:auto;
-    white-space:nowrap;
-    text-align:center;
-    margin:0;
-  }
-
-  .row{
-    grid-template-columns:1fr;
-  }
-}
-</style>
+      .settings-card {
+        padding: 15px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="topbar">
+<div class="settings-page">
 
-  <div class="logo">
-    Ghost <span>Builder</span>
-  </div>
+  <!-- TOPBAR -->
 
-  <div class="actions">
+  <header class="topbar">
 
-    <button
-      class="btn"
-      onclick="goHome()">
-      خانه
-    </button>
+    <div class="topbar-title">
+      <div>
+        <strong>⚙️ تنظیمات Ghost Builder</strong>
+        <span>شخصی‌سازی محیط و پروژه‌ها</span>
+      </div>
+    </div>
 
-    <button
-      class="btn primary"
-      onclick="saveAll()">
-      ذخیره
-    </button>
-
-  </div>
-
-</header>
-
-
-<main class="container">
-
-  <section class="header">
-
-    <h1>⚙️ تنظیمات</h1>
-
-    <p>
-      تنظیمات حساب، ظاهر، ویرایشگر و رفتار Ghost Builder را مدیریت کنید.
-    </p>
-
-  </section>
-
-
-  <div class="layout">
-
-    <aside class="sidebar">
+    <div class="topbar-actions">
 
       <button
-        class="tab active"
-        onclick="openTab('general',this)">
-        ⚙️ عمومی
+        class="btn"
+        onclick="goHome()">
+        🏠 خانه
       </button>
 
       <button
-        class="tab"
-        onclick="openTab('editor',this)">
-        🛠️ ویرایشگر
+        class="btn btn-primary"
+        onclick="saveAllSettings()">
+        💾 ذخیره
       </button>
 
-      <button
-        class="tab"
-        onclick="openTab('appearance',this)">
-        🎨 ظاهر
-      </button>
+    </div>
 
-      <button
-        class="tab"
-        onclick="openTab('project',this)">
-        📦 پروژه
-      </button>
+  </header>
 
-      <button
-        class="tab"
-        onclick="openTab('about',this)">
-        ℹ️ درباره
-      </button>
 
-    </aside>
+  <main class="settings-container">
 
+    <div class="settings-heading">
 
-    <section class="content">
+      <h1>
+        تنظیمات
+      </h1>
 
-      <!-- GENERAL -->
+      <p>
+        تنظیمات Ghost Builder را مطابق نیاز خود شخصی‌سازی کنید.
+      </p>
 
-      <div
-        class="section active"
-        id="general">
+    </div>
 
-        <div class="section-title">
-          تنظیمات عمومی
-        </div>
 
-        <div class="section-description">
-          اطلاعات و رفتار عمومی Ghost Builder را تنظیم کنید.
-        </div>
+    <div class="settings-layout">
 
 
-        <div class="field">
+      <!-- MENU -->
 
-          <label>
-            نام سازنده
-          </label>
-
-          <input
-            id="creatorName"
-            class="input"
-            placeholder="نام سازنده">
-
-          <small>
-            این نام فقط برای اطلاعات پروژه استفاده می‌شود.
-          </small>
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            زبان رابط کاربری
-          </label>
-
-          <select
-            id="language"
-            class="select">
-
-            <option value="fa">
-              فارسی
-            </option>
-
-            <option value="en">
-              English
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            واحد اندازه‌گیری
-          </label>
-
-          <select
-            id="unit"
-            class="select">
-
-            <option value="px">
-              Pixel (px)
-            </option>
-
-            <option value="rem">
-              REM
-            </option>
-
-            <option value="percent">
-              درصد
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="switch-row">
-
-          <div>
-
-            <div class="switch-title">
-              ذخیره خودکار
-            </div>
-
-            <div class="switch-description">
-              تغییرات پروژه به صورت خودکار ذخیره شوند.
-            </div>
-
-          </div>
-
-          <label class="switch">
-
-            <input
-              type="checkbox"
-              id="autosave"
-              checked>
-
-            <span class="slider"></span>
-
-          </label>
-
-        </div>
-
-
-        <div class="switch-row">
-
-          <div>
-
-            <div class="switch-title">
-              اعلان‌ها
-            </div>
-
-            <div class="switch-description">
-              پیام‌های مربوط به ذخیره و انتشار نمایش داده شوند.
-            </div>
-
-          </div>
-
-          <label class="switch">
-
-            <input
-              type="checkbox"
-              id="notifications"
-              checked>
-
-            <span class="slider"></span>
-
-          </label>
-
-        </div>
-
-      </div>
-
-
-      <!-- EDITOR -->
-
-      <div
-        class="section"
-        id="editor">
-
-        <div class="section-title">
-          تنظیمات ویرایشگر
-        </div>
-
-        <div class="section-description">
-          رفتار محیط ساخت پروژه را کنترل کنید.
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            کیفیت پیش‌فرض
-          </label>
-
-          <select
-            id="defaultQuality"
-            class="select">
-
-            <option value="Low">
-              Low
-            </option>
-
-            <option value="Medium">
-              Medium
-            </option>
-
-            <option value="High">
-              High
-            </option>
-
-            <option value="Ultra">
-              Ultra
-            </option>
-
-            <option value="Custom">
-              Custom
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            رزولوشن پیش‌فرض
-          </label>
-
-          <select
-            id="defaultResolution"
-            class="select">
-
-            <option value="480p">
-              480p
-            </option>
-
-            <option value="720p">
-              720p
-            </option>
-
-            <option value="1080p">
-              1080p
-            </option>
-
-            <option value="1440p">
-              1440p
-            </option>
-
-            <option value="2160p">
-              2160p
-            </option>
-
-            <option value="4K">
-              4K
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="switch-row">
-
-          <div>
-
-            <div class="switch-title">
-              نمایش خطوط راهنما
-            </div>
-
-            <div class="switch-description">
-              Grid محیط Builder نمایش داده شود.
-            </div>
-
-          </div>
-
-          <label class="switch">
-
-            <input
-              type="checkbox"
-              id="showGrid"
-              checked>
-
-            <span class="slider"></span>
-
-          </label>
-
-        </div>
-
-
-        <div class="switch-row">
-
-          <div>
-
-            <div class="switch-title">
-              Snap
-            </div>
-
-            <div class="switch-description">
-              عناصر هنگام جابه‌جایی روی نقاط شبکه قرار بگیرند.
-            </div>
-
-          </div>
-
-          <label class="switch">
-
-            <input
-              type="checkbox"
-              id="snap"
-              checked>
-
-            <span class="slider"></span>
-
-          </label>
-
-        </div>
-
-
-        <div class="switch-row">
-
-          <div>
-
-            <div class="switch-title">
-              پیش‌نمایش زنده
-            </div>
-
-            <div class="switch-description">
-              تغییرات در محیط Preview سریع‌تر نمایش داده شوند.
-            </div>
-
-          </div>
-
-          <label class="switch">
-
-            <input
-              type="checkbox"
-              id="livePreview"
-              checked>
-
-            <span class="slider"></span>
-
-          </label>
-
-        </div>
-
-      </div>
-
-
-      <!-- APPEARANCE -->
-
-      <div
-        class="section"
-        id="appearance">
-
-        <div class="section-title">
-          ظاهر
-        </div>
-
-        <div class="section-description">
-          ظاهر پنل Ghost Builder را شخصی‌سازی کنید.
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            تم
-          </label>
-
-          <select
-            id="theme"
-            class="select">
-
-            <option value="dark">
-              تاریک
-            </option>
-
-            <option value="light">
-              روشن
-            </option>
-
-            <option value="system">
-              سیستم
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            رنگ اصلی
-          </label>
-
-          <div class="color-row">
-
-            <input
-              type="color"
-              id="primaryColor"
-              class="color"
-              value="#7655ff">
-
-            <input
-              id="primaryColorText"
-              class="input color-text"
-              value="#7655ff">
-
-          </div>
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            رنگ پس‌زمینه
-          </label>
-
-          <div class="color-row">
-
-            <input
-              type="color"
-              id="backgroundColor"
-              class="color"
-              value="#07070b">
-
-            <input
-              id="backgroundColorText"
-              class="input color-text"
-              value="#07070b">
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- PROJECT -->
-
-      <div
-        class="section"
-        id="project">
-
-        <div class="section-title">
-          مدیریت پروژه‌ها
-        </div>
-
-        <div class="section-description">
-          تنظیمات مربوط به ذخیره و مدیریت پروژه‌ها.
-        </div>
-
-
-        <div class="switch-row">
-
-          <div>
-
-            <div class="switch-title">
-              ساخت پروژه نمونه
-            </div>
-
-            <div class="switch-description">
-              هنگام شروع Ghost Builder یک پروژه نمونه داشته باشید.
-            </div>
-
-          </div>
-
-          <label class="switch">
-
-            <input
-              type="checkbox"
-              id="sampleProject"
-              checked>
-
-            <span class="slider"></span>
-
-          </label>
-
-        </div>
-
-
-        <div class="switch-row">
-
-          <div>
-
-            <div class="switch-title">
-              تأیید حذف پروژه
-            </div>
-
-            <div class="switch-description">
-              قبل از حذف پروژه پیام تأیید نمایش داده شود.
-            </div>
-
-          </div>
-
-          <label class="switch">
-
-            <input
-              type="checkbox"
-              id="confirmDelete"
-              checked>
-
-            <span class="slider"></span>
-
-          </label>
-
-        </div>
-
-
-        <div class="danger-box">
-
-          <h3>
-            ⚠️ منطقه خطر
-          </h3>
-
-          <p>
-            با حذف اطلاعات محلی، پروژه‌ها و تنظیمات ذخیره‌شده
-            در این مرورگر پاک می‌شوند.
-          </p>
-
-          <button
-            class="btn danger"
-            onclick="resetData()">
-
-            🗑️ حذف اطلاعات محلی
-
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <!-- ABOUT -->
-
-      <div
-        class="section"
-        id="about">
-
-        <div class="about">
-
-          <div class="about-logo">
-            👻
-          </div>
-
-          <h2>
-            Ghost Builder
-          </h2>
-
-          <p>
-            پلتفرم ساخت وب‌سایت، اپلیکیشن و بازی
-            بدون نیاز به پیچیدگی‌های فنی.
-            <br>
-            ساخت پروژه‌های 2D، 3D، وب و اپلیکیشن در یک محیط.
-          </p>
-
-          <div class="version">
-            Version 1.0.0
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="save-area">
+      <nav class="settings-menu">
 
         <button
-          class="btn primary"
-          onclick="saveAll()">
-
-          💾 ذخیره تنظیمات
-
+          class="settings-tab active"
+          data-tab="general"
+          onclick="openTab('general',this)">
+          👤 عمومی
         </button>
 
         <button
-          class="btn"
-          onclick="loadSettings()">
-
-          ↩️ بازگردانی
-
+          class="settings-tab"
+          data-tab="editor"
+          onclick="openTab('editor',this)">
+          🛠️ ویرایشگر
         </button>
+
+        <button
+          class="settings-tab"
+          data-tab="appearance"
+          onclick="openTab('appearance',this)">
+          🎨 ظاهر
+        </button>
+
+        <button
+          class="settings-tab"
+          data-tab="project"
+          onclick="openTab('project',this)">
+          📦 پروژه
+        </button>
+
+        <button
+          class="settings-tab"
+          data-tab="about"
+          onclick="openTab('about',this)">
+          ℹ️ درباره
+        </button>
+
+      </nav>
+
+
+      <!-- CONTENT -->
+
+      <div class="settings-content">
+
+
+        <!-- GENERAL -->
+
+        <section
+          id="tab-general"
+          class="settings-panel active">
+
+          <div class="settings-card">
+
+            <h2>
+              👤 تنظیمات عمومی
+            </h2>
+
+            <p class="settings-card-description">
+              تنظیمات پایه حساب و تجربه کاربری.
+            </p>
+
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+
+                <strong>
+                  زبان رابط کاربری
+                </strong>
+
+                <span>
+                  زبان نمایش بخش‌های Ghost Builder
+                </span>
+
+              </div>
+
+              <div class="setting-control">
+
+                <select
+                  id="language"
+                  class="setting-select"
+                  onchange="saveSettingValue('language',this.value)">
+
+                  <option value="fa">
+                    فارسی
+                  </option>
+
+                  <option value="en">
+                    English
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+
+                <strong>
+                  نام سازنده
+                </strong>
+
+                <span>
+                  این نام در اطلاعات پروژه استفاده می‌شود.
+                </span>
+
+              </div>
+
+              <div class="setting-control">
+
+                <input
+                  id="creatorName"
+                  class="form-input"
+                  style="min-width:180px;"
+                  value="کاربر نمونه"
+                  onchange="saveSettingValue('creatorName',this.value)">
+
+              </div>
+
+            </div>
+
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+
+                <strong>
+                  ذخیره خودکار
+                </strong>
+
+                <span>
+                  تغییرات ویرایشگر به صورت خودکار ذخیره شود.
+                </span>
+
+              </div>
+
+              <div class="setting-control">
+
+                <label class="toggle">
+
+                  <input
+                    id="autoSave"
+                    type="checkbox"
+                    onchange="saveSettingValue('autoSave',this.checked)">
+
+                  <span class="toggle-slider"></span>
+
+                </label>
+
+              </div>
+
+            </div>
+
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+
+                <strong>
+                  اعلان‌ها
+                </strong>
+
+                <span>
+                  نمایش پیام‌های موفقیت و اطلاع‌رسانی.
+                </span>
+
+              </div>
+
+              <div class="setting-control">
+
+                <label class="toggle">
+
+                  <input
+                    id="notifications"
+                    type="checkbox"
+                    onchange="saveSettingValue('notifications',this.checked)">
+
+                  <span class="toggle-slider"></span>
+
+                </label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- EDITOR -->
+
+        <section
+          id="tab-editor"
+          class="settings-panel">
+
+          <div class="settings-card">
+
+            <h2>
+              🛠️ تنظیمات ویرایشگر
+            </h2>
+
+            <p class="settings-card-description">
+              رفتار محیط ساخت و پیش‌نمایش را تنظیم کنید.
+            </p>
+
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+
+                <strong>
+                  کیفیت پیش‌فرض
+                </strong>
+
+                <span>
+                  کیفیت اولیه پروژه‌های جدید.
+                </span>
+
+              </div>
+
+              <select
+                id="defaultQuality"
+                class="setting-select"
+                onchange="saveSettingValue('defaultQuality',this.value)">
+
+                <option value="Low">
+                  Low
+                </option>
+
+                <option value="Medium">
+                  Medium
+                </option>
+
+                <option value="High">
+                  High
+                </option>
+
+                <option value="Ultra">
+                  Ultra
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+
+                <strong>
+                  رزولوشن پیش‌فرض
+                </strong>
+
+                <span>
+                  اندازه پیش‌فرض خروجی پروژه.
+                </span>
+
+              </div>
+
+              <select
+                id="defaultResolution"
+                class="setting-select"
+                onchange="saveSettingValue('defaultResolution',this.value)">
+
+                <option value="480p">
+                  480p
+                </option>
+
+                <option value="720p">
+                  720p
+                </option>
+
+                <option value="1080p">
+                  1080p
+                </option>
+
+                <option value="1440p">
+                  1440p
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+
+                <strong>
+                  نمایش Grid
+                </strong>
+
+                <span>
+                  خطوط راهنمای محیط ویرایشگر.
+                </span>
+
+              </div>
+
+              <label class="toggle">
+
+                <input
+                  id="showGrid"
+                  type="checkbox"
+                  onchange="saveSettingValue('showGrid',this.checked)">
+
+                <span class="toggle-slider"></span>
+
+              </label>
+
+            </div>
+
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+
+                <strong>
+                  Snap
+                </strong>
+
+                <span>
+                  چسبیدن عناصر به خطوط شبکه.
+                </span>
+
+              </div>
+
+              <label class="toggle">
+
+                <input
+                  id="snap"
+                  type="checkbox"
+                  onchange="saveSettingValue('snap',this.checked)">
+
+                <span class="toggle-slider"></span>
+
+              </label>
+
+            </div>
+
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+
+                <strong>
+                  پیش‌نمایش زنده
+                </strong>
+
+                <span>
+                  نمایش سریع تغییرات در محیط ویرایش.
+                </span>
+
+              </div>
+
+              <label class="toggle">
+
+                <input
+                  id="livePreview"
+                  type="checkbox"
+                  onchange="saveSettingValue('livePreview',this.checked)">
+
+                <span class="toggle-slider"></span>
+
+              </label>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- APPEARANCE -->
+
+        <section
+          id="tab-appearance"
+          class="settings-panel">
+
+          <div class="settings-card">
+
+            <h2>
+              🎨 ظاهر
+            </h2>
+
+            <p class="settings-card-description">
+              رنگ‌ها و حالت نمایش Ghost Builder.
+            </p>
+
+
+            <div class="setting-row">
+
+              <div class="setting-info">
+
+                <strong>
+                  حالت نمایش
+                </strong>
+
+                <span>
+                  انتخاب حالت روشن، تاریک یا سیستم.
+                </span>
+
+              </div>
+
+              <select
+                id="theme"
+                class="setting-select"
+                onchange="changeTheme(this.value)">
+
+                <option value="dark">
+                  تاریک
+                </option>
+
+                <option value="light">
+                  روشن
+                </option>
+
+                <option value="system">
+                  سیستم
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="color-grid">
+
+              <div class="color-box">
+
+                <label>
+                  رنگ اصلی
+                </label>
+
+                <div class="color-input-row">
+
+                  <input
+                    id="primaryColor"
+                    class="color-input"
+                    type="color"
+                    onchange="updateColor('primaryColor',this.value)">
+
+                  <input
+                    id="primaryColorText"
+                    class="form-input color-text"
+                    onchange="updateColor('primaryColor',this.value)">
+
+                </div>
+
+              </div>
+
+
+              <div class="color-box">
+
+                <label>
+                  رنگ پس‌زمینه
+                </label>
+
+                <div class="color-input-row">
+
+                  <input
+                    id="backgroundColor"
+                    class="color-input"
+                    type="color"
+                    onchange="updateColor('backgroundColor',this.value)">
+
+                  <input
+                    id="backgroundColorText"
+                    class="form-input color-text"
+                    onchange="updateColor('backgroundColor',this.value)">
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- PROJECT -->
+
+        <section
+          id="tab-project"
+          class="settings-panel">
+
+          <div class="settings-card">
+
+            <h2>
+              📦 تنظیمات پروژه
+            </h2>
+
+            <p class="settings-card-description">
+              تنظیمات مربوط به پروژه فعلی.
+            </p>
+
+
+            <div
+              id="currentProjectBox"
+              style="
+                padding:15px;
+                border-radius:15px;
+                background:var(--bg);
+              ">
+              در حال بررسی پروژه...
+            </div>
+
+
+            <div class="settings-actions">
+
+              <button
+                class="btn"
+                onclick="openCurrentProject()">
+                ✏️ باز کردن پروژه
+              </button>
+
+              <button
+                class="btn"
+                onclick="createSampleProject()">
+                ✨ ساخت پروژه نمونه
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div class="settings-card danger-card">
+
+            <h2>
+              ⚠️ منطقه خطر
+            </h2>
+
+            <p class="settings-card-description">
+              این عملیات می‌تواند اطلاعات ذخیره‌شده روی
+              دستگاه را حذف کند.
+            </p>
+
+            <button
+              class="btn"
+              onclick="resetData()">
+              🗑️ پاک کردن اطلاعات محلی
+            </button>
+
+          </div>
+
+        </section>
+
+
+        <!-- ABOUT -->
+
+        <section
+          id="tab-about"
+          class="settings-panel">
+
+          <div class="settings-card">
+
+            <div class="about-box">
+
+              <div class="about-logo">
+                G
+              </div>
+
+              <h2>
+                Ghost Builder
+              </h2>
+
+              <p>
+                پلتفرم ساخت سایت، اپلیکیشن و بازی
+                با تمرکز بر تجربه ساده و قدرتمند.
+              </p>
+
+              <span class="version-badge">
+                Version 1.0.0
+              </span>
+
+              <p style="margin-top:20px;">
+                🌐 Website Builder<br>
+                📱 App Builder<br>
+                🎮 2D / 3D Game Builder<br>
+                🚀 Create Without Limits
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
 
       </div>
 
-    </section>
+    </div>
 
-  </div>
+  </main>
 
-</main>
-
-
-<div
-  id="status"
-  class="status">
-  تنظیمات ذخیره شد.
 </div>
 
 
+<script src="app.js"></script>
+
 <script>
 
-const STORAGE_KEY =
-  "ghost_builder_settings";
+"use strict";
 
 
-/* =========================
+/* =====================================================
    DEFAULT SETTINGS
-========================= */
+   ===================================================== */
 
-const defaults = {
+const defaultSettings = {
 
-  creatorName:"کاربر نمونه",
+  language: "fa",
 
-  language:"fa",
+  creatorName: "کاربر نمونه",
 
-  unit:"px",
+  autoSave: true,
 
-  autosave:true,
+  notifications: true,
 
-  notifications:true,
+  defaultQuality: "Medium",
 
-  defaultQuality:"Medium",
+  defaultResolution: "720p",
 
-  defaultResolution:"720p",
+  showGrid: true,
 
-  showGrid:true,
+  snap: true,
 
-  snap:true,
+  livePreview: true,
 
-  livePreview:true,
+  theme: "dark",
 
-  theme:"dark",
+  primaryColor: "#7c5cff",
 
-  primaryColor:"#7655ff",
-
-  backgroundColor:"#07070b",
-
-  sampleProject:true,
-
-  confirmDelete:true
+  backgroundColor: "#0b0d14"
 
 };
 
 
-/* =========================
-   LOAD
-========================= */
+/* =====================================================
+   LOAD SETTINGS
+   ===================================================== */
 
-function loadSettings(){
+function loadSettings() {
 
   const saved =
-    JSON.parse(
-      localStorage.getItem(
-        STORAGE_KEY
-      ) || "null"
-    );
+    gbGetSettings
+      ? gbGetSettings()
+      : {};
+
 
   const settings = {
-    ...defaults,
-    ...(saved || {})
+    ...defaultSettings,
+    ...saved
   };
 
 
-  document.getElementById(
-    "creatorName"
-  ).value =
-    settings.creatorName;
+  setValue(
+    "language",
+    settings.language
+  );
+
+  setValue(
+    "creatorName",
+    settings.creatorName
+  );
+
+  setChecked(
+    "autoSave",
+    settings.autoSave
+  );
+
+  setChecked(
+    "notifications",
+    settings.notifications
+  );
+
+  setValue(
+    "defaultQuality",
+    settings.defaultQuality
+  );
+
+  setValue(
+    "defaultResolution",
+    settings.defaultResolution
+  );
+
+  setChecked(
+    "showGrid",
+    settings.showGrid
+  );
+
+  setChecked(
+    "snap",
+    settings.snap
+  );
+
+  setChecked(
+    "livePreview",
+    settings.livePreview
+  );
+
+  setValue(
+    "theme",
+    settings.theme
+  );
+
+  setValue(
+    "primaryColor",
+    settings.primaryColor
+  );
+
+  setValue(
+    "primaryColorText",
+    settings.primaryColor
+  );
+
+  setValue(
+    "backgroundColor",
+    settings.backgroundColor
+  );
+
+  setValue(
+    "backgroundColorText",
+    settings.backgroundColor
+  );
 
 
-  document.getElementById(
-    "language"
-  ).value =
-    settings.language;
-
-
-  document.getElementById(
-    "unit"
-  ).value =
-    settings.unit;
-
-
-  document.getElementById(
-    "autosave"
-  ).checked =
-    settings.autosave;
-
-
-  document.getElementById(
-    "notifications"
-  ).checked =
-    settings.notifications;
-
-
-  document.getElementById(
-    "defaultQuality"
-  ).value =
-    settings.defaultQuality;
-
-
-  document.getElementById(
-    "defaultResolution"
-  ).value =
-    settings.defaultResolution;
-
-
-  document.getElementById(
-    "showGrid"
-  ).checked =
-    settings.showGrid;
-
-
-  document.getElementById(
-    "snap"
-  ).checked =
-    settings.snap;
-
-
-  document.getElementById(
-    "livePreview"
-  ).checked =
-    settings.livePreview;
-
-
-  document.getElementById(
-    "theme"
-  ).value =
-    settings.theme;
-
-
-  document.getElementById(
-    "primaryColor"
-  ).value =
-    settings.primaryColor;
-
-
-  document.getElementById(
-    "primaryColorText"
-  ).value =
-    settings.primaryColor;
-
-
-  document.getElementById(
-    "backgroundColor"
-  ).value =
-    settings.backgroundColor;
-
-
-  document.getElementById(
-    "backgroundColorText"
-  ).value =
-    settings.backgroundColor;
-
-
-  document.getElementById(
-    "sampleProject"
-  ).checked =
-    settings.sampleProject;
-
-
-  document.getElementById(
-    "confirmDelete"
-  ).checked =
-    settings.confirmDelete;
-
-
-  applyAppearance(settings);
+  updateCurrentProject();
 
 }
 
 
-/* =========================
-   SAVE
-========================= */
+/* =====================================================
+   HELPERS
+   ===================================================== */
 
-function saveAll(){
+function setValue(
+  id,
+  value
+) {
 
-  const settings = {
+  const element =
+    document.getElementById(id);
 
-    creatorName:
-      document.getElementById(
-        "creatorName"
-      ).value.trim(),
+
+  if (element) {
+
+    element.value =
+      value ?? "";
+
+  }
+
+}
+
+
+function setChecked(
+  id,
+  value
+) {
+
+  const element =
+    document.getElementById(id);
+
+
+  if (element) {
+
+    element.checked =
+      !!value;
+
+  }
+
+}
+
+
+/* =====================================================
+   GET ALL SETTINGS
+   ===================================================== */
+
+function collectSettings() {
+
+  return {
 
     language:
       document.getElementById(
         "language"
       ).value,
 
-    unit:
+    creatorName:
       document.getElementById(
-        "unit"
-      ).value,
+        "creatorName"
+      ).value.trim() ||
+      "کاربر نمونه",
 
-    autosave:
+    autoSave:
       document.getElementById(
-        "autosave"
+        "autoSave"
       ).checked,
 
     notifications:
@@ -1270,297 +1230,601 @@ function saveAll(){
 
     primaryColor:
       document.getElementById(
-        "primaryColorText"
+        "primaryColor"
       ).value,
 
     backgroundColor:
       document.getElementById(
-        "backgroundColorText"
-      ).value,
-
-    sampleProject:
-      document.getElementById(
-        "sampleProject"
-      ).checked,
-
-    confirmDelete:
-      document.getElementById(
-        "confirmDelete"
-      ).checked
+        "backgroundColor"
+      ).value
 
   };
 
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(settings)
-  );
-
-
-  applyAppearance(settings);
-
-  showStatus(
-    "✅ تنظیمات ذخیره شد."
-  );
-
 }
 
 
-/* =========================
-   APPEARANCE
-========================= */
+/* =====================================================
+   SAVE ALL
+   ===================================================== */
 
-function applyAppearance(settings){
+function saveAllSettings() {
 
-  document.documentElement.style
-    .setProperty(
-      "--ghost-primary",
-      settings.primaryColor
+  const settings =
+    collectSettings();
+
+
+  if (
+    typeof gbSaveSettings ===
+    "function"
+  ) {
+
+    gbSaveSettings(
+      settings
     );
 
-  if(
-    settings.theme === "light"
-  ){
+  } else {
 
-    document.body.style.background =
-      "#f4f4f8";
-
-    document.body.style.color =
-      "#111";
+    gbSet(
+      "ghost_builder_settings",
+      settings
+    );
 
   }
 
-  else{
 
-    document.body.style.background =
-      settings.backgroundColor;
+  if (
+    typeof gbSetTheme ===
+    "function"
+  ) {
 
-    document.body.style.color =
-      "#fff";
+    gbSetTheme(
+      settings.theme
+    );
+
+  }
+
+
+  gbToast(
+    "تنظیمات با موفقیت ذخیره شد.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   SAVE SINGLE SETTING
+   ===================================================== */
+
+function saveSettingValue(
+  key,
+  value
+) {
+
+  const settings =
+    collectSettings();
+
+
+  settings[key] =
+    value;
+
+
+  if (
+    typeof gbSaveSettings ===
+    "function"
+  ) {
+
+    gbSaveSettings(
+      settings
+    );
+
+  } else {
+
+    gbSet(
+      "ghost_builder_settings",
+      settings
+    );
+
+  }
+
+
+  if (
+    key === "theme"
+  ) {
+
+    changeTheme(
+      value
+    );
 
   }
 
 }
 
 
-/* =========================
-   TABS
-========================= */
+/* =====================================================
+   THEME
+   ===================================================== */
 
-function openTab(id,button){
+function changeTheme(
+  value
+) {
 
-  document
-    .querySelectorAll(".section")
-    .forEach(section => {
+  if (
+    typeof gbSetTheme ===
+    "function"
+  ) {
 
-      section.classList.remove(
-        "active"
-      );
+    gbSetTheme(
+      value
+    );
 
-    });
-
-
-  document
-    .querySelectorAll(".tab")
-    .forEach(tab => {
-
-      tab.classList.remove(
-        "active"
-      );
-
-    });
+  }
 
 
-  document
-    .getElementById(id)
-    .classList.add("active");
-
-
-  button.classList.add("active");
+  saveSettingValue(
+    "theme",
+    value
+  );
 
 }
 
 
-/* =========================
-   COLOR SYNC
-========================= */
+/* =====================================================
+   COLORS
+   ===================================================== */
 
-document
-  .getElementById("primaryColor")
-  .addEventListener(
-    "input",
-    function(){
+function updateColor(
+  type,
+  value
+) {
 
-      document.getElementById(
-        "primaryColorText"
-      ).value =
-        this.value;
-
-    }
-  );
-
-
-document
-  .getElementById("primaryColorText")
-  .addEventListener(
-    "input",
-    function(){
-
-      if(
-        /^#[0-9A-F]{6}$/i.test(
-          this.value
-        )
-      ){
-
-        document.getElementById(
-          "primaryColor"
-        ).value =
-          this.value;
-
-      }
-
-    }
-  );
-
-
-document
-  .getElementById("backgroundColor")
-  .addEventListener(
-    "input",
-    function(){
-
-      document.getElementById(
-        "backgroundColorText"
-      ).value =
-        this.value;
-
-    }
-  );
-
-
-document
-  .getElementById("backgroundColorText")
-  .addEventListener(
-    "input",
-    function(){
-
-      if(
-        /^#[0-9A-F]{6}$/i.test(
-          this.value
-        )
-      ){
-
-        document.getElementById(
-          "backgroundColor"
-        ).value =
-          this.value;
-
-      }
-
-    }
-  );
-
-
-/* =========================
-   RESET
-========================= */
-
-function resetData(){
-
-  const ok =
-    confirm(
-      "تمام پروژه‌ها، رسانه‌ها و تنظیمات محلی حذف شوند؟\n\nاین عملیات قابل بازگشت نیست."
-    );
-
-
-  if(!ok){
+  if (!value) {
     return;
   }
 
 
-  localStorage.removeItem(
-    "ghost_builder_projects"
+  if (
+    type ===
+    "primaryColor"
+  ) {
+
+    document.getElementById(
+      "primaryColor"
+    ).value =
+      normalizeColor(
+        value
+      );
+
+    document.getElementById(
+      "primaryColorText"
+    ).value =
+      normalizeColor(
+        value
+      );
+
+  }
+
+
+  if (
+    type ===
+    "backgroundColor"
+  ) {
+
+    document.getElementById(
+      "backgroundColor"
+    ).value =
+      normalizeColor(
+        value
+      );
+
+    document.getElementById(
+      "backgroundColorText"
+    ).value =
+      normalizeColor(
+        value
+      );
+
+  }
+
+
+  saveAllSettings();
+
+}
+
+
+function normalizeColor(
+  value
+) {
+
+  const v =
+    String(value)
+      .trim();
+
+
+  if (
+    /^#[0-9a-fA-F]{6}$/.test(v)
+  ) {
+
+    return v;
+
+  }
+
+
+  return "#7c5cff";
+
+}
+
+
+/* =====================================================
+   TABS
+   ===================================================== */
+
+function openTab(
+  tab,
+  button
+) {
+
+  document
+    .querySelectorAll(
+      ".settings-tab"
+    )
+    .forEach(
+      item =>
+        item.classList.remove(
+          "active"
+        )
+    );
+
+
+  document
+    .querySelectorAll(
+      ".settings-panel"
+    )
+    .forEach(
+      panel =>
+        panel.classList.remove(
+          "active"
+        )
+    );
+
+
+  if (button) {
+
+    button.classList.add(
+      "active"
+    );
+
+  }
+
+
+  const panel =
+    document.getElementById(
+      "tab-" + tab
+    );
+
+
+  if (panel) {
+
+    panel.classList.add(
+      "active"
+    );
+
+  }
+
+
+  try {
+
+    history.replaceState(
+      null,
+      "",
+      "#" + tab
+    );
+
+  } catch(e) {}
+
+}
+
+
+/* =====================================================
+   CURRENT PROJECT
+   ===================================================== */
+
+function updateCurrentProject() {
+
+  const box =
+    document.getElementById(
+      "currentProjectBox"
+    );
+
+
+  const project =
+    gbGetCurrentProject();
+
+
+  if (!project) {
+
+    box.innerHTML = `
+
+      <strong>
+        📂 پروژه فعالی انتخاب نشده
+      </strong>
+
+      <div
+        style="
+          color:var(--muted);
+          font-size:11px;
+          margin-top:5px;
+        ">
+
+        برای مدیریت پروژه، ابتدا یک پروژه را باز کنید.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  box.innerHTML = `
+
+    <strong>
+      ${gbProjectTypeIcon(
+        project.type
+      )}
+
+      ${gbEscapeHTML(
+        project.name ||
+        "پروژه بدون نام"
+      )}
+    </strong>
+
+    <div
+      style="
+        color:var(--muted);
+        font-size:11px;
+        margin-top:6px;
+      ">
+
+      نوع:
+      ${gbEscapeHTML(
+        gbProjectTypeLabel(
+          project.type
+        )
+      )}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   OPEN CURRENT PROJECT
+   ===================================================== */
+
+function openCurrentProject() {
+
+  const project =
+    gbGetCurrentProject();
+
+
+  if (!project) {
+
+    gbToast(
+      "پروژه فعالی وجود ندارد.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  window.location.href =
+    "builder.html?project=" +
+    encodeURIComponent(
+      project.id
+    );
+
+}
+
+
+/* =====================================================
+   SAMPLE PROJECT
+   ===================================================== */
+
+function createSampleProject() {
+
+  const project =
+    gbCreateProject({
+
+      name:
+        "پروژه نمونه Ghost",
+
+      type:
+        "website",
+
+      title:
+        "سایت نمونه Ghost Builder",
+
+      description:
+        "این یک پروژه نمونه برای آزمایش امکانات Ghost Builder است.",
+
+      button:
+        "شروع کنید",
+
+      primary:
+        "#7c5cff",
+
+      background:
+        "#ffffff",
+
+      quality:
+        "Medium",
+
+      resolution:
+        "720p",
+
+      elements: [
+
+        gbCreateElement(
+          "text",
+          {
+            text:
+              "به Ghost Builder خوش آمدید"
+          }
+        ),
+
+        gbCreateElement(
+          "card",
+          {
+            title:
+              "کارت نمونه",
+
+            description:
+              "این پروژه برای شروع کار شما ساخته شده است."
+          }
+        )
+
+      ]
+
+    });
+
+
+  gbSetCurrentProject(
+    project
   );
 
-  localStorage.removeItem(
-    "ghost_builder_current_project"
-  );
 
-  localStorage.removeItem(
-    "ghost_builder_media"
-  );
-
-  localStorage.removeItem(
-    "ghost_builder_selected_media"
-  );
-
-  localStorage.removeItem(
-    "ghost_builder_published_demo"
-  );
-
-  localStorage.removeItem(
-    STORAGE_KEY
-  );
+  updateCurrentProject();
 
 
-  loadSettings();
-
-
-  showStatus(
-    "🗑️ اطلاعات محلی حذف شد."
+  gbToast(
+    "پروژه نمونه ساخته شد.",
+    "success"
   );
 
 }
 
 
-/* =========================
-   STATUS
-========================= */
+/* =====================================================
+   RESET
+   ===================================================== */
 
-function showStatus(message){
+function resetData() {
 
-  const box =
-    document.getElementById(
-      "status"
+  const confirmed =
+    confirm(
+      "⚠️ همه پروژه‌ها، تنظیمات و رسانه‌های ذخیره‌شده روی این دستگاه حذف می‌شوند. ادامه می‌دهید؟"
     );
 
-  box.textContent =
-    message;
 
-  box.classList.add("show");
+  if (!confirmed) {
+    return;
+  }
+
+
+  if (
+    typeof gbResetAll ===
+    "function"
+  ) {
+
+    gbResetAll();
+
+  } else {
+
+    localStorage.clear();
+
+  }
+
+
+  gbToast(
+    "اطلاعات محلی پاک شد.",
+    "success"
+  );
 
 
   setTimeout(
     () => {
 
-      box.classList.remove(
-        "show"
-      );
+      window.location.href =
+        "index.html";
 
     },
-    2500
+    700
   );
 
 }
 
 
-/* =========================
-   NAVIGATION
-========================= */
+/* =====================================================
+   HOME
+   ===================================================== */
 
-function goHome(){
+function goHome() {
 
-  location.href =
+  window.location.href =
     "index.html";
 
 }
 
 
-/* =========================
-   START
-========================= */
+/* =====================================================
+   HASH TAB
+   ===================================================== */
 
-loadSettings();
+function loadHashTab() {
+
+  const hash =
+    location.hash
+      .replace(
+        "#",
+        ""
+      );
+
+
+  if (!hash) {
+    return;
+  }
+
+
+  const button =
+    document.querySelector(
+      '[data-tab="' +
+      hash +
+      '"]'
+    );
+
+
+  if (button) {
+
+    openTab(
+      hash,
+      button
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   INIT
+   ===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    loadSettings();
+
+    loadHashTab();
+
+  }
+);
 
 </script>
 
